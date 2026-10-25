@@ -1,0 +1,21 @@
+# Generated build output and Gradle caches
+.gradle/
+build/
+out/
+run/
+
+# Local IDE and machine settings
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+*.iml
+local.properties
+
+# Operating system files and logs
+.DS_Store
+Thumbs.db
+*.log
+
+# Keep gradle/wrapper/gradle-wrapper.jar committed: it is required to build.
