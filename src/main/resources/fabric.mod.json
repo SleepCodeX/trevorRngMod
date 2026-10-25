@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "trevorroll",
+  "version": "${version}",
+  "name": "Trevor Roll",
+  "description": "A short case-opening reveal for Trevor's actual hunt rarity, followed by the hunting location.",
+  "authors": ["Anish"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient"] },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": ">=0.161.0+26.2"
+  }
+}
