@@ -1,4 +1,4 @@
-Classfile jar:file:///C:/Users/anish/Documents/ChatGPT/c/trevorRngMod/build/libs/trevor-roll-1.3.1-dev.jar!/dev/crestwatch/trapper/CrestHudConfig.class
+Classfile jar:file:///C:/Users/anish/Documents/ChatGPT/c/trevorRngMod/build/libs/trevor-roll-1.3.1.jar!/dev/crestwatch/trapper/CrestHudConfig.class
   Last modified Feb 1, 1980; size 4102 bytes
   SHA-256 checksum f1c9f8de7b084b3a54e396dfeb4f495166ef0bcebfdf45f9557eaeb2a2d9ef33
   Compiled from "CrestHudConfig.java"

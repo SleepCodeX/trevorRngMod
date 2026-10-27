@@ -36,3 +36,7 @@ The 1.3.0 JAR was built using **inaccurate test/compatibility stubs**; FabricLoa
 6. Publish a JAR only after a real Loom production build and Minecraft launch smoke test (`./gradlew runProductionClientGameTest --no-daemon`). Keep the development version until modpack validation and review; do not merge or tag a release automatically.
 
 See `CODEX_HANDOFF.md` for a detailed plan and failure evidence. Do not recreate or replace the original Trevor Roll source unnecessarily.
+
+## Current release approval
+
+On 2026-10-27, the user confirmed the mod works in-game, authorized the merge to main, and explicitly requested stable 1.3.1 without the dev suffix. This satisfies the validation gate above. Runtime behavior must remain unchanged during this version-only promotion.
