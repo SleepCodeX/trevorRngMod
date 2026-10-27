@@ -51,6 +51,8 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
         registerCommands();
     }
 
+    public static CrestHudConfig settings() { return config; }
+
     private static void tick(Minecraft mc) {
         if (mc.player == null || mc.level == null) {
             Arrays.fill(CACHED_STACKS, null);
@@ -63,7 +65,7 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
 
     private static void render(GuiGraphicsExtractor graphics, DeltaTracker tick) {
         if (MC.player == null || MC.level == null || MC.gui.hud.isHidden() || !config.enabled) return;
-        if (TrevorRollClient.isRevealActive()) return;
+        if (TrevorRollClient.isRevealActive() || MC.gui.screen() instanceof dev.trevorroll.TrevorLayoutScreen) return;
         long now = System.nanoTime() / 1_000_000L;
         boolean preview = previewState != null && now < previewExpires;
         if (!preview && config.onlyHypixel && !isHypixel(MC)) return;
@@ -108,6 +110,7 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
                     feedback("Crest HUD: /trevorcrest demo <common|uncommon|rare|missing>, toggle, scale <0.65-1.6>, top <pixels>, right <pixels>, reset");
                     return 1;
                 })
+                .then(literal("config").executes(ctx -> { TrevorRollClient.openSettings(); return 1; }))
                 .then(literal("toggle").executes(ctx -> {
                     config.enabled = !config.enabled; config.save();
                     feedback("Crest HUD " + (config.enabled ? "enabled" : "disabled"));

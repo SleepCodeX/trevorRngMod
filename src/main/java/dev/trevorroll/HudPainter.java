@@ -6,7 +6,8 @@ import java.util.Locale;
 
 /** Shared drawing code for the Minecraft HUD and the offline visual preview. */
 public final class HudPainter {
-    private static final double WIDTH = 414, HEIGHT = 160, PITCH = Reel.CARD_PITCH, CARD = Reel.CARD_WIDTH;
+    public static final double WIDTH = 414, HEIGHT = 160;
+    private static final double PITCH = Reel.CARD_PITCH, CARD = Reel.CARD_WIDTH;
     private static final int INK = 0xFFF6F2FF, MUTED = 0xFFA5A1C0, PANEL = 0xFF18182C;
     private static final int[] COLORS = {0xFFDCE5F4, 0xFF91E4BD, 0xFF8FC5FF, 0xFFC7A2FF, 0xFFFFD28D};
 
@@ -27,15 +28,18 @@ public final class HudPainter {
     private HudPainter(Canvas canvas, double opacity) { this.c = canvas; this.opacity = opacity; }
 
     public static void draw(Canvas c, Reel reel, long now, int screenWidth, int screenHeight) {
+        draw(c, reel, now, screenWidth, screenHeight, 1, .5, 0, false);
+    }
+
+    public static void draw(Canvas c, Reel reel, long now, int screenWidth, int screenHeight,
+                            double userScale, double x, double y, boolean customPosition) {
         if (reel.expired(now) || screenWidth < 100 || screenHeight < 80) return;
         double age = Math.max(0, now - reel.startedAt);
         double remaining = reel.durationMillis + Reel.RESULT_MILLIS - age;
         double alpha = smooth(age / 180) * smooth(remaining / 350);
-        double scale = Math.min(1, Math.min((screenWidth - 24) / WIDTH, (screenHeight - 24) / HEIGHT));
-        double top = Math.max(10, Math.min(28, screenHeight * .075));
-        // Small screens keep the full reveal in view; no clipping of biome text.
-        top = Math.min(top, screenHeight - HEIGHT * scale - 10);
-        c.push((screenWidth - WIDTH * scale) / 2, top - (1 - smooth(age / 240)) * 8, scale);
+        var bounds = HudLayout.roll(screenWidth, screenHeight, userScale, x, y, customPosition);
+        double scale = bounds.scale();
+        c.push(bounds.x(), bounds.y() - (1 - smooth(age / 240)) * 8, scale);
         try { new HudPainter(c, alpha).panel(reel, now); }
         finally { c.pop(); }
     }

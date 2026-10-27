@@ -9,13 +9,13 @@ import net.minecraft.resources.Identifier;
  * Reuses the ORIGINAL Trevor Roll circle + glow textures for feathered corners.
  * This duplicates only the small render adapter; original Trevor Roll classes are unchanged.
  */
-final class CrestHudCanvas implements CrestHudPainter.Canvas {
+public final class CrestHudCanvas implements CrestHudPainter.Canvas {
     private static final Identifier CIRCLE = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/circle.png");
     private static final Identifier GLOW = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/glow.png");
     private final GuiGraphicsExtractor g;
     private final Minecraft mc = Minecraft.getInstance();
 
-    CrestHudCanvas(GuiGraphicsExtractor graphics) { this.g = graphics; }
+    public CrestHudCanvas(GuiGraphicsExtractor graphics) { this.g = graphics; }
 
     @Override public void push(double x, double y, double scale) {
         g.pose().pushMatrix();

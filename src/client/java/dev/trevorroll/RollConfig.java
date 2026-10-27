@@ -13,6 +13,10 @@ final class RollConfig {
     boolean enabled = true;
     boolean sound = true;
     int durationMillis = 3000;
+    double scale = 1.0;
+    double x = .5;
+    double y = 0;
+    boolean customPosition = false;
 
     static RollConfig load() {
         try {
@@ -20,6 +24,9 @@ final class RollConfig {
                 RollConfig config = GSON.fromJson(Files.readString(PATH), RollConfig.class);
                 if (config != null) {
                     config.durationMillis = Math.clamp(config.durationMillis, 1000, 8000);
+                    config.scale = HudLayout.finiteClamp(config.scale, .5, 2, 1);
+                    config.x = HudLayout.finiteClamp(config.x, 0, 1, .5);
+                    config.y = HudLayout.finiteClamp(config.y, 0, 1, 0);
                     return config;
                 }
             }

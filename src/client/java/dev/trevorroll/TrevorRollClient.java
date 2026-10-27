@@ -61,6 +61,10 @@ public final class TrevorRollClient implements ClientModInitializer {
     }
 
     private void tick() {
+        if (openSettingsNextTick) {
+            openSettingsNextTick = false;
+            MC.gui.setScreen(new TrevorSettingsScreen());
+        }
         if (reel == null || MC.player == null) return;
         long time = now();
         if (reel.finished(time)) {
@@ -95,13 +99,22 @@ public final class TrevorRollClient implements ClientModInitializer {
         reel = null;
     }
 
+    static RollConfig settings() { return instance.config; }
+
+    public static void openSettings() {
+        // Commands run while the chat screen is still closing; defer until next tick.
+        instance.openSettingsNextTick = true;
+    }
+    private boolean openSettingsNextTick;
+
     private void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
             literal("trevorroll")
                 .executes(ctx -> {
-                    feedback("Trevor Roll: /trevorroll test [rarity], toggle, sound, duration <1-8>, skip");
+                    feedback("Trevor Roll: /trevorroll config, test [rarity], toggle, sound, duration <1-8>, skip");
                     return 1;
                 })
+                .then(literal("config").executes(ctx -> { openSettings(); return 1; }))
                 .then(literal("test").executes(ctx -> demo(Hunt.Rarity.values()[random.nextInt(5)]))
                     .then(literal("trackable").executes(ctx -> demo(Hunt.Rarity.TRACKABLE)))
                     .then(literal("untrackable").executes(ctx -> demo(Hunt.Rarity.UNTRACKABLE)))
@@ -138,8 +151,10 @@ public final class TrevorRollClient implements ClientModInitializer {
 
     private void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Reel roll = reel;
+        if (MC.gui.screen() instanceof TrevorLayoutScreen) return;
         if (roll == null || MC.player == null || MC.gui.hud.isHidden()) return;
         HudPainter.draw(new MinecraftCanvas(g), roll, now(),
-            MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight());
+            MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
+            config.scale, config.x, config.y, config.customPosition);
     }
 }

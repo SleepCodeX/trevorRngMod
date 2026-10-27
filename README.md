@@ -1,3 +1,22 @@
+## Settings menu and draggable HUD (1.4.0-dev)
+
+Open `/trevorroll config` or `/trevorcrest config` in-game. Adjust roll duration
+(1–8 seconds; lower is faster), roll size (50–200%), crest size (65–160%), sound,
+visibility, and whether the crest appears only on Hypixel. Sizes include all text,
+icons, backgrounds and effects within each panel; large panels fit the screen.
+Duration changes apply to the next roll and leave an active hunt reveal intact.
+
+Choose **Edit HUD layout / live preview**, drag either panel, then use **Smaller**
+or **Larger** to resize the selected panel. Both previews appear even when disabled
+or outside Hypixel. **Done** or Escape saves and returns to settings. Settings also
+save on screen changes. **Reset sizes and positions** restores the default layout.
+Roll positions are proportional to available screen space; the crest retains its
+existing top/right anchoring and `/trevorcrest` commands. Existing configuration
+files are retained, including all old settings. Original commands still work.
+
+This development branch requires the Java 25 Loom build and production client
+checks before installing its artifact. It does not replace the stable JAR in `dist`.
+
 # Trevor Roll
 
 A client-side Hypixel SkyBlock mod for **Minecraft 26.2**, built with **Fabric Loader 0.19.5**. Version **1.3.1** preserves the original Trevor Roll rarity reveal and adds a live Trapper Crest progress HUD, rebuilt with real Fabric dependencies to fix the 1.3.0 startup crash.
