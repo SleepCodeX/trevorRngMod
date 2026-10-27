@@ -12,7 +12,11 @@ import java.util.function.DoubleFunction;
 
 /** Keyboard-accessible settings; changes persist when leaving the screen. */
 public final class TrevorSettingsScreen extends Screen {
-    public TrevorSettingsScreen() { super(Component.literal("Trevor Roll settings")); }
+    private final Screen parent;
+    public TrevorSettingsScreen() { this(null); }
+    public TrevorSettingsScreen(Screen parent) {
+        super(Component.literal("Trevor Roll settings")); this.parent = parent;
+    }
 
     @Override protected void init() {
         var roll = TrevorRollClient.settings();
@@ -64,7 +68,7 @@ public final class TrevorSettingsScreen extends Screen {
         TrapperCrestHudClient.settings().save();
     }
     @Override public void removed() { save(); }
-    @Override public void onClose() { save(); minecraft.gui.setScreen(null); }
+    @Override public void onClose() { save(); minecraft.gui.setScreen(parent); }
     @Override public boolean isPauseScreen() { return false; }
     @Override public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
         super.extractRenderState(g, mouseX, mouseY, delta);

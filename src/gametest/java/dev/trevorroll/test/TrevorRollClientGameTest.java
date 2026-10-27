@@ -141,6 +141,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             context.runOnClient(mc -> mc.gui.setScreen(new TrevorLayoutScreen(mc.gui.screen())));
             context.waitTicks(10);
             context.takeScreenshot("layout-editor");
+            context.runOnClient(dev.trevorroll.HudEditorChecks::run);
             context.runOnClient(mc -> mc.gui.screen().onClose());
             context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Layout editor returns to settings"));
             context.runOnClient(mc -> mc.gui.screen().onClose());

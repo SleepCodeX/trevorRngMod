@@ -35,6 +35,23 @@ public final class LogicTest {
                 check(reel.position(0) == 3 && reel.position(20000) == Reel.TARGET, "time clamp");
             }
         }
+        for (int width : new int[]{320, 854, 1920}) {
+            for (int height : new int[]{240, 480, 1080}) {
+                for (double scale : new double[]{.5, 1, 2, Double.NaN}) {
+                    for (double x : new double[]{0, .5, 1}) {
+                        var b = HudLayout.roll(width, height, scale, x, x, true);
+                        check(b.x() >= 0 && b.y() >= 0 && b.x() + b.width() <= width
+                            && b.y() + b.height() <= height, "custom roll fits after resize");
+                        check(b.contains(b.x() + b.width() / 2, b.y() + b.height() / 2), "editor hitbox matches panel");
+                        check(!b.contains(b.x() - 1, b.y()), "outside panel does not drag");
+                    }
+                    var c = HudLayout.crest(width, height, scale, 2000, 1000);
+                    check(c.x() >= 0 && c.y() >= 0 && c.x() + c.width() <= width
+                        && c.y() + c.height() <= height, "crest fits after resize");
+                }
+            }
+        }
+        check(HudLayout.finiteClamp(Double.POSITIVE_INFINITY, 0, 1, .5) == .5, "invalid saved values use default");
         System.out.println("Trevor Roll logic checks passed: " + checks);
     }
 }
