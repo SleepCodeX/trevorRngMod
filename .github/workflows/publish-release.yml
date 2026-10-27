@@ -1,0 +1,50 @@
+name: Publish verified Trevor Roll 1.4.0
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: deca4a00bc7343e43ce0816dbedf4f5c8bf4560c
+      - name: Download the tested stable production JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: trevor-roll-1.4.0-mc26.2-loader0.19.5
+          run-id: 40537466083
+          github-token: ${{ github.token }}
+          path: release-assets
+      - name: Verify the exact validated artifact and release metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          path = Path('release-assets/trevor-roll-1.4.0.jar')
+          digest = hashlib.sha256(path.read_bytes()).hexdigest()
+          assert digest == 'ca91fd9882017573abc8bfe6ee4d899c982f869ef1d57b90192314428ab90efb', digest
+          with zipfile.ZipFile(path) as archive:
+              assert json.loads(archive.read('fabric.mod.json'))['version'] == '1.4.0'
+              assert 'dev/trevorroll/TrevorLayoutScreen.class' in archive.namelist()
+              assert not any(name.startswith(('net/minecraft/', 'net/fabricmc/')) for name in archive.namelist())
+          path.with_name(path.name + '.sha256').write_text(digest + '  ' + path.name + '\n')
+          print('Verified the stable production JAR from successful build and Minecraft client tests.')
+          PY
+      - name: Publish the stable release and mark it Latest
+        run: |
+          if ! gh release view 1.4.0 >/dev/null 2>&1; then
+            gh release create 1.4.0 --draft --target deca4a00bc7343e43ce0816dbedf4f5c8bf4560c --title 'Trevor Roll 1.4.0' --notes-file RELEASE-NOTES.md
+          fi
+          gh release upload 1.4.0 release-assets/trevor-roll-1.4.0.jar release-assets/trevor-roll-1.4.0.jar.sha256 --clobber
+          gh release edit 1.4.0 --draft=false --prerelease=false --latest --title 'Trevor Roll 1.4.0' --notes-file RELEASE-NOTES.md
+          test "$(gh api repos/SleepCodeX/trevorRngMod/releases/latest --jq .tag_name)" = 1.4.0
