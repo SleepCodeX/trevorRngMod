@@ -1,12 +1,31 @@
-# Trevor Roll
+## Settings and HUD studio (1.4.0)
 
-A client-side Hypixel SkyBlock mod for **Minecraft 26.2**, built with **Fabric Loader 0.19.5**. Version **1.3.1** preserves the original Trevor Roll rarity reveal and adds a live Trapper Crest progress HUD, rebuilt with real Fabric dependencies to fix the 1.3.0 startup crash.
+Open `/trevormod settings` for all settings, or use Trevor Roll's Configure button
+in optional Mod Menu 20.x. The old config commands remain aliases.
 
-Accept Trevor's trapper task and get a short case-opening reveal: pastel paw cards scroll past a glowing selector, slow down, and land on the rarity Trevor actually assigned. The hunting location appears below the winning card and is saved in your local chat.
+The menu has four pages: **Roll**, **Crest**, **Appearance**, and **Editor**.
+Configure roll duration, result display time, sound volume, chat announcements,
+HUD sizes and opacity, glow, crest motion, missing-crest reminders, and whether
+the crest yields during a roll. Hover controls for explanations. Existing config
+files and commands are preserved; new options default to the previous behavior.
 
-![Trevor Roll UI preview](docs/preview.png)
+**HUD studio** shows the entire screen in a dedicated canvas so controls never
+cover a panel. Select a card or use the Roll/Crest buttons to select overlapping
+cards. Drag a card to move it; drag any corner to resize without changing its
+aspect ratio. Scroll or use the size buttons for fine sizing. Arrows nudge by one
+GUI pixel; Shift+arrows move ten pixels. Shift-drag bypasses snapping.
 
-*Rendered UI preview using the mod's drawing code; not an in-game screenshot.*
+Snapping offers screen edges, centers, the other card's edges/center, and optional
+grid placement, with cyan alignment guides. Toggle the grid and snapping, lock
+panels to protect their placement, center a selected panel, reset only that panel,
+or undo up to 50 layout actions (Ctrl+Z). Preview cycles all four crest states.
+Done/Escape saves; Escape during a gesture cancels that gesture. Cancel restores
+the positions and sizes from when the editor opened. Hidden HUDs still preview.
+
+Interaction references used in the refinement:
+- [Fabric custom screens, Minecraft 26.2](https://docs.fabricmc.net/develop/rendering/gui/custom-screens)
+- [Konva selection and transform tutorial](https://konvajs.org/docs/select_and_transform/Basic_demo.html)
+- [Konva object snapping tutorial](https://konvajs.org/docs/sandbox/Objects_Snapping.html)
 
 ## Requirements
 
@@ -16,12 +35,12 @@ Accept Trevor's trapper task and get a short case-opening reveal: pastel paw car
 | Fabric Loader | 0.19.5 or newer; built against 0.19.5 |
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
-| Mod version | 1.3.1 |
+| Mod version | 1.4.0 |
 
 ## Install
 
-1. Build the project below, or download the compiled mod if the repository owner has published a release.
-2. Put `trevor-roll-1.3.1.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
+1. Download [trevor-roll-1.4.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.4.0/trevor-roll-1.4.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
+2. Put `trevor-roll-1.4.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
 3. Remove any older Trevor Roll JAR so that only one version is installed.
 4. Launch Minecraft 26.2 with Fabric Loader 0.19.5 and run `/trevorroll test undetected` in a world to preview it.
 
@@ -46,8 +65,8 @@ The included Gradle wrapper downloads Gradle and the required dependencies on th
 Build output:
 
 ```text
-build/libs/trevor-roll-1.3.1.jar          # Install this in Minecraft
-build/libs/trevor-roll-1.3.1-sources.jar  # Java source archive
+build/libs/trevor-roll-1.4.0.jar          # Install this in Minecraft
+build/libs/trevor-roll-1.4.0-sources.jar  # Java source archive
 ```
 
 For a development Minecraft instance, run `gradlew.bat runClient` on Windows or `bash gradlew runClient` on macOS/Linux.
@@ -185,7 +204,7 @@ Versions are configured in `gradle.properties`. Mod compatibility requirements a
 
 `build` runs the Trevor parser/reel tests, the Trapper Crest parsing/state tests, and the layout/animation checks (including the screenshot lore and Rare crest removal). The Trevor checks: all five rarities, messages that must stay visible, the supplied assignment format, and landing/timing behavior over 500 seeded rolls. You can run these checks separately with `gradlew.bat logicTest` or `bash gradlew logicTest`.
 
-All runtime classes in 1.3.1 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
+All runtime classes in 1.4.0 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
 
 ## Upload this project to GitHub
 

@@ -7,7 +7,7 @@
   "authors": ["Anish"],
   "license": "MIT",
   "environment": "client",
-  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient", "dev.crestwatch.trapper.TrapperCrestHudClient"] },
+  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient", "dev.crestwatch.trapper.TrapperCrestHudClient"], "modmenu": ["dev.trevorroll.TrevorModMenu"] },
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "26.2",

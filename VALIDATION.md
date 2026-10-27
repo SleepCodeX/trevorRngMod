@@ -1,3 +1,20 @@
+# Trevor Roll 1.4.0 validation
+
+The user confirmed that the refined 1.4.0-dev build works well in-game on
+2026-10-27 and requested stable promotion and the latest-release designation.
+Version 1.4.0 changes only release metadata and documentation from that candidate.
+
+- Tested candidate: `a1fb4c0998b0baa7b327cfb88a08121a687a8000`.
+- Candidate build and real-client evidence: https://github.com/SleepCodeX/trevorRngMod/actions/runs/40535439519
+- Stable builds and production-client checks: [Fabric 26.2 workflow](https://github.com/SleepCodeX/trevorRngMod/actions/workflows/build.yml).
+- Stable installable JAR: [trevor-roll-1.4.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.4.0/trevor-roll-1.4.0.jar).
+- Toolchain: Minecraft 26.2, Fabric Loader 0.19.5, Fabric API 0.161.0+26.2, Java 25 and real Fabric Loom 1.19.3.
+- Required checks: `clean build check`, including production JAR bytecode verification, followed by `runProductionClientGameTest`.
+- Candidate tests cover original roll/crest behavior, unified settings and legacy aliases, actual canvas dragging and corner resizing, locking, undo, disk persistence, and all four settings pages at two GUI scales. Screenshots were inspected.
+- No compatibility stubs or hand-assembled runtime classes are used. Optional Mod Menu integration is compiled against the official 20.0.3 API; automated client tests run without Mod Menu installed.
+
+## Historical 1.3.1 validation
+
 # Trevor Roll 1.3.1 validation
 
 Rebuilt and validated locally on Windows on 2026-10-27. This release uses the user's latest `trevor-roll-1.3.1-visual-performance-refined.zip` plus the subsequent hotbar-priority, bold-alert and MP requests. The user confirmed that the mod works in-game on 2026-10-27, approved the merge to main, and requested stable release 1.3.1. The stable JAR is rebuilt with version 1.3.1 in its metadata; runtime source is unchanged from the tested candidate.
