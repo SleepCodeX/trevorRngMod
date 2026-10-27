@@ -9,6 +9,6 @@ For **Minecraft 26.2**, **Fabric Loader 0.19.5**, **Fabric API 0.161.0+26.2** an
 - Caches unchanged item lore and checks on client ticks instead of parsing during every rendered frame.
 - Recognizes per-item 3/5/8 MP lore as a fallback to explicit perk/upgrade-stage evidence.
 
-The attached JAR comes from the successful GitHub Actions build, after its tests, production bytecode checks and actual Minecraft client startup/in-world tests pass. Minecraft 26.2 is unobfuscated, so the correct Loom plugin's production task is `jar`, included by `build`; a remapping task is neither available nor required.
+The attached JAR was built with real Fabric Loom and passed production bytecode checks and actual Minecraft client startup/in-world tests. The same source also passed those checks independently in GitHub Actions. Minecraft 26.2 is unobfuscated, so the correct Loom plugin's production task is `jar`, included by `build`; a remapping task is neither available nor required.
 
 This is a **prerelease candidate**. Full validation in the intended Hypixel 26.2 modpack and third-party MP tooltip exposure remains pending. The PR remains unmerged and main is unchanged. Source, in-game screenshots and detailed validation are in [PR #1](https://github.com/SleepCodeX/trevorRngMod/pull/1).
