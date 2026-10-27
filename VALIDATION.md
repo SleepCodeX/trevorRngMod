@@ -1,12 +1,12 @@
-# Trevor Roll 1.3.1-dev validation
+# Trevor Roll 1.3.1 validation
 
-Validated locally on Windows on 2026-10-26. This candidate uses the user's latest `trevor-roll-1.3.1-visual-performance-refined.zip` plus the subsequent hotbar-priority, bold-alert and MP requests. It is not a tagged release; main must remain unchanged pending review and modpack validation.
+Rebuilt and validated locally on Windows on 2026-10-27. This release uses the user's latest `trevor-roll-1.3.1-visual-performance-refined.zip` plus the subsequent hotbar-priority, bold-alert and MP requests. The user confirmed that the mod works in-game on 2026-10-27, approved the merge to main, and requested stable release 1.3.1. The stable JAR is rebuilt with version 1.3.1 in its metadata; runtime source is unchanged from the tested candidate.
 
 ## Toolchain and production artifact
 
 - Minecraft 26.2, Fabric Loader 0.19.5, Fabric API 0.161.0+26.2.
 - Eclipse Temurin JDK 25.0.5+8, Gradle wrapper 9.8.2, real Fabric Loom pinned to 1.19.3.
-- Installable JAR: [dist/trevor-roll-1.3.1-dev.jar](dist/trevor-roll-1.3.1-dev.jar), with [SHA-256](dist/trevor-roll-1.3.1-dev.jar.sha256).
+- Installable JAR: [dist/trevor-roll-1.3.1.jar](dist/trevor-roll-1.3.1.jar), with [SHA-256](dist/trevor-roll-1.3.1.jar.sha256).
 - Every runtime class was compiled from source against official dependencies. No old compiled HUD classes, compatibility stubs, or manually assembled mod JAR were used.
 
 Minecraft 26.2 is unobfuscated. The correct [`net.fabricmc.fabric-loom` plugin](https://docs.fabricmc.net/develop/loom/) provides the production `jar` task, included by `build`. The historical handoff's `remapJar` command was attempted and failed because that task does not exist for this plugin/target. Switching to remapping Loom would target the wrong Minecraft naming model. The file above is the actual installable Loom production JAR, not a renamed development or intermediary archive.
@@ -63,6 +63,6 @@ Original Elusive reel, with the crest card yielding space:
 
 Original hunt detection, commands, sound behavior, reel timing, rendering code and textures are preserved. `TrevorRollClient` only gains a read-only active-reel query so the crest HUD can yield space; its existing animation and command implementations are unchanged.
 
-The local `.minecraft/mods` folder contains 26.1.x mods and Fabric API 0.155.2+26.1.2. That is not a compatible full-modpack test for 26.2, so those files were not modified or used. A manual test in the intended 26.2 Hypixel modpack remains required before declaring a stable release. MP-only detection is tested with representative item lore; whether another mod's MP display is exposed in server item lore must be confirmed in that modpack.
+The local `.minecraft/mods` folder contains 26.1.x mods and Fabric API 0.155.2+26.1.2. That is not a compatible full-modpack test for 26.2, so those files were not modified or used. The user subsequently confirmed that the mod works in-game and requested this stable release. MP-only detection is tested with representative item lore; whether another mod's MP display is exposed in server item lore must be confirmed in that modpack.
 
-GitHub Actions repeats the full build, bytecode verification and production-client tests. Its candidate artifact contains only the installable mod JAR; logs, bytecode and all screenshots are uploaded separately as validation evidence. No merge or release is authorized by a passing automated run alone.
+GitHub Actions repeats the full build, bytecode verification and production-client tests. Its release artifact contains only the installable mod JAR; logs, bytecode and all screenshots are uploaded separately as validation evidence. No merge or release is authorized by a passing automated run alone.
