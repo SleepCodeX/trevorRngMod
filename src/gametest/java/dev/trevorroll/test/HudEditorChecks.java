@@ -27,6 +27,13 @@ public final class HudEditorChecks {
         require(crest.top == 30, "Drag updates crest top");
         var savedCrest = CrestHudConfig.load();
         require(savedCrest.top == crest.top && savedCrest.rightMargin == crest.rightMargin, "Crest drag persists on disk");
+        double oldScale = crest.scale;
+        require(editor.mouseClicked(event(w / 2 - 40, h - 15), false), "Click larger");
+        editor.mouseReleased(event(w / 2 - 40, h - 15));
+        require(crest.scale > oldScale, "Larger resizes selected crest");
+        editor.mouseClicked(event(w / 2 - 115, h - 15), false);
+        editor.mouseReleased(event(w / 2 - 115, h - 15));
+        require(Math.abs(crest.scale - oldScale) < .0001, "Smaller restores selected crest scale");
         roll.customPosition = false; roll.x = .5; roll.y = 0;
         crest.top = 85; crest.rightMargin = 12;
         TrevorSettingsScreen.save();

@@ -32,8 +32,8 @@ public final class CrestHudConfig {
                 properties.load(in);
                 result.enabled = Boolean.parseBoolean(properties.getProperty("enabled", "true"));
                 result.onlyHypixel = Boolean.parseBoolean(properties.getProperty("onlyHypixel", "true"));
-                result.top = bounded(properties.getProperty("top", "85"), 85, 0, 2000);
-                result.rightMargin = bounded(properties.getProperty("rightMargin", "12"), 12, 0, 1000);
+                result.top = bounded(properties.getProperty("top", "85"), 85, 0, 10000);
+                result.rightMargin = bounded(properties.getProperty("rightMargin", "12"), 12, 0, 10000);
                 result.scale = boundedDouble(properties.getProperty("scale", "1.0"), 1.0, .65, 1.60);
             } catch (IOException ignored) { }
         } else result.save();
