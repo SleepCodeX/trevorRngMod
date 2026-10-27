@@ -11,7 +11,15 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     private static final Identifier GLOW = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/glow.png");
     private final GuiGraphicsExtractor g;
     private final Minecraft mc = Minecraft.getInstance();
-    MinecraftCanvas(GuiGraphicsExtractor graphics) { this.g = graphics; }
+    private final double opacity;
+    private final boolean glows;
+    public MinecraftCanvas(GuiGraphicsExtractor graphics) { this(graphics, 1, true); }
+    public MinecraftCanvas(GuiGraphicsExtractor graphics, double opacity, boolean glows) {
+        this.g = graphics; this.opacity = opacity; this.glows = glows;
+    }
+    private int alpha(int color) {
+        return (color & 0xFFFFFF) | ((int) Math.round((color >>> 24) * opacity) << 24);
+    }
 
     @Override public void push(double x, double y, double scale) {
         g.pose().pushMatrix();
@@ -21,6 +29,7 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     @Override public void pop() { g.pose().popMatrix(); }
     @Override public double textWidth(String text) { return mc.font.width(text); }
     @Override public void text(String text, double x, double y, double size, int color) {
+        color = alpha(color);
         if ((color >>> 24) == 0) return;
         push(x, y, size);
         try { g.text(mc.font, text, 0, 0, color, false); }
@@ -32,6 +41,7 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     @Override public void unclip() { g.disableScissor(); }
 
     @Override public void round(double x, double y, double w, double h, double radius, int color) {
+        color = alpha(color);
         if (w <= 0 || h <= 0 || (color >>> 24) == 0) return;
         int iw = (int) Math.ceil(w), ih = (int) Math.ceil(h);
         int r = Math.min(Math.min(iw, ih) / 2, (int) Math.round(radius));
@@ -52,8 +62,9 @@ final class MinecraftCanvas implements HudPainter.Canvas {
         g.blit(RenderPipelines.GUI_TEXTURED, CIRCLE, x, y, u, v, r, r, 64, 64, 128, 128, color);
     }
     @Override public void ellipse(double x, double y, double w, double h, int color) { image(CIRCLE, x, y, w, h, color); }
-    @Override public void glow(double x, double y, double w, double h, int color) { image(GLOW, x, y, w, h, color); }
+    @Override public void glow(double x, double y, double w, double h, int color) { if (glows) image(GLOW, x, y, w, h, color); }
     private void image(Identifier id, double x, double y, double w, double h, int color) {
+        color = alpha(color);
         if ((color >>> 24) == 0) return;
         push(x, y, 1);
         g.pose().scale((float) (w / 128), (float) (h / 128));

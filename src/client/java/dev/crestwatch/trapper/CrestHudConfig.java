@@ -15,6 +15,11 @@ public final class CrestHudConfig {
     public int top = 85;
     public int rightMargin = 12;
     public double scale = 1.0;
+    public double opacity = 1;
+    public boolean glow = true;
+    public boolean animations = true;
+    public boolean showMissing = true;
+    public boolean hideDuringRoll = true;
 
     // Resolve lazily after the Fabric client entrypoint starts, never at class-load time.
     // NOTE: this DOES NOT replace a real Loom build: FabricLoader is an interface,
@@ -34,6 +39,11 @@ public final class CrestHudConfig {
                 result.onlyHypixel = Boolean.parseBoolean(properties.getProperty("onlyHypixel", "true"));
                 result.top = bounded(properties.getProperty("top", "85"), 85, 0, 10000);
                 result.rightMargin = bounded(properties.getProperty("rightMargin", "12"), 12, 0, 10000);
+                result.opacity = boundedDouble(properties.getProperty("opacity", "1"), 1, .25, 1);
+                result.glow = Boolean.parseBoolean(properties.getProperty("glow", "true"));
+                result.animations = Boolean.parseBoolean(properties.getProperty("animations", "true"));
+                result.showMissing = Boolean.parseBoolean(properties.getProperty("showMissing", "true"));
+                result.hideDuringRoll = Boolean.parseBoolean(properties.getProperty("hideDuringRoll", "true"));
                 result.scale = boundedDouble(properties.getProperty("scale", "1.0"), 1.0, .65, 1.60);
             } catch (IOException ignored) { }
         } else result.save();
@@ -61,6 +71,11 @@ public final class CrestHudConfig {
             p.setProperty("top", Integer.toString(top));
             p.setProperty("rightMargin", Integer.toString(rightMargin));
             p.setProperty("scale", Double.toString(scale));
+            p.setProperty("opacity", Double.toString(opacity));
+            p.setProperty("glow", Boolean.toString(glow));
+            p.setProperty("animations", Boolean.toString(animations));
+            p.setProperty("showMissing", Boolean.toString(showMissing));
+            p.setProperty("hideDuringRoll", Boolean.toString(hideDuringRoll));
             try (OutputStream out = Files.newOutputStream(path)) {
                 p.store(out, "Trevor Roll - Trapper Crest floating HUD (updated live by /trevorcrest)");
             }

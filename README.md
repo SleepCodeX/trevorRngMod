@@ -1,33 +1,31 @@
-## Settings menu and draggable HUD (1.4.0-dev)
+## Settings and HUD studio (1.4.0-dev)
 
-Open `/trevormod settings` for all mod settings in-game, or select Trevor Roll
-in Mod Menu and click **Configure**. Mod Menu 20.x for Minecraft 26.2 is optional.
-The older `/trevorroll config` and `/trevorcrest config` commands remain aliases. Adjust roll duration
-(1–8 seconds; lower is faster), roll size (50–200%), crest size (65–160%), sound,
-visibility, and whether the crest appears only on Hypixel. Sizes include all text,
-icons, backgrounds and effects within each panel; large panels fit the screen.
-Duration changes apply to the next roll and leave an active hunt reveal intact.
+Open `/trevormod settings` for all settings, or use Trevor Roll's Configure button
+in optional Mod Menu 20.x. The old config commands remain aliases.
 
-Choose **Edit HUD layout / live preview**, drag either panel, then use **Smaller**
-or **Larger** to resize the selected panel. Both previews appear even when disabled
-or outside Hypixel. **Done** or Escape saves and returns to settings. Settings also
-save on screen changes. **Reset sizes and positions** restores the default layout.
-Roll positions are proportional to available screen space; the crest retains its
-existing top/right anchoring and `/trevorcrest` commands. Existing configuration
-files are retained, including all old settings. Original commands still work.
+The menu has four pages: **Roll**, **Crest**, **Appearance**, and **Editor**.
+Configure roll duration, result display time, sound volume, chat announcements,
+HUD sizes and opacity, glow, crest motion, missing-crest reminders, and whether
+the crest yields during a roll. Hover controls for explanations. Existing config
+files and commands are preserved; new options default to the previous behavior.
 
-This development branch requires the Java 25 Loom build and production client
-checks before installing its artifact. It does not replace the stable JAR in `dist`.
+**HUD studio** shows the entire screen in a dedicated canvas so controls never
+cover a panel. Select a card or use the Roll/Crest buttons to select overlapping
+cards. Drag a card to move it; drag any corner to resize without changing its
+aspect ratio. Scroll or use the size buttons for fine sizing. Arrows nudge by one
+GUI pixel; Shift+arrows move ten pixels. Shift-drag bypasses snapping.
 
-# Trevor Roll
+Snapping offers screen edges, centers, the other card's edges/center, and optional
+grid placement, with cyan alignment guides. Toggle the grid and snapping, lock
+panels to protect their placement, center a selected panel, reset only that panel,
+or undo up to 50 layout actions (Ctrl+Z). Preview cycles all four crest states.
+Done/Escape saves; Escape during a gesture cancels that gesture. Cancel restores
+the positions and sizes from when the editor opened. Hidden HUDs still preview.
 
-A client-side Hypixel SkyBlock mod for **Minecraft 26.2**, built with **Fabric Loader 0.19.5**. Version **1.3.1** preserves the original Trevor Roll rarity reveal and adds a live Trapper Crest progress HUD, rebuilt with real Fabric dependencies to fix the 1.3.0 startup crash.
-
-Accept Trevor's trapper task and get a short case-opening reveal: pastel paw cards scroll past a glowing selector, slow down, and land on the rarity Trevor actually assigned. The hunting location appears below the winning card and is saved in your local chat.
-
-![Trevor Roll UI preview](docs/preview.png)
-
-*Rendered UI preview using the mod's drawing code; not an in-game screenshot.*
+Interaction references used in the refinement:
+- [Fabric custom screens, Minecraft 26.2](https://docs.fabricmc.net/develop/rendering/gui/custom-screens)
+- [Konva selection and transform tutorial](https://konvajs.org/docs/select_and_transform/Basic_demo.html)
+- [Konva object snapping tutorial](https://konvajs.org/docs/sandbox/Objects_Snapping.html)
 
 ## Requirements
 

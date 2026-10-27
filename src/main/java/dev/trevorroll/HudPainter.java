@@ -35,7 +35,7 @@ public final class HudPainter {
                             double userScale, double x, double y, boolean customPosition) {
         if (reel.expired(now) || screenWidth < 100 || screenHeight < 80) return;
         double age = Math.max(0, now - reel.startedAt);
-        double remaining = reel.durationMillis + Reel.RESULT_MILLIS - age;
+        double remaining = reel.durationMillis + reel.resultMillis - age;
         double alpha = smooth(age / 180) * smooth(remaining / 350);
         var bounds = HudLayout.roll(screenWidth, screenHeight, userScale, x, y, customPosition);
         double scale = bounds.scale();

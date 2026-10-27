@@ -36,7 +36,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             if (hunt.isEmpty()) return true;
             // Preserve an earlier assignment if two arrive before the first is revealed.
             if (reel != null && !reel.announced && !reel.demo) announce(reel);
-            reel = new Reel(hunt.get(), now(), config.durationMillis, false, random);
+            reel = new Reel(hunt.get(), now(), config.durationMillis, false, random, config.resultMillis);
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> tick());
@@ -83,11 +83,12 @@ public final class TrevorRollClient implements ClientModInitializer {
     }
 
     private void sound(float pitch, float volume) {
-        if (config.sound) MC.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), pitch, volume));
+        if (config.sound) MC.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), pitch, (float) (volume * config.volume)));
     }
 
     private void announce(Reel roll) {
         roll.announced = true;
+        if (!config.chatAnnouncements) return;
         Component result = Component.literal(roll.hunt.rarity().name()).withColor(roll.hunt.rarity().color & 0xFFFFFF);
         MC.gui.hud.getChat().addClientSystemMessage(Component.literal(roll.demo ? "[Trevor Roll DEMO] " : "[Trevor Roll] ")
             .withStyle(ChatFormatting.GOLD).append(result).append(Component.literal(" animal! ").withStyle(ChatFormatting.WHITE))
@@ -146,7 +147,7 @@ public final class TrevorRollClient implements ClientModInitializer {
         if (reel != null && !reel.demo) {
             feedback("Finish the current hunt reveal first, or use /trevorroll skip."); return 0;
         }
-        reel = new Reel(new Hunt(rarity, "Overgrown Mushroom Cave"), now(), config.durationMillis, true, random);
+        reel = new Reel(new Hunt(rarity, "Overgrown Mushroom Cave"), now(), config.durationMillis, true, random, config.resultMillis);
         return 1;
     }
 
@@ -158,7 +159,7 @@ public final class TrevorRollClient implements ClientModInitializer {
         Reel roll = reel;
         if (MC.gui.screen() instanceof TrevorLayoutScreen) return;
         if (roll == null || MC.player == null || MC.gui.hud.isHidden()) return;
-        HudPainter.draw(new MinecraftCanvas(g), roll, now(),
+        HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow), roll, now(),
             MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
             config.scale, config.x, config.y, config.customPosition);
     }

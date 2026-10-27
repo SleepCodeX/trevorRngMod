@@ -17,6 +17,16 @@ final class RollConfig {
     double x = .5;
     double y = 0;
     boolean customPosition = false;
+    int resultMillis = 4500;
+    double volume = 1;
+    boolean chatAnnouncements = true;
+    double opacity = 1;
+    boolean glow = true;
+    boolean rollLocked = false;
+    boolean crestLocked = false;
+    boolean editorGrid = true;
+    boolean editorSnap = true;
+    int gridSize = 8;
 
     static RollConfig load() {
         try {
@@ -27,6 +37,10 @@ final class RollConfig {
                     config.scale = HudLayout.finiteClamp(config.scale, .5, 2, 1);
                     config.x = HudLayout.finiteClamp(config.x, 0, 1, .5);
                     config.y = HudLayout.finiteClamp(config.y, 0, 1, 0);
+                    config.resultMillis = Math.clamp(config.resultMillis, 1000, 10000);
+                    config.volume = HudLayout.finiteClamp(config.volume, 0, 1, 1);
+                    config.opacity = HudLayout.finiteClamp(config.opacity, .25, 1, 1);
+                    config.gridSize = Math.clamp(config.gridSize, 4, 32);
                     return config;
                 }
             }

@@ -52,6 +52,15 @@ public final class LogicTest {
             }
         }
         check(HudLayout.finiteClamp(Double.POSITIVE_INFINITY, 0, 1, .5) == .5, "invalid saved values use default");
+        var snap = EditorGeometry.snap(198, 100, 500, 70, 20, 0, 5);
+        check(snap.position() == 200 && snap.guide() == 250, "panel center snaps to screen center");
+        var grid = EditorGeometry.snap(131, 20, 800, 700, 10, 8, 2);
+        check(grid.position() == 128 && Double.isNaN(grid.guide()), "grid snap without false guide");
+        check(Math.abs(EditorGeometry.resize(228, 118, 228, 118, .65, 1.6) - 1) < .0001, "corner resize preserves aspect");
+        check(EditorGeometry.resize(-100, -100, 228, 118, .65, 1.6) == .65, "corner cannot invert panel");
+        check(EditorGeometry.resize(2000, 2000, 228, 118, .65, 1.6) == 1.6, "corner respects maximum size");
+        var hold = new Reel(new Hunt(Hunt.Rarity.ELUSIVE, "Oasis"), 0, 1000, true, new Random(1), 6000);
+        check(!hold.expired(6999) && hold.expired(7000), "custom result hold boundary");
         System.out.println("Trevor Roll logic checks passed: " + checks);
     }
 }

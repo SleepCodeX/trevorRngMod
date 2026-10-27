@@ -13,10 +13,16 @@ public final class Reel {
     public final long startedAt;
     public final int durationMillis;
     public final boolean demo;
+    public final int resultMillis;
     public boolean announced;
     public int lastClick = -1;
 
     public Reel(Hunt hunt, long startedAt, int durationMillis, boolean demo, Random random) {
+        this(hunt, startedAt, durationMillis, demo, random, RESULT_MILLIS);
+    }
+
+    public Reel(Hunt hunt, long startedAt, int durationMillis, boolean demo, Random random, int resultMillis) {
+        this.resultMillis = Math.clamp(resultMillis, 1000, 10000);
         this.hunt = hunt;
         this.startedAt = startedAt;
         this.durationMillis = durationMillis;
@@ -37,5 +43,5 @@ public final class Reel {
     }
 
     public boolean finished(long now) { return now - startedAt >= durationMillis; }
-    public boolean expired(long now) { return now - startedAt >= durationMillis + RESULT_MILLIS; }
+    public boolean expired(long now) { return now - startedAt >= durationMillis + resultMillis; }
 }

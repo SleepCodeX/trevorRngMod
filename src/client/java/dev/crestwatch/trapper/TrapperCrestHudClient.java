@@ -65,13 +65,15 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
 
     private static void render(GuiGraphicsExtractor graphics, DeltaTracker tick) {
         if (MC.player == null || MC.level == null || MC.gui.hud.isHidden() || !config.enabled) return;
-        if (TrevorRollClient.isRevealActive() || MC.gui.screen() instanceof dev.trevorroll.TrevorLayoutScreen) return;
+        if ((config.hideDuringRoll && TrevorRollClient.isRevealActive()) || MC.gui.screen() instanceof dev.trevorroll.TrevorLayoutScreen) return;
         long now = System.nanoTime() / 1_000_000L;
         boolean preview = previewState != null && now < previewExpires;
         if (!preview && config.onlyHypixel && !isHypixel(MC)) return;
         CrestHudState state = preview ? previewState : hotbarState;
-        CrestHudFrame frame = MOTION.sample(state, now);
-        CrestHudPainter.draw(new CrestHudCanvas(graphics), state, frame,
+        if (!config.showMissing && state.kind() == CrestHudState.Kind.MISSING) return;
+        CrestHudFrame frame = config.animations ? MOTION.sample(state, now)
+            : new CrestHudFrame(state.ratio(), 0, 0, 1, 0, 0);
+        CrestHudPainter.draw(new CrestHudCanvas(graphics, config.opacity, config.glow), state, frame,
             graphics.guiWidth(), graphics.guiHeight(), config.top, config.rightMargin, config.scale);
         if (!preview) previewState = null;
     }
