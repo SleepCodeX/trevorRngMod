@@ -36,8 +36,8 @@ public final class TrevorLayoutScreen extends Screen {
         zoom = Math.max(.1, Math.min((width - 28.) / width, (height - 132.) / height));
         viewX = (width - width * zoom) / 2; viewY = 64;
         int cw = (width - 28) / 4;
-        add("Roll", 0, 10, cw, () -> { crestSelected = false; rebuildWidgets(); });
-        add("Crest", 1, 10, cw, () -> { crestSelected = true; rebuildWidgets(); });
+        add((!crestSelected ? "• " : "") + "Roll", 0, 10, cw, () -> { crestSelected = false; rebuildWidgets(); });
+        add((crestSelected ? "• " : "") + "Crest", 1, 10, cw, () -> { crestSelected = true; rebuildWidgets(); });
         var r = TrevorRollClient.settings();
         add("Snap: " + on(r.editorSnap), 2, 10, cw, () -> { r.editorSnap = !r.editorSnap; rebuildWidgets(); });
         add("Grid: " + on(r.editorGrid), 3, 10, cw, () -> { r.editorGrid = !r.editorGrid; rebuildWidgets(); });
@@ -192,9 +192,10 @@ public final class TrevorLayoutScreen extends Screen {
         for (var button : controls) button.extractRenderState(g, mx, my, delta);
         var b = selected();
         String label = String.format(Locale.ROOT, "%s%s  ·  X %.0f  Y %.0f  ·  %.0f × %.0f  ·  %.0f%%", crestSelected ? "CREST" : "ROLL", locked() ? " / LOCKED" : "", b.x(), b.y(), b.width(), b.height(), b.scale() * 100);
-        g.text(font, label, 15, height - 61, 0xFFF1E9FF, false);
-        g.text(font, "Drag corners to resize • Scroll for size • Arrows to nudge", 15, height - 48, 0xFFA9A5C0, false);
-        g.text(font, "Shift: free drag / 10px nudge • Ctrl+Z: undo • Esc: save", 15, height - 37, 0xFF8283A1, false);
+        var text = new MinecraftCanvas(g);
+        text.text(label, 15, height - 61, Math.min(1, (width - 30.) / Math.max(1, font.width(label))), 0xFFF1E9FF);
+        text.text("Drag corners to resize • Scroll for size • Arrows to nudge", 15, height - 48, .8, 0xFFA9A5C0);
+        text.text("Shift: free drag / 10px nudge • Ctrl+Z: undo • Esc: save", 15, height - 37, .8, 0xFF8283A1);
     }
     private void drawRoll(GuiGraphicsExtractor g, Reel reel, long time) {
         var r = TrevorRollClient.settings(); HudPainter.draw(new MinecraftCanvas(g, r.opacity, r.glow), reel, time, width, height, r.scale, r.x, r.y, r.customPosition);
