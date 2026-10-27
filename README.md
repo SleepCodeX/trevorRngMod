@@ -1,6 +1,6 @@
 ## Settings and HUD studio (1.4.0)
 
-Open `/trevormod settings` for all settings, or use Trevor Roll's Configure button
+Open **`/trevormod settings`** for all settings, or use Trevor Roll's Configure button
 in optional Mod Menu 20.x. The old config commands remain aliases.
 
 The menu has four pages: **Roll**, **Crest**, **Appearance**, and **Editor**.
@@ -42,7 +42,9 @@ Interaction references used in the refinement:
 1. Download [trevor-roll-1.4.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.4.0/trevor-roll-1.4.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
 2. Put `trevor-roll-1.4.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
 3. Remove any older Trevor Roll JAR so that only one version is installed.
-4. Launch Minecraft 26.2 with Fabric Loader 0.19.5 and run `/trevorroll test undetected` in a world to preview it.
+4. Launch Minecraft 26.2 with Fabric Loader 0.19.5.
+5. **Open the general settings menu with `/trevormod settings`.** Configure the GUI editor, move GUI elements, and adjust timing here.
+6. Optional: run `/trevorroll test undetected` in a world to preview the roll.
 
 ## Build
 
@@ -79,6 +81,7 @@ All commands run locally on the client.
 
 | Command | Effect |
 | --- | --- |
+| **`/trevormod settings`** | **Open the general settings menu: GUI editor, element positioning, and timing controls** |
 | `/trevorroll` | Show help |
 | `/trevorroll test` | Preview a random rarity |
 | `/trevorroll test elusive` | Preview a chosen rarity |
