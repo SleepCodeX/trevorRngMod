@@ -109,9 +109,14 @@ public final class TrevorRollClient implements ClientModInitializer {
 
     private void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
+            literal("trevormod")
+                .executes(ctx -> { feedback("Trevor Mod: /trevormod settings"); return 1; })
+                .then(literal("settings").executes(ctx -> { openSettings(); return 1; }))
+        ));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
             literal("trevorroll")
                 .executes(ctx -> {
-                    feedback("Trevor Roll: /trevorroll config, test [rarity], toggle, sound, duration <1-8>, skip");
+                    feedback("All settings: /trevormod settings. Trevor Roll: /trevorroll config, test [rarity], toggle, sound, duration <1-8>, skip");
                     return 1;
                 })
                 .then(literal("config").executes(ctx -> { openSettings(); return 1; }))

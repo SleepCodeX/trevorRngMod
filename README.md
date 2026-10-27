@@ -1,7 +1,8 @@
 ## Settings menu and draggable HUD (1.4.0-dev)
 
-Open `/trevorroll config` or `/trevorcrest config` in-game, or select Trevor Roll
-in Mod Menu and click **Configure**. Mod Menu 20.x for Minecraft 26.2 is optional. Adjust roll duration
+Open `/trevormod settings` for all mod settings in-game, or select Trevor Roll
+in Mod Menu and click **Configure**. Mod Menu 20.x for Minecraft 26.2 is optional.
+The older `/trevorroll config` and `/trevorcrest config` commands remain aliases. Adjust roll duration
 (1–8 seconds; lower is faster), roll size (50–200%), crest size (65–160%), sound,
 visibility, and whether the crest appears only on Hypixel. Sizes include all text,
 icons, backgrounds and effects within each panel; large panels fit the screen.

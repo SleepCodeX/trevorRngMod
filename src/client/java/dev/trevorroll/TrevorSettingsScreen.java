@@ -15,7 +15,7 @@ public final class TrevorSettingsScreen extends Screen {
     private final Screen parent;
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) {
-        super(Component.literal("Trevor Roll settings")); this.parent = parent;
+        super(Component.literal("Trevor Mod settings")); this.parent = parent;
     }
 
     @Override protected void init() {

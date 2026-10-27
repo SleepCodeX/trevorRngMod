@@ -134,6 +134,10 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                 command(context, "trevorroll skip");
                 context.runOnClient(mc -> require(!TrevorRollClient.isRevealActive(), "Original skip clears reel"));
             }
+            command(context, "trevormod settings");
+            context.waitTicks(2);
+            context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Unified settings command opens menu"));
+            context.runOnClient(mc -> mc.gui.screen().onClose());
             command(context, "trevorroll config");
             context.waitTicks(2);
             context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Roll settings command opens menu"));
