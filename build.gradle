@@ -18,6 +18,28 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+// Keep integration tests in a separate mod: none of this code ships in Trevor Roll.
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = 'trevorroll-tests'
+        enableGameTests = false
+        enableClientGameTests = true
+    }
+}
+
+tasks.register('gametestJar', Jar) {
+    archiveClassifier = 'gametest'
+    from sourceSets.gametest.output
+}
+
+tasks.register('runProductionClientGameTest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+    mods.from tasks.named('gametestJar')
+    jvmArgs.add('-Dfabric.client.gametest')
+    runDir = layout.buildDirectory.dir('run/productionClientGameTest')
 }
 
 processResources {
@@ -28,6 +50,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach { options.release = 25 }
 java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
@@ -42,4 +65,25 @@ tasks.register('logicTest', JavaExec) {
 tasks.named('test') { failOnNoDiscoveredTests = false }
 tasks.named('check') { dependsOn tasks.named('logicTest') }
 
+tasks.register('crestTest', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.crestwatch.trapper.CrestHudStateTest'
+}
+tasks.named('check') { dependsOn tasks.named('crestTest') }
+tasks.register('crestVisualTest', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.crestwatch.trapper.CrestHudAnimationTest'
+}
+tasks.named('check') { dependsOn tasks.named('crestVisualTest') }
 jar { from('LICENSE') }
+
+tasks.register('verifyProductionJar', JavaExec) {
+    dependsOn tasks.named('jar'), tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.crestwatch.trapper.ProductionJarTest'
+    args tasks.named('jar', Jar).flatMap { it.archiveFile }.get().asFile.absolutePath,
+        layout.buildDirectory.dir('verification').get().asFile.absolutePath
+}
+tasks.named('check') { dependsOn tasks.named('verifyProductionJar') }

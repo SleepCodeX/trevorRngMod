@@ -3,11 +3,11 @@
   "id": "trevorroll",
   "version": "${version}",
   "name": "Trevor Roll",
-  "description": "A short case-opening reveal for Trevor's actual hunt rarity, followed by the hunting location.",
+  "description": "Trevor hunt rarity reel plus a floating bubble Trapper Crest HUD that follows actual item lore, with smooth progress and positioning commands.",
   "authors": ["Anish"],
   "license": "MIT",
   "environment": "client",
-  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient"] },
+  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient", "dev.crestwatch.trapper.TrapperCrestHudClient"] },
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "26.2",
