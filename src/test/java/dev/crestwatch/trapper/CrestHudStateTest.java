@@ -133,6 +133,11 @@ public final class CrestHudStateTest {
         for (String invalid : List.of("MP: -8", "MP: 8.5", "Total Magical Power: 8", "80 MP")) {
             eq(CrestLoreParser.parse("Trapper Crest", List.of(invalid), 0).orElseThrow().tier(), CrestTier.COMMON);
         }
+        for (String negativeProgress : List.of("Collected: -45/500 pelts", "-45 pelts earned",
+                "Pelts Earned: −45/500", "Collected: -1,234 pelts")) {
+            eq(CrestLoreParser.parse("Trapper Crest", List.of(negativeProgress), 0)
+                .orElseThrow().peltsEarned(), -1);
+        }
         System.out.println("PASS: " + checks + " Trapper Crest HUD parsing/state assertions");
     }
 }

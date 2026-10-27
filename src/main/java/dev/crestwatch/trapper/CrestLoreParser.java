@@ -15,17 +15,17 @@ public final class CrestLoreParser {
     private CrestLoreParser() {}
 
     private static final Pattern PELTS_EARNED = Pattern.compile(
-        "(?i)\\bpelts?\\s*(?:earned|gained|collected|obtained)\\s*[:：]?\\s*([0-9][\\d,]*)"
+        "(?i)\\bpelts?\\s*(?:earned|gained|collected|obtained)\\s*[:：]?\\s*([+\\-−]?[0-9][\\d,]*)"
     );
     // Exact 2026 Hypixel tooltip: "Collected: 258 pelts" (also "Collected: 504 pelts").
     private static final Pattern COLLECTED = Pattern.compile(
-        "(?i)\\bcollected\\s*[:：]?\\s*([0-9][\\d,]*)\\s*pelts?\\b"
+        "(?i)\\bcollected\\s*[:：]?\\s*([+\\-−]?[0-9][\\d,]*)\\s*pelts?\\b"
     );
     private static final Pattern EARNED_PELTS = Pattern.compile(
-        "(?i)\\b([0-9][\\d,]*)\\s*pelts?\\s*(?:earned|gained|collected|obtained)\\b"
+        "(?i)(?<![\\p{L}\\d.,+\\-−])([+\\-−]?[0-9][\\d,]*)\\s*pelts?\\s*(?:earned|gained|collected|obtained)\\b"
     );
     private static final Pattern PROGRESS = Pattern.compile(
-        "(?i)\\b([0-9][\\d,]*)\\s*/\\s*(?:100|500)\\s*(?:pelts?)?\\b"
+        "(?i)(?<![\\p{L}\\d.,+\\-−])([+\\-−]?[0-9][\\d,]*)\\s*/\\s*(?:100|500)\\s*(?:pelts?)?\\b"
     );
     private static final Pattern RARITY = Pattern.compile(
         "(?i)^\\s*(?:\\b(?:SHINY|VERY|RECOMBOBULATED)\\s+)?(COMMON|UNCOMMON|RARE|EPIC|LEGENDARY|MYTHIC)\\s+ACCESSORY\\b"
@@ -78,6 +78,7 @@ public final class CrestLoreParser {
     private static int parseCount(String digits) {
         try {
             long value = Long.parseLong(digits.replace(",", ""));
+            if (value < 0) return -1;
             return (int) Math.min(value, Integer.MAX_VALUE);
         } catch (NumberFormatException e) {
             return -1;

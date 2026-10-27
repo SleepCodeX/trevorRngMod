@@ -20,7 +20,7 @@ Minecraft 26.2 is unobfuscated. The correct [`net.fabricmc.fabric-loom` plugin](
 Result: **BUILD SUCCESSFUL**, 18 actionable tasks, 17 executed, 1 up-to-date.
 
 - 91,012 original Trevor Roll parser/reel assertions passed.
-- 64 crest lore, MP, slot-priority and state assertions passed.
+- 68 crest lore, MP, slot-priority and state assertions passed.
 - 313 visual/layout and animation assertions passed.
 - `verifyProductionJar` passed against the actual installable JAR, checking both config classes with `javap -p -v`.
 - Java class-file major version is 69 (Java 25).
@@ -38,7 +38,7 @@ The actual client checks cover:
 - Real `ItemStack` and `ItemLore` components in every slot 1-9; non-crest items are ignored.
 - The leftmost crest wins, even with a later Rare crest. Removing it immediately selects the next crest.
 - Unchanged components reuse parsed state; changing lore invalidates the cache. Scanning occurs on client ticks, outside rendering.
-- 500-pelt completion before the rarity label updates, plus Common/Uncommon/Rare/missing transitions and 3/5/8 MP-only lore.
+- 500-pelt completion before the rarity label updates, plus Common/Uncommon/Rare/missing transitions and 3/5/8 MP-only lore. A live tick-driven check also verifies switching to the next crest and showing the missing-hotbar action without invoking the scanner or demo commands.
 - All `/trevorcrest` demos, toggle, scale, top, right, reset and persisted config.
 - All five `/trevorroll test` rarities, toggle, sound, duration, skip, and the completed Elusive announcement.
 - Screenshots at GUI scales 1, 2 and 3 at 854x480 and 1280x720. Alert text fits and the crest card yields while the original reel is active.

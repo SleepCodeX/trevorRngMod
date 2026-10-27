@@ -75,6 +75,25 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                 }
                 mc.player.getInventory().setItem(2, ItemStack.EMPTY);
             });
+            // Let the registered tick callback detect actual item changes without
+            // calling the scanner or using a demo state.
+            context.runOnClient(mc -> {
+                mc.player.getInventory().setItem(1, crest("1.25", 500));
+                mc.player.getInventory().setItem(8, crest("1.1", 37));
+            });
+            context.waitTicks(10);
+            context.runOnClient(mc -> require(liveState().kind() == CrestHudState.Kind.SWITCH_CREST
+                && liveState().hotbarSlot() == 1, "Tick detects active 500-pelt crest"));
+            context.takeScreenshot("live-switch-slot-2");
+            context.runOnClient(mc -> mc.player.getInventory().setItem(1, ItemStack.EMPTY));
+            context.waitTick();
+            context.runOnClient(mc -> require(liveState().kind() == CrestHudState.Kind.COMMON
+                && liveState().hotbarSlot() == 8, "Next tick selects spare crest"));
+            context.takeScreenshot("live-next-crest-slot-9");
+            context.runOnClient(mc -> mc.player.getInventory().setItem(8, ItemStack.EMPTY));
+            context.waitTick();
+            context.runOnClient(mc -> require(liveState().kind() == CrestHudState.Kind.MISSING,
+                "Next tick clears completion and shows missing-hotbar action"));
             for (int scale : new int[]{1, 2, 3}) {
                 context.getInput().resizeWindow(scale == 1 ? 854 : 1280, scale == 1 ? 480 : 720);
                 context.runOnClient(mc -> mc.options.guiScale().set(scale));
@@ -150,6 +169,12 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
         var field = TrapperCrestHudClient.class.getDeclaredField("config");
         field.setAccessible(true);
         return (CrestHudConfig) field.get(null);
+    }
+
+    private static CrestHudState liveState() throws ReflectiveOperationException {
+        var field = TrapperCrestHudClient.class.getDeclaredField("hotbarState");
+        field.setAccessible(true);
+        return (CrestHudState) field.get(null);
     }
 
     private static void require(boolean condition, String description) {
