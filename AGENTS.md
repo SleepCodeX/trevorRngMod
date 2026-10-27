@@ -39,4 +39,4 @@ See `CODEX_HANDOFF.md` for a detailed plan and failure evidence. Do not recreate
 
 ## Current release approval
 
-On 2026-10-27, the user confirmed the mod works in-game, authorized the merge to main, and explicitly requested stable 1.3.1 without the dev suffix. This satisfies the validation gate above. Runtime behavior must remain unchanged during this version-only promotion.
+On 2026-10-27, the user confirmed that the refined 1.4.0-dev mod works well and explicitly requested promotion to a stable release and marking it as the latest release. This authorizes merging the settings/HUD studio PR, publishing 1.4.0 and marking it latest after the real Loom build and production-client checks pass. Runtime behavior must remain unchanged during this version-only promotion. The earlier stable 1.3.1 promotion was also user-approved.

@@ -1,4 +1,4 @@
-## Settings and HUD studio (1.4.0-dev)
+## Settings and HUD studio (1.4.0)
 
 Open `/trevormod settings` for all settings, or use Trevor Roll's Configure button
 in optional Mod Menu 20.x. The old config commands remain aliases.
@@ -35,12 +35,12 @@ Interaction references used in the refinement:
 | Fabric Loader | 0.19.5 or newer; built against 0.19.5 |
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
-| Mod version | 1.3.1 |
+| Mod version | 1.4.0 |
 
 ## Install
 
-1. Build the project below, or download the compiled mod if the repository owner has published a release.
-2. Put `trevor-roll-1.3.1.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
+1. Download [trevor-roll-1.4.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.4.0/trevor-roll-1.4.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
+2. Put `trevor-roll-1.4.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
 3. Remove any older Trevor Roll JAR so that only one version is installed.
 4. Launch Minecraft 26.2 with Fabric Loader 0.19.5 and run `/trevorroll test undetected` in a world to preview it.
 
@@ -65,8 +65,8 @@ The included Gradle wrapper downloads Gradle and the required dependencies on th
 Build output:
 
 ```text
-build/libs/trevor-roll-1.3.1.jar          # Install this in Minecraft
-build/libs/trevor-roll-1.3.1-sources.jar  # Java source archive
+build/libs/trevor-roll-1.4.0.jar          # Install this in Minecraft
+build/libs/trevor-roll-1.4.0-sources.jar  # Java source archive
 ```
 
 For a development Minecraft instance, run `gradlew.bat runClient` on Windows or `bash gradlew runClient` on macOS/Linux.
@@ -204,7 +204,7 @@ Versions are configured in `gradle.properties`. Mod compatibility requirements a
 
 `build` runs the Trevor parser/reel tests, the Trapper Crest parsing/state tests, and the layout/animation checks (including the screenshot lore and Rare crest removal). The Trevor checks: all five rarities, messages that must stay visible, the supplied assignment format, and landing/timing behavior over 500 seeded rolls. You can run these checks separately with `gradlew.bat logicTest` or `bash gradlew logicTest`.
 
-All runtime classes in 1.3.1 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
+All runtime classes in 1.4.0 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
 
 ## Upload this project to GitHub
 
