@@ -1,11 +1,38 @@
-# Trevor Roll: Codex working instructions
+# Codex instructions for Trevor Roll
 
-Work on `fix/crest-hud-fabric-build`, not `main`. Minecraft **26.2**, Fabric Loader **0.19.5**, Fabric API **0.161.0+26.2**, Java **25**.
+## Environment
 
-**Known breakage:** Trevor Roll 1.3.0's client entrypoint `dev.crestwatch.trapper.TrapperCrestHudClient` crashes immediately in `CrestHudConfig.<clinit>` with `java.lang.IncompatibleClassChangeError: FabricLoader.getInstance() must be InterfaceMethodref constant`. The experimental jar was compiled with fake Fabric interfaces. **You must rebuild the HUD using real Fabric Loom dependencies and remapJar.** Do not reuse the broken JAR or make compatibility stubs.
+- Repository: `SleepCodeX/trevorRngMod`.
+- Safe working branch: `fix/crest-hud-fabric-build` (create a new feature branch if necessary). Never commit an unverified build directly to `main`.
+- Minecraft Java Edition **26.2**; Fabric Loader **0.19.5**; Fabric API **0.161.0+26.2**; Java **25**.
+- Build with the **real Fabric Loom Gradle toolchain** via the Gradle wrapper (`./gradlew clean build check --no-daemon`). Minecraft 26.2 is unobfuscated: the correct `net.fabricmc.fabric-loom` plugin produces the installable artifact with `jar` (included by `build`), and has no `remapJar` task. Do not switch to remapping Loom or invent a remapping task. Do not use Java compatibility stubs or assemble a JAR by hand.
 
-Preserve all original v1.1.1 Trevor animation/commands (`/trevorroll`). Add a polished right-side bubbly Trapper Crest HUD that checks all nine hotbar slots, reads lore `Collected: N pelts`, recognizes Common (x1.1, 100 Pelts), Uncommon (x1.25, 500 Pelts, 'Almost there!'), Rare (x1.5, '500 Pelts Gained! Switch Crests!'), and clears the rare warning as soon as that crest leaves the hotbar. Keep `/trevorcrest` demo/position/scale controls. Match the original glowing rounded style and avoid HUD overlap.
+## User goal
 
-The user has a Codex handoff source ZIP `TrevorRoll_Codex_Handoff_v1.3.1-dev.zip` and Git patch `trevor-roll-v1.1.1-to-v1.3.1-codex.patch` from ChatGPT; the repo's main branch still contains the stable original and this branch initially has handoff documents only. Ask them to attach the ZIP if not in your task context, or implement the feature directly from this description. The ZIP includes a full candidate source and tests.
+Keep every working behavior and `/trevorroll` command from 1.1.1 and integrate a polished, bubbly Trapper Crest HUD, matching the original roll's colors, paw icon, circles, and glows. The user's latest request overrides the historical rarity priority: scan slots 1-9 and track the first actual Trapper Crest from the left. Ignore non-crest items and later crests, even if a later crest is completed. Read actual lore (`Collected: <number> pelts`), show common progress to 100 and uncommon progress to 500. At 500 or more pelts (or an active Rare crest), show a bold `SWITCH CRESTS!` action identifying the active slot. If none is detected, show a bold `MOVE TRAPPER CREST TO YOUR HOTBAR!` side reminder. Clear/update warnings within the next client tick after item removal or lore changes. Cache unchanged item components and parse outside rendering. Preserve `/trevorcrest` controls.
 
-Required: `./gradlew clean check remapJar --no-daemon` with JDK25. Inspect actual remapped JAR bytecode via `javap -v`: FabricLoader.getInstance must be `InterfaceMethodref` and no stub `net/fabricmc` or `net/minecraft` classes can be bundled. Launch Minecraft with the new JAR and Fabric API. Do not label as release-ready until actual startup succeeds. Raise a PR for review; do not merge a broken version.
+## Known crash (from real user crash report)
+
+The user also requested per-item MP detection: recognize 3/5/8 MP lore as Common/Uncommon/Rare when explicit perk/upgrade-stage evidence is absent. Do not confuse total player MP with item MP, or override recombobulation-safe perk evidence.
+
+```
+java.lang.RuntimeException: Could not execute entrypoint stage 'client'
+provided by 'trevorroll' at 'dev.crestwatch.trapper.TrapperCrestHudClient'
+Caused by: java.lang.IncompatibleClassChangeError:
+ Method 'net.fabricmc.loader.api.FabricLoader net.fabricmc.loader.api.FabricLoader.getInstance()'
+ must be InterfaceMethodref constant
+ at dev.crestwatch.trapper.CrestHudConfig.<clinit>(CrestHudConfig.java:19)
+```
+
+The 1.3.0 JAR was built using **inaccurate test/compatibility stubs**; FabricLoader was encoded as `Methodref` instead of `InterfaceMethodref`. **Recompile all client classes with real dependencies**. Moving the config path out of static initialization is only a defensive change and not a substitute for this.
+
+## Definition of done
+
+1. `./gradlew clean build check --no-daemon` succeeds with Java 25, including tests and `verifyProductionJar`.
+2. Inspect bytecode with `javap -p -v` on the **production JAR**: `FabricLoader.getInstance` and `getConfigDir` resolve via the correct interface constant-pool references. No `net/fabricmc/**` or `net/minecraft/**` stub class files are bundled in the mod.
+3. Vanilla Minecraft 26.2 + Loader 0.19.5 + Fabric API starts with the mod; reproduce startup with the user's full modpack if possible.
+4. `/trevorroll test elusive` displays the original roll; `/trevorcrest demo common`, `uncommon`, `rare`, `missing` work. Hide/show and config commands work.
+5. Inspect HUD at multiple GUI scales/resolutions; all texts fit; progress accurate, rare alert disappears upon removing crest, stage determined by 1.1x/1.25x/1.5x perk even if recombobulated.
+6. Publish a JAR only after a real Loom production build and Minecraft launch smoke test (`./gradlew runProductionClientGameTest --no-daemon`). Keep the development version until modpack validation and review; do not merge or tag a release automatically.
+
+See `CODEX_HANDOFF.md` for a detailed plan and failure evidence. Do not recreate or replace the original Trevor Roll source unnecessarily.

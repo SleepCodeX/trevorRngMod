@@ -22,11 +22,13 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public final class TrevorRollClient implements ClientModInitializer {
     private static final Minecraft MC = Minecraft.getInstance();
+    private static TrevorRollClient instance;
     private final Random random = new Random();
     private RollConfig config;
     private Reel reel;
 
     @Override public void onInitializeClient() {
+        instance = this;
         config = RollConfig.load();
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (overlay || !config.enabled || !onHypixel()) return true;
@@ -42,6 +44,11 @@ public final class TrevorRollClient implements ClientModInitializer {
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath("trevorroll", "reveal"), this::draw);
         registerCommands();
+    }
+
+    /** Lets the crest card yield space to the original reveal without changing the reel. */
+    public static boolean isRevealActive() {
+        return instance != null && instance.reel != null;
     }
 
     private static long now() { return System.nanoTime() / 1_000_000; }

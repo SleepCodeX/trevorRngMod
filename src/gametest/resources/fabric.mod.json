@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "trevorroll-tests",
+  "version": "1.0.0",
+  "name": "Trevor Roll integration tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": ["dev.trevorroll.test.TrevorRollClientGameTest"]
+  },
+  "depends": {"trevorroll": "*"}
+}

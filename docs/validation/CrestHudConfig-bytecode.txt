@@ -1,0 +1,642 @@
+Classfile jar:file:///C:/Users/anish/Documents/ChatGPT/c/trevorRngMod/build/libs/trevor-roll-1.3.1-dev.jar!/dev/crestwatch/trapper/CrestHudConfig.class
+  Last modified Feb 1, 1980; size 4102 bytes
+  SHA-256 checksum f1c9f8de7b084b3a54e396dfeb4f495166ef0bcebfdf45f9557eaeb2a2d9ef33
+  Compiled from "CrestHudConfig.java"
+public final class dev.crestwatch.trapper.CrestHudConfig
+  minor version: 0
+  major version: 69
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #8                          // dev/crestwatch/trapper/CrestHudConfig
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 5, methods: 6, attributes: 1
+Constant pool:
+    #1 = Methodref          #2.#3         // java/lang/Object."<init>":()V
+    #2 = Class              #4            // java/lang/Object
+    #3 = NameAndType        #5:#6         // "<init>":()V
+    #4 = Utf8               java/lang/Object
+    #5 = Utf8               <init>
+    #6 = Utf8               ()V
+    #7 = Fieldref           #8.#9         // dev/crestwatch/trapper/CrestHudConfig.enabled:Z
+    #8 = Class              #10           // dev/crestwatch/trapper/CrestHudConfig
+    #9 = NameAndType        #11:#12       // enabled:Z
+   #10 = Utf8               dev/crestwatch/trapper/CrestHudConfig
+   #11 = Utf8               enabled
+   #12 = Utf8               Z
+   #13 = Fieldref           #8.#14        // dev/crestwatch/trapper/CrestHudConfig.onlyHypixel:Z
+   #14 = NameAndType        #15:#12       // onlyHypixel:Z
+   #15 = Utf8               onlyHypixel
+   #16 = Fieldref           #8.#17        // dev/crestwatch/trapper/CrestHudConfig.top:I
+   #17 = NameAndType        #18:#19       // top:I
+   #18 = Utf8               top
+   #19 = Utf8               I
+   #20 = Fieldref           #8.#21        // dev/crestwatch/trapper/CrestHudConfig.rightMargin:I
+   #21 = NameAndType        #22:#19       // rightMargin:I
+   #22 = Utf8               rightMargin
+   #23 = Fieldref           #8.#24        // dev/crestwatch/trapper/CrestHudConfig.scale:D
+   #24 = NameAndType        #25:#26       // scale:D
+   #25 = Utf8               scale
+   #26 = Utf8               D
+   #27 = InterfaceMethodref #28.#29       // net/fabricmc/loader/api/FabricLoader.getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+   #28 = Class              #30           // net/fabricmc/loader/api/FabricLoader
+   #29 = NameAndType        #31:#32       // getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+   #30 = Utf8               net/fabricmc/loader/api/FabricLoader
+   #31 = Utf8               getInstance
+   #32 = Utf8               ()Lnet/fabricmc/loader/api/FabricLoader;
+   #33 = InterfaceMethodref #28.#34       // net/fabricmc/loader/api/FabricLoader.getConfigDir:()Ljava/nio/file/Path;
+   #34 = NameAndType        #35:#36       // getConfigDir:()Ljava/nio/file/Path;
+   #35 = Utf8               getConfigDir
+   #36 = Utf8               ()Ljava/nio/file/Path;
+   #37 = String             #38           // trapper-crest-hud.properties
+   #38 = Utf8               trapper-crest-hud.properties
+   #39 = InterfaceMethodref #40.#41       // java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+   #40 = Class              #42           // java/nio/file/Path
+   #41 = NameAndType        #43:#44       // resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+   #42 = Utf8               java/nio/file/Path
+   #43 = Utf8               resolve
+   #44 = Utf8               (Ljava/lang/String;)Ljava/nio/file/Path;
+   #45 = Methodref          #8.#3         // dev/crestwatch/trapper/CrestHudConfig."<init>":()V
+   #46 = Class              #47           // java/util/Properties
+   #47 = Utf8               java/util/Properties
+   #48 = Methodref          #46.#3        // java/util/Properties."<init>":()V
+   #49 = Methodref          #8.#50        // dev/crestwatch/trapper/CrestHudConfig.configPath:()Ljava/nio/file/Path;
+   #50 = NameAndType        #51:#36       // configPath:()Ljava/nio/file/Path;
+   #51 = Utf8               configPath
+   #52 = Class              #53           // java/nio/file/LinkOption
+   #53 = Utf8               java/nio/file/LinkOption
+   #54 = Methodref          #55.#56       // java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #55 = Class              #57           // java/nio/file/Files
+   #56 = NameAndType        #58:#59       // exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #57 = Utf8               java/nio/file/Files
+   #58 = Utf8               exists
+   #59 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #60 = Class              #61           // java/nio/file/OpenOption
+   #61 = Utf8               java/nio/file/OpenOption
+   #62 = Methodref          #55.#63       // java/nio/file/Files.newInputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+   #63 = NameAndType        #64:#65       // newInputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+   #64 = Utf8               newInputStream
+   #65 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+   #66 = Methodref          #46.#67       // java/util/Properties.load:(Ljava/io/InputStream;)V
+   #67 = NameAndType        #68:#69       // load:(Ljava/io/InputStream;)V
+   #68 = Utf8               load
+   #69 = Utf8               (Ljava/io/InputStream;)V
+   #70 = String             #11           // enabled
+   #71 = String             #72           // true
+   #72 = Utf8               true
+   #73 = Methodref          #46.#74       // java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+   #74 = NameAndType        #75:#76       // getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+   #75 = Utf8               getProperty
+   #76 = Utf8               (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+   #77 = Methodref          #78.#79       // java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+   #78 = Class              #80           // java/lang/Boolean
+   #79 = NameAndType        #81:#82       // parseBoolean:(Ljava/lang/String;)Z
+   #80 = Utf8               java/lang/Boolean
+   #81 = Utf8               parseBoolean
+   #82 = Utf8               (Ljava/lang/String;)Z
+   #83 = String             #15           // onlyHypixel
+   #84 = String             #18           // top
+   #85 = String             #86           // 85
+   #86 = Utf8               85
+   #87 = Methodref          #8.#88        // dev/crestwatch/trapper/CrestHudConfig.bounded:(Ljava/lang/String;III)I
+   #88 = NameAndType        #89:#90       // bounded:(Ljava/lang/String;III)I
+   #89 = Utf8               bounded
+   #90 = Utf8               (Ljava/lang/String;III)I
+   #91 = String             #22           // rightMargin
+   #92 = String             #93           // 12
+   #93 = Utf8               12
+   #94 = String             #25           // scale
+   #95 = String             #96           // 1.0
+   #96 = Utf8               1.0
+   #97 = Double             0.65d
+   #99 = Double             1.6d
+  #101 = Methodref          #8.#102       // dev/crestwatch/trapper/CrestHudConfig.boundedDouble:(Ljava/lang/String;DDD)D
+  #102 = NameAndType        #103:#104     // boundedDouble:(Ljava/lang/String;DDD)D
+  #103 = Utf8               boundedDouble
+  #104 = Utf8               (Ljava/lang/String;DDD)D
+  #105 = Methodref          #106.#107     // java/io/InputStream.close:()V
+  #106 = Class              #108          // java/io/InputStream
+  #107 = NameAndType        #109:#6       // close:()V
+  #108 = Utf8               java/io/InputStream
+  #109 = Utf8               close
+  #110 = Class              #111          // java/lang/Throwable
+  #111 = Utf8               java/lang/Throwable
+  #112 = Methodref          #110.#113     // java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+  #113 = NameAndType        #114:#115     // addSuppressed:(Ljava/lang/Throwable;)V
+  #114 = Utf8               addSuppressed
+  #115 = Utf8               (Ljava/lang/Throwable;)V
+  #116 = Class              #117          // java/io/IOException
+  #117 = Utf8               java/io/IOException
+  #118 = Methodref          #8.#119       // dev/crestwatch/trapper/CrestHudConfig.save:()V
+  #119 = NameAndType        #120:#6       // save:()V
+  #120 = Utf8               save
+  #121 = Methodref          #122.#123     // java/lang/String.trim:()Ljava/lang/String;
+  #122 = Class              #124          // java/lang/String
+  #123 = NameAndType        #125:#126     // trim:()Ljava/lang/String;
+  #124 = Utf8               java/lang/String
+  #125 = Utf8               trim
+  #126 = Utf8               ()Ljava/lang/String;
+  #127 = Methodref          #128.#129     // java/lang/Integer.parseInt:(Ljava/lang/String;)I
+  #128 = Class              #130          // java/lang/Integer
+  #129 = NameAndType        #131:#132     // parseInt:(Ljava/lang/String;)I
+  #130 = Utf8               java/lang/Integer
+  #131 = Utf8               parseInt
+  #132 = Utf8               (Ljava/lang/String;)I
+  #133 = Methodref          #134.#135     // java/lang/Math.clamp:(JII)I
+  #134 = Class              #136          // java/lang/Math
+  #135 = NameAndType        #137:#138     // clamp:(JII)I
+  #136 = Utf8               java/lang/Math
+  #137 = Utf8               clamp
+  #138 = Utf8               (JII)I
+  #139 = Class              #140          // java/lang/RuntimeException
+  #140 = Utf8               java/lang/RuntimeException
+  #141 = Methodref          #142.#143     // java/lang/Double.parseDouble:(Ljava/lang/String;)D
+  #142 = Class              #144          // java/lang/Double
+  #143 = NameAndType        #145:#146     // parseDouble:(Ljava/lang/String;)D
+  #144 = Utf8               java/lang/Double
+  #145 = Utf8               parseDouble
+  #146 = Utf8               (Ljava/lang/String;)D
+  #147 = Methodref          #142.#148     // java/lang/Double.isFinite:(D)Z
+  #148 = NameAndType        #149:#150     // isFinite:(D)Z
+  #149 = Utf8               isFinite
+  #150 = Utf8               (D)Z
+  #151 = Methodref          #134.#152     // java/lang/Math.clamp:(DDD)D
+  #152 = NameAndType        #137:#153     // clamp:(DDD)D
+  #153 = Utf8               (DDD)D
+  #154 = InterfaceMethodref #40.#155      // java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+  #155 = NameAndType        #156:#36      // getParent:()Ljava/nio/file/Path;
+  #156 = Utf8               getParent
+  #157 = Class              #158          // java/nio/file/attribute/FileAttribute
+  #158 = Utf8               java/nio/file/attribute/FileAttribute
+  #159 = Methodref          #55.#160      // java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+  #160 = NameAndType        #161:#162     // createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+  #161 = Utf8               createDirectories
+  #162 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+  #163 = Methodref          #78.#164      // java/lang/Boolean.toString:(Z)Ljava/lang/String;
+  #164 = NameAndType        #165:#166     // toString:(Z)Ljava/lang/String;
+  #165 = Utf8               toString
+  #166 = Utf8               (Z)Ljava/lang/String;
+  #167 = Methodref          #46.#168      // java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+  #168 = NameAndType        #169:#170     // setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+  #169 = Utf8               setProperty
+  #170 = Utf8               (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+  #171 = Methodref          #128.#172     // java/lang/Integer.toString:(I)Ljava/lang/String;
+  #172 = NameAndType        #165:#173     // toString:(I)Ljava/lang/String;
+  #173 = Utf8               (I)Ljava/lang/String;
+  #174 = Methodref          #142.#175     // java/lang/Double.toString:(D)Ljava/lang/String;
+  #175 = NameAndType        #165:#176     // toString:(D)Ljava/lang/String;
+  #176 = Utf8               (D)Ljava/lang/String;
+  #177 = Methodref          #55.#178      // java/nio/file/Files.newOutputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;
+  #178 = NameAndType        #179:#180     // newOutputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;
+  #179 = Utf8               newOutputStream
+  #180 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;
+  #181 = String             #182          // Trevor Roll - Trapper Crest floating HUD (updated live by /trevorcrest)
+  #182 = Utf8               Trevor Roll - Trapper Crest floating HUD (updated live by /trevorcrest)
+  #183 = Methodref          #46.#184      // java/util/Properties.store:(Ljava/io/OutputStream;Ljava/lang/String;)V
+  #184 = NameAndType        #185:#186     // store:(Ljava/io/OutputStream;Ljava/lang/String;)V
+  #185 = Utf8               store
+  #186 = Utf8               (Ljava/io/OutputStream;Ljava/lang/String;)V
+  #187 = Methodref          #188.#107     // java/io/OutputStream.close:()V
+  #188 = Class              #189          // java/io/OutputStream
+  #189 = Utf8               java/io/OutputStream
+  #190 = Utf8               Code
+  #191 = Utf8               LineNumberTable
+  #192 = Utf8               LocalVariableTable
+  #193 = Utf8               this
+  #194 = Utf8               Ldev/crestwatch/trapper/CrestHudConfig;
+  #195 = Utf8               ()Ldev/crestwatch/trapper/CrestHudConfig;
+  #196 = Utf8               in
+  #197 = Utf8               Ljava/io/InputStream;
+  #198 = Utf8               result
+  #199 = Utf8               properties
+  #200 = Utf8               Ljava/util/Properties;
+  #201 = Utf8               path
+  #202 = Utf8               Ljava/nio/file/Path;
+  #203 = Utf8               StackMapTable
+  #204 = Utf8               e
+  #205 = Utf8               Ljava/lang/RuntimeException;
+  #206 = Utf8               string
+  #207 = Utf8               Ljava/lang/String;
+  #208 = Utf8               fallback
+  #209 = Utf8               low
+  #210 = Utf8               high
+  #211 = Utf8               parsed
+  #212 = Utf8               out
+  #213 = Utf8               Ljava/io/OutputStream;
+  #214 = Utf8               p
+  #215 = Utf8               SourceFile
+  #216 = Utf8               CrestHudConfig.java
+{
+  public boolean enabled;
+    descriptor: Z
+    flags: (0x0001) ACC_PUBLIC
+
+  public boolean onlyHypixel;
+    descriptor: Z
+    flags: (0x0001) ACC_PUBLIC
+
+  public int top;
+    descriptor: I
+    flags: (0x0001) ACC_PUBLIC
+
+  public int rightMargin;
+    descriptor: I
+    flags: (0x0001) ACC_PUBLIC
+
+  public double scale;
+    descriptor: D
+    flags: (0x0001) ACC_PUBLIC
+
+  public dev.crestwatch.trapper.CrestHudConfig();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #7                  // Field enabled:Z
+         9: aload_0
+        10: iconst_1
+        11: putfield      #13                 // Field onlyHypixel:Z
+        14: aload_0
+        15: bipush        85
+        17: putfield      #16                 // Field top:I
+        20: aload_0
+        21: bipush        12
+        23: putfield      #20                 // Field rightMargin:I
+        26: aload_0
+        27: dconst_1
+        28: putfield      #23                 // Field scale:D
+        31: return
+      LineNumberTable:
+        line 12: 0
+        line 13: 4
+        line 14: 9
+        line 15: 14
+        line 16: 20
+        line 17: 26
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      32     0  this   Ldev/crestwatch/trapper/CrestHudConfig;
+
+  private static java.nio.file.Path configPath();
+    descriptor: ()Ljava/nio/file/Path;
+    flags: (0x000a) ACC_PRIVATE, ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #27                 // InterfaceMethod net/fabricmc/loader/api/FabricLoader.getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+         3: invokeinterface #33,  1           // InterfaceMethod net/fabricmc/loader/api/FabricLoader.getConfigDir:()Ljava/nio/file/Path;
+         8: ldc           #37                 // String trapper-crest-hud.properties
+        10: invokeinterface #39,  2           // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+        15: areturn
+      LineNumberTable:
+        line 23: 0
+
+  public static dev.crestwatch.trapper.CrestHudConfig load();
+    descriptor: ()Ldev/crestwatch/trapper/CrestHudConfig;
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=8, locals=6, args_size=0
+         0: new           #8                  // class dev/crestwatch/trapper/CrestHudConfig
+         3: dup
+         4: invokespecial #45                 // Method "<init>":()V
+         7: astore_0
+         8: new           #46                 // class java/util/Properties
+        11: dup
+        12: invokespecial #48                 // Method java/util/Properties."<init>":()V
+        15: astore_1
+        16: invokestatic  #49                 // Method configPath:()Ljava/nio/file/Path;
+        19: astore_2
+        20: aload_2
+        21: iconst_0
+        22: anewarray     #52                 // class java/nio/file/LinkOption
+        25: invokestatic  #54                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        28: ifeq          182
+        31: aload_2
+        32: iconst_0
+        33: anewarray     #60                 // class java/nio/file/OpenOption
+        36: invokestatic  #62                 // Method java/nio/file/Files.newInputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+        39: astore_3
+        40: aload_1
+        41: aload_3
+        42: invokevirtual #66                 // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+        45: aload_0
+        46: aload_1
+        47: ldc           #70                 // String enabled
+        49: ldc           #71                 // String true
+        51: invokevirtual #73                 // Method java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        54: invokestatic  #77                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+        57: putfield      #7                  // Field enabled:Z
+        60: aload_0
+        61: aload_1
+        62: ldc           #83                 // String onlyHypixel
+        64: ldc           #71                 // String true
+        66: invokevirtual #73                 // Method java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        69: invokestatic  #77                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+        72: putfield      #13                 // Field onlyHypixel:Z
+        75: aload_0
+        76: aload_1
+        77: ldc           #84                 // String top
+        79: ldc           #85                 // String 85
+        81: invokevirtual #73                 // Method java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        84: bipush        85
+        86: iconst_0
+        87: sipush        2000
+        90: invokestatic  #87                 // Method bounded:(Ljava/lang/String;III)I
+        93: putfield      #16                 // Field top:I
+        96: aload_0
+        97: aload_1
+        98: ldc           #91                 // String rightMargin
+       100: ldc           #92                 // String 12
+       102: invokevirtual #73                 // Method java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       105: bipush        12
+       107: iconst_0
+       108: sipush        1000
+       111: invokestatic  #87                 // Method bounded:(Ljava/lang/String;III)I
+       114: putfield      #20                 // Field rightMargin:I
+       117: aload_0
+       118: aload_1
+       119: ldc           #94                 // String scale
+       121: ldc           #95                 // String 1.0
+       123: invokevirtual #73                 // Method java/util/Properties.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       126: dconst_1
+       127: ldc2_w        #97                 // double 0.65d
+       130: ldc2_w        #99                 // double 1.6d
+       133: invokestatic  #101                // Method boundedDouble:(Ljava/lang/String;DDD)D
+       136: putfield      #23                 // Field scale:D
+       139: aload_3
+       140: ifnull        175
+       143: aload_3
+       144: invokevirtual #105                // Method java/io/InputStream.close:()V
+       147: goto          175
+       150: astore        4
+       152: aload_3
+       153: ifnull        172
+       156: aload_3
+       157: invokevirtual #105                // Method java/io/InputStream.close:()V
+       160: goto          172
+       163: astore        5
+       165: aload         4
+       167: aload         5
+       169: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+       172: aload         4
+       174: athrow
+       175: goto          186
+       178: astore_3
+       179: goto          186
+       182: aload_0
+       183: invokevirtual #118                // Method save:()V
+       186: aload_0
+       187: areturn
+      Exception table:
+         from    to  target type
+            40   139   150   Class java/lang/Throwable
+           156   160   163   Class java/lang/Throwable
+            31   175   178   Class java/io/IOException
+      LineNumberTable:
+        line 27: 0
+        line 28: 8
+        line 29: 16
+        line 30: 20
+        line 31: 31
+        line 32: 40
+        line 33: 45
+        line 34: 60
+        line 35: 75
+        line 36: 96
+        line 37: 117
+        line 38: 139
+        line 31: 150
+        line 38: 175
+        line 39: 182
+        line 40: 186
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           40     135     3    in   Ljava/io/InputStream;
+            8     180     0 result   Ldev/crestwatch/trapper/CrestHudConfig;
+           16     172     1 properties   Ljava/util/Properties;
+           20     168     2  path   Ljava/nio/file/Path;
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 150
+          locals = [ class dev/crestwatch/trapper/CrestHudConfig, class java/util/Properties, class java/nio/file/Path, class java/io/InputStream ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 12
+          locals = [ class dev/crestwatch/trapper/CrestHudConfig, class java/util/Properties, class java/nio/file/Path, class java/io/InputStream, class java/lang/Throwable ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 8 /* same */
+        frame_type = 249 /* chop */
+          offset_delta = 2
+        frame_type = 66 /* same_locals_1_stack_item */
+          stack = [ class java/io/IOException ]
+        frame_type = 3 /* same */
+        frame_type = 3 /* same */
+
+  private static int bounded(java.lang.String, int, int, int);
+    descriptor: (Ljava/lang/String;III)I
+    flags: (0x000a) ACC_PRIVATE, ACC_STATIC
+    Code:
+      stack=4, locals=5, args_size=4
+         0: aload_0
+         1: invokevirtual #121                // Method java/lang/String.trim:()Ljava/lang/String;
+         4: invokestatic  #127                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+         7: i2l
+         8: iload_2
+         9: iload_3
+        10: invokestatic  #133                // Method java/lang/Math.clamp:(JII)I
+        13: ireturn
+        14: astore        4
+        16: iload_1
+        17: ireturn
+      Exception table:
+         from    to  target type
+             0    13    14   Class java/lang/RuntimeException
+      LineNumberTable:
+        line 44: 0
+        line 45: 14
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           16       2     4     e   Ljava/lang/RuntimeException;
+            0      18     0 string   Ljava/lang/String;
+            0      18     1 fallback   I
+            0      18     2   low   I
+            0      18     3  high   I
+      StackMapTable: number_of_entries = 1
+        frame_type = 78 /* same_locals_1_stack_item */
+          stack = [ class java/lang/RuntimeException ]
+
+  private static double boundedDouble(java.lang.String, double, double, double);
+    descriptor: (Ljava/lang/String;DDD)D
+    flags: (0x000a) ACC_PRIVATE, ACC_STATIC
+    Code:
+      stack=6, locals=9, args_size=4
+         0: aload_0
+         1: invokevirtual #121                // Method java/lang/String.trim:()Ljava/lang/String;
+         4: invokestatic  #141                // Method java/lang/Double.parseDouble:(Ljava/lang/String;)D
+         7: dstore        7
+         9: dload         7
+        11: invokestatic  #147                // Method java/lang/Double.isFinite:(D)Z
+        14: ifeq          28
+        17: dload         7
+        19: dload_3
+        20: dload         5
+        22: invokestatic  #151                // Method java/lang/Math.clamp:(DDD)D
+        25: goto          29
+        28: dload_1
+        29: dreturn
+        30: astore        7
+        32: dload_1
+        33: dreturn
+      Exception table:
+         from    to  target type
+             0    29    30   Class java/lang/RuntimeException
+      LineNumberTable:
+        line 49: 0
+        line 50: 9
+        line 51: 30
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            9      21     7 parsed   D
+           32       2     7     e   Ljava/lang/RuntimeException;
+            0      34     0 string   Ljava/lang/String;
+            0      34     1 fallback   D
+            0      34     3   low   D
+            0      34     5  high   D
+      StackMapTable: number_of_entries = 3
+        frame_type = 252 /* append */
+          offset_delta = 28
+          locals = [ double ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ double ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class java/lang/String, double, double, double ]
+          stack = [ class java/lang/RuntimeException ]
+
+  public void save();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=4, locals=6, args_size=1
+         0: invokestatic  #49                 // Method configPath:()Ljava/nio/file/Path;
+         3: astore_1
+         4: aload_1
+         5: invokeinterface #154,  1          // InterfaceMethod java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+        10: iconst_0
+        11: anewarray     #157                // class java/nio/file/attribute/FileAttribute
+        14: invokestatic  #159                // Method java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+        17: pop
+        18: new           #46                 // class java/util/Properties
+        21: dup
+        22: invokespecial #48                 // Method java/util/Properties."<init>":()V
+        25: astore_2
+        26: aload_2
+        27: ldc           #70                 // String enabled
+        29: aload_0
+        30: getfield      #7                  // Field enabled:Z
+        33: invokestatic  #163                // Method java/lang/Boolean.toString:(Z)Ljava/lang/String;
+        36: invokevirtual #167                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        39: pop
+        40: aload_2
+        41: ldc           #83                 // String onlyHypixel
+        43: aload_0
+        44: getfield      #13                 // Field onlyHypixel:Z
+        47: invokestatic  #163                // Method java/lang/Boolean.toString:(Z)Ljava/lang/String;
+        50: invokevirtual #167                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        53: pop
+        54: aload_2
+        55: ldc           #84                 // String top
+        57: aload_0
+        58: getfield      #16                 // Field top:I
+        61: invokestatic  #171                // Method java/lang/Integer.toString:(I)Ljava/lang/String;
+        64: invokevirtual #167                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        67: pop
+        68: aload_2
+        69: ldc           #91                 // String rightMargin
+        71: aload_0
+        72: getfield      #20                 // Field rightMargin:I
+        75: invokestatic  #171                // Method java/lang/Integer.toString:(I)Ljava/lang/String;
+        78: invokevirtual #167                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        81: pop
+        82: aload_2
+        83: ldc           #94                 // String scale
+        85: aload_0
+        86: getfield      #23                 // Field scale:D
+        89: invokestatic  #174                // Method java/lang/Double.toString:(D)Ljava/lang/String;
+        92: invokevirtual #167                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        95: pop
+        96: aload_1
+        97: iconst_0
+        98: anewarray     #60                 // class java/nio/file/OpenOption
+       101: invokestatic  #177                // Method java/nio/file/Files.newOutputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;
+       104: astore_3
+       105: aload_2
+       106: aload_3
+       107: ldc           #181                // String Trevor Roll - Trapper Crest floating HUD (updated live by /trevorcrest)
+       109: invokevirtual #183                // Method java/util/Properties.store:(Ljava/io/OutputStream;Ljava/lang/String;)V
+       112: aload_3
+       113: ifnull        148
+       116: aload_3
+       117: invokevirtual #187                // Method java/io/OutputStream.close:()V
+       120: goto          148
+       123: astore        4
+       125: aload_3
+       126: ifnull        145
+       129: aload_3
+       130: invokevirtual #187                // Method java/io/OutputStream.close:()V
+       133: goto          145
+       136: astore        5
+       138: aload         4
+       140: aload         5
+       142: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+       145: aload         4
+       147: athrow
+       148: goto          152
+       151: astore_1
+       152: return
+      Exception table:
+         from    to  target type
+           105   112   123   Class java/lang/Throwable
+           129   133   136   Class java/lang/Throwable
+             0   148   151   Class java/io/IOException
+      LineNumberTable:
+        line 56: 0
+        line 57: 4
+        line 58: 18
+        line 59: 26
+        line 60: 40
+        line 61: 54
+        line 62: 68
+        line 63: 82
+        line 64: 96
+        line 65: 105
+        line 66: 112
+        line 64: 123
+        line 67: 148
+        line 68: 152
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+          105      43     3   out   Ljava/io/OutputStream;
+            4     144     1  path   Ljava/nio/file/Path;
+           26     122     2     p   Ljava/util/Properties;
+            0     153     0  this   Ldev/crestwatch/trapper/CrestHudConfig;
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 123
+          locals = [ class dev/crestwatch/trapper/CrestHudConfig, class java/nio/file/Path, class java/util/Properties, class java/io/OutputStream ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 12
+          locals = [ class dev/crestwatch/trapper/CrestHudConfig, class java/nio/file/Path, class java/util/Properties, class java/io/OutputStream, class java/lang/Throwable ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 8 /* same */
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class dev/crestwatch/trapper/CrestHudConfig ]
+          stack = []
+        frame_type = 66 /* same_locals_1_stack_item */
+          stack = [ class java/io/IOException ]
+        frame_type = 0 /* same */
+}
+SourceFile: "CrestHudConfig.java"

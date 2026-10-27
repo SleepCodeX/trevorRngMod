@@ -1,0 +1,325 @@
+Classfile jar:file:///C:/Users/anish/Documents/ChatGPT/c/trevorRngMod/build/libs/trevor-roll-1.3.1-dev.jar!/dev/trevorroll/RollConfig.class
+  Last modified Feb 1, 1980; size 2522 bytes
+  SHA-256 checksum dd166c70401a7c7cc72b9450b70ccd729f08199ccc84cb752634b850c86ce8ff
+  Compiled from "RollConfig.java"
+final class dev.trevorroll.RollConfig
+  minor version: 0
+  major version: 69
+  flags: (0x0030) ACC_FINAL, ACC_SUPER
+  this_class: #8                          // dev/trevorroll/RollConfig
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 5, methods: 4, attributes: 1
+Constant pool:
+    #1 = Methodref          #2.#3         // java/lang/Object."<init>":()V
+    #2 = Class              #4            // java/lang/Object
+    #3 = NameAndType        #5:#6         // "<init>":()V
+    #4 = Utf8               java/lang/Object
+    #5 = Utf8               <init>
+    #6 = Utf8               ()V
+    #7 = Fieldref           #8.#9         // dev/trevorroll/RollConfig.enabled:Z
+    #8 = Class              #10           // dev/trevorroll/RollConfig
+    #9 = NameAndType        #11:#12       // enabled:Z
+   #10 = Utf8               dev/trevorroll/RollConfig
+   #11 = Utf8               enabled
+   #12 = Utf8               Z
+   #13 = Fieldref           #8.#14        // dev/trevorroll/RollConfig.sound:Z
+   #14 = NameAndType        #15:#12       // sound:Z
+   #15 = Utf8               sound
+   #16 = Fieldref           #8.#17        // dev/trevorroll/RollConfig.durationMillis:I
+   #17 = NameAndType        #18:#19       // durationMillis:I
+   #18 = Utf8               durationMillis
+   #19 = Utf8               I
+   #20 = Fieldref           #8.#21        // dev/trevorroll/RollConfig.PATH:Ljava/nio/file/Path;
+   #21 = NameAndType        #22:#23       // PATH:Ljava/nio/file/Path;
+   #22 = Utf8               PATH
+   #23 = Utf8               Ljava/nio/file/Path;
+   #24 = Class              #25           // java/nio/file/LinkOption
+   #25 = Utf8               java/nio/file/LinkOption
+   #26 = Methodref          #27.#28       // java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #27 = Class              #29           // java/nio/file/Files
+   #28 = NameAndType        #30:#31       // exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #29 = Utf8               java/nio/file/Files
+   #30 = Utf8               exists
+   #31 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+   #32 = Fieldref           #8.#33        // dev/trevorroll/RollConfig.GSON:Lcom/google/gson/Gson;
+   #33 = NameAndType        #34:#35       // GSON:Lcom/google/gson/Gson;
+   #34 = Utf8               GSON
+   #35 = Utf8               Lcom/google/gson/Gson;
+   #36 = Methodref          #27.#37       // java/nio/file/Files.readString:(Ljava/nio/file/Path;)Ljava/lang/String;
+   #37 = NameAndType        #38:#39       // readString:(Ljava/nio/file/Path;)Ljava/lang/String;
+   #38 = Utf8               readString
+   #39 = Utf8               (Ljava/nio/file/Path;)Ljava/lang/String;
+   #40 = Methodref          #41.#42       // com/google/gson/Gson.fromJson:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+   #41 = Class              #43           // com/google/gson/Gson
+   #42 = NameAndType        #44:#45       // fromJson:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+   #43 = Utf8               com/google/gson/Gson
+   #44 = Utf8               fromJson
+   #45 = Utf8               (Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+   #46 = Methodref          #47.#48       // java/lang/Math.clamp:(JII)I
+   #47 = Class              #49           // java/lang/Math
+   #48 = NameAndType        #50:#51       // clamp:(JII)I
+   #49 = Utf8               java/lang/Math
+   #50 = Utf8               clamp
+   #51 = Utf8               (JII)I
+   #52 = Class              #53           // java/lang/Exception
+   #53 = Utf8               java/lang/Exception
+   #54 = String             #55           // trevorroll
+   #55 = Utf8               trevorroll
+   #56 = Methodref          #57.#58       // org/slf4j/LoggerFactory.getLogger:(Ljava/lang/String;)Lorg/slf4j/Logger;
+   #57 = Class              #59           // org/slf4j/LoggerFactory
+   #58 = NameAndType        #60:#61       // getLogger:(Ljava/lang/String;)Lorg/slf4j/Logger;
+   #59 = Utf8               org/slf4j/LoggerFactory
+   #60 = Utf8               getLogger
+   #61 = Utf8               (Ljava/lang/String;)Lorg/slf4j/Logger;
+   #62 = String             #63           // Could not read Trevor Roll config; using defaults
+   #63 = Utf8               Could not read Trevor Roll config; using defaults
+   #64 = InterfaceMethodref #65.#66       // org/slf4j/Logger.warn:(Ljava/lang/String;Ljava/lang/Throwable;)V
+   #65 = Class              #67           // org/slf4j/Logger
+   #66 = NameAndType        #68:#69       // warn:(Ljava/lang/String;Ljava/lang/Throwable;)V
+   #67 = Utf8               org/slf4j/Logger
+   #68 = Utf8               warn
+   #69 = Utf8               (Ljava/lang/String;Ljava/lang/Throwable;)V
+   #70 = Methodref          #8.#3         // dev/trevorroll/RollConfig."<init>":()V
+   #71 = InterfaceMethodref #72.#73       // java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+   #72 = Class              #74           // java/nio/file/Path
+   #73 = NameAndType        #75:#76       // getParent:()Ljava/nio/file/Path;
+   #74 = Utf8               java/nio/file/Path
+   #75 = Utf8               getParent
+   #76 = Utf8               ()Ljava/nio/file/Path;
+   #77 = Class              #78           // java/nio/file/attribute/FileAttribute
+   #78 = Utf8               java/nio/file/attribute/FileAttribute
+   #79 = Methodref          #27.#80       // java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+   #80 = NameAndType        #81:#82       // createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+   #81 = Utf8               createDirectories
+   #82 = Utf8               (Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+   #83 = Methodref          #41.#84       // com/google/gson/Gson.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+   #84 = NameAndType        #85:#86       // toJson:(Ljava/lang/Object;)Ljava/lang/String;
+   #85 = Utf8               toJson
+   #86 = Utf8               (Ljava/lang/Object;)Ljava/lang/String;
+   #87 = Class              #88           // java/nio/file/OpenOption
+   #88 = Utf8               java/nio/file/OpenOption
+   #89 = Methodref          #27.#90       // java/nio/file/Files.writeString:(Ljava/nio/file/Path;Ljava/lang/CharSequence;[Ljava/nio/file/OpenOption;)Ljava/nio/file/Path;
+   #90 = NameAndType        #91:#92       // writeString:(Ljava/nio/file/Path;Ljava/lang/CharSequence;[Ljava/nio/file/OpenOption;)Ljava/nio/file/Path;
+   #91 = Utf8               writeString
+   #92 = Utf8               (Ljava/nio/file/Path;Ljava/lang/CharSequence;[Ljava/nio/file/OpenOption;)Ljava/nio/file/Path;
+   #93 = String             #94           // Could not save Trevor Roll config
+   #94 = Utf8               Could not save Trevor Roll config
+   #95 = Class              #96           // com/google/gson/GsonBuilder
+   #96 = Utf8               com/google/gson/GsonBuilder
+   #97 = Methodref          #95.#3        // com/google/gson/GsonBuilder."<init>":()V
+   #98 = Methodref          #95.#99       // com/google/gson/GsonBuilder.setPrettyPrinting:()Lcom/google/gson/GsonBuilder;
+   #99 = NameAndType        #100:#101     // setPrettyPrinting:()Lcom/google/gson/GsonBuilder;
+  #100 = Utf8               setPrettyPrinting
+  #101 = Utf8               ()Lcom/google/gson/GsonBuilder;
+  #102 = Methodref          #95.#103      // com/google/gson/GsonBuilder.create:()Lcom/google/gson/Gson;
+  #103 = NameAndType        #104:#105     // create:()Lcom/google/gson/Gson;
+  #104 = Utf8               create
+  #105 = Utf8               ()Lcom/google/gson/Gson;
+  #106 = InterfaceMethodref #107.#108     // net/fabricmc/loader/api/FabricLoader.getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+  #107 = Class              #109          // net/fabricmc/loader/api/FabricLoader
+  #108 = NameAndType        #110:#111     // getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+  #109 = Utf8               net/fabricmc/loader/api/FabricLoader
+  #110 = Utf8               getInstance
+  #111 = Utf8               ()Lnet/fabricmc/loader/api/FabricLoader;
+  #112 = InterfaceMethodref #107.#113     // net/fabricmc/loader/api/FabricLoader.getConfigDir:()Ljava/nio/file/Path;
+  #113 = NameAndType        #114:#76      // getConfigDir:()Ljava/nio/file/Path;
+  #114 = Utf8               getConfigDir
+  #115 = String             #116          // trevor-roll.json
+  #116 = Utf8               trevor-roll.json
+  #117 = InterfaceMethodref #72.#118      // java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+  #118 = NameAndType        #119:#120     // resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+  #119 = Utf8               resolve
+  #120 = Utf8               (Ljava/lang/String;)Ljava/nio/file/Path;
+  #121 = Utf8               Code
+  #122 = Utf8               LineNumberTable
+  #123 = Utf8               LocalVariableTable
+  #124 = Utf8               this
+  #125 = Utf8               Ldev/trevorroll/RollConfig;
+  #126 = Utf8               load
+  #127 = Utf8               ()Ldev/trevorroll/RollConfig;
+  #128 = Utf8               config
+  #129 = Utf8               e
+  #130 = Utf8               Ljava/lang/Exception;
+  #131 = Utf8               StackMapTable
+  #132 = Utf8               save
+  #133 = Utf8               <clinit>
+  #134 = Utf8               SourceFile
+  #135 = Utf8               RollConfig.java
+{
+  private static final com.google.gson.Gson GSON;
+    descriptor: Lcom/google/gson/Gson;
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+
+  private static final java.nio.file.Path PATH;
+    descriptor: Ljava/nio/file/Path;
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+
+  boolean enabled;
+    descriptor: Z
+    flags: (0x0000)
+
+  boolean sound;
+    descriptor: Z
+    flags: (0x0000)
+
+  int durationMillis;
+    descriptor: I
+    flags: (0x0000)
+
+  dev.trevorroll.RollConfig();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #7                  // Field enabled:Z
+         9: aload_0
+        10: iconst_1
+        11: putfield      #13                 // Field sound:Z
+        14: aload_0
+        15: sipush        3000
+        18: putfield      #16                 // Field durationMillis:I
+        21: return
+      LineNumberTable:
+        line 10: 0
+        line 13: 4
+        line 14: 9
+        line 15: 14
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      22     0  this   Ldev/trevorroll/RollConfig;
+
+  static dev.trevorroll.RollConfig load();
+    descriptor: ()Ldev/trevorroll/RollConfig;
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=5, locals=1, args_size=0
+         0: getstatic     #20                 // Field PATH:Ljava/nio/file/Path;
+         3: iconst_0
+         4: anewarray     #24                 // class java/nio/file/LinkOption
+         7: invokestatic  #26                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        10: ifeq          55
+        13: getstatic     #32                 // Field GSON:Lcom/google/gson/Gson;
+        16: getstatic     #20                 // Field PATH:Ljava/nio/file/Path;
+        19: invokestatic  #36                 // Method java/nio/file/Files.readString:(Ljava/nio/file/Path;)Ljava/lang/String;
+        22: ldc           #8                  // class dev/trevorroll/RollConfig
+        24: invokevirtual #40                 // Method com/google/gson/Gson.fromJson:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+        27: checkcast     #8                  // class dev/trevorroll/RollConfig
+        30: astore_0
+        31: aload_0
+        32: ifnull        55
+        35: aload_0
+        36: aload_0
+        37: getfield      #16                 // Field durationMillis:I
+        40: i2l
+        41: sipush        1000
+        44: sipush        8000
+        47: invokestatic  #46                 // Method java/lang/Math.clamp:(JII)I
+        50: putfield      #16                 // Field durationMillis:I
+        53: aload_0
+        54: areturn
+        55: goto          72
+        58: astore_0
+        59: ldc           #54                 // String trevorroll
+        61: invokestatic  #56                 // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/String;)Lorg/slf4j/Logger;
+        64: ldc           #62                 // String Could not read Trevor Roll config; using defaults
+        66: aload_0
+        67: invokeinterface #64,  3           // InterfaceMethod org/slf4j/Logger.warn:(Ljava/lang/String;Ljava/lang/Throwable;)V
+        72: new           #8                  // class dev/trevorroll/RollConfig
+        75: dup
+        76: invokespecial #70                 // Method "<init>":()V
+        79: areturn
+      Exception table:
+         from    to  target type
+             0    54    58   Class java/lang/Exception
+      LineNumberTable:
+        line 19: 0
+        line 20: 13
+        line 21: 31
+        line 22: 35
+        line 23: 53
+        line 28: 55
+        line 26: 58
+        line 27: 59
+        line 29: 72
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           31      24     0 config   Ldev/trevorroll/RollConfig;
+           59      13     0     e   Ljava/lang/Exception;
+      StackMapTable: number_of_entries = 3
+        frame_type = 55 /* same */
+        frame_type = 66 /* same_locals_1_stack_item */
+          stack = [ class java/lang/Exception ]
+        frame_type = 13 /* same */
+
+  void save();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=3, locals=2, args_size=1
+         0: getstatic     #20                 // Field PATH:Ljava/nio/file/Path;
+         3: invokeinterface #71,  1           // InterfaceMethod java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+         8: iconst_0
+         9: anewarray     #77                 // class java/nio/file/attribute/FileAttribute
+        12: invokestatic  #79                 // Method java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+        15: pop
+        16: getstatic     #20                 // Field PATH:Ljava/nio/file/Path;
+        19: getstatic     #32                 // Field GSON:Lcom/google/gson/Gson;
+        22: aload_0
+        23: invokevirtual #83                 // Method com/google/gson/Gson.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+        26: iconst_0
+        27: anewarray     #87                 // class java/nio/file/OpenOption
+        30: invokestatic  #89                 // Method java/nio/file/Files.writeString:(Ljava/nio/file/Path;Ljava/lang/CharSequence;[Ljava/nio/file/OpenOption;)Ljava/nio/file/Path;
+        33: pop
+        34: goto          51
+        37: astore_1
+        38: ldc           #54                 // String trevorroll
+        40: invokestatic  #56                 // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/String;)Lorg/slf4j/Logger;
+        43: ldc           #93                 // String Could not save Trevor Roll config
+        45: aload_1
+        46: invokeinterface #64,  3           // InterfaceMethod org/slf4j/Logger.warn:(Ljava/lang/String;Ljava/lang/Throwable;)V
+        51: return
+      Exception table:
+         from    to  target type
+             0    34    37   Class java/lang/Exception
+      LineNumberTable:
+        line 34: 0
+        line 35: 16
+        line 38: 34
+        line 36: 37
+        line 37: 38
+        line 39: 51
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           38      13     1     e   Ljava/lang/Exception;
+            0      52     0  this   Ldev/trevorroll/RollConfig;
+      StackMapTable: number_of_entries = 2
+        frame_type = 101 /* same_locals_1_stack_item */
+          stack = [ class java/lang/Exception ]
+        frame_type = 13 /* same */
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #95                 // class com/google/gson/GsonBuilder
+         3: dup
+         4: invokespecial #97                 // Method com/google/gson/GsonBuilder."<init>":()V
+         7: invokevirtual #98                 // Method com/google/gson/GsonBuilder.setPrettyPrinting:()Lcom/google/gson/GsonBuilder;
+        10: invokevirtual #102                // Method com/google/gson/GsonBuilder.create:()Lcom/google/gson/Gson;
+        13: putstatic     #32                 // Field GSON:Lcom/google/gson/Gson;
+        16: invokestatic  #106                // InterfaceMethod net/fabricmc/loader/api/FabricLoader.getInstance:()Lnet/fabricmc/loader/api/FabricLoader;
+        19: invokeinterface #112,  1          // InterfaceMethod net/fabricmc/loader/api/FabricLoader.getConfigDir:()Ljava/nio/file/Path;
+        24: ldc           #115                // String trevor-roll.json
+        26: invokeinterface #117,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+        31: putstatic     #20                 // Field PATH:Ljava/nio/file/Path;
+        34: return
+      LineNumberTable:
+        line 11: 0
+        line 12: 16
+}
+SourceFile: "RollConfig.java"
