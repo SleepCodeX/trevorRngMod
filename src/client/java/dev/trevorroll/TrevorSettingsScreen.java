@@ -29,7 +29,7 @@ public final class TrevorSettingsScreen extends Screen {
         controls.clear();baseY.clear();fixed.clear();
         contentWidth=Math.min(540,width-36);left=(width-contentWidth)/2;column=(contentWidth-10)/2;top=70;
         if(page<0){initDashboard();return;}
-        var home=button("← Modules",left,16,79,22,()->selectModule(-1));fixed.add(home);
+        var home=button("Modules",left,16,79,22,()->selectModule(-1));fixed.add(home);
         var r = TrevorRollClient.settings(); var c = TrapperCrestHudClient.settings();
         switch (page) {
             case 0 -> {
@@ -155,7 +155,7 @@ public final class TrevorSettingsScreen extends Screen {
     @Override public void onClose() { save(); minecraft.gui.setScreen(parent); }
     @Override public boolean isPauseScreen() { return false; }
     private void initDashboard(){
-        int columns=width<430?2:3,cardW=(contentWidth-(columns-1)*10)/columns;
+        int columns=width<350?2:3,cardW=(contentWidth-(columns-1)*10)/columns;
         int cardH=56;
         for(int i=0;i<TITLES.length;i++){
             final int module=i;var b=button(TITLES[i],left+(i%columns)*(cardW+10),70+(i/columns)*(cardH+9),cardW,cardH,()->selectModule(module));
