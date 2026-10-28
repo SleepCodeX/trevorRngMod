@@ -21,7 +21,6 @@ public final class TrevorSettingsScreen extends Screen {
     private static final String[] DESCRIPTIONS={"Hunt reveals, pacing and announcements.","Live crest progress and hotbar reminders.","Sizes, opacity and soft lighting.","Drag, resize and align your HUD elements.","Golden Elusive celebrations and effects.","Mix two sounds, audition and set volumes.","Compact pelts/hour and crest-complete alerts."};
     public void selectModule(int module){page=module;scroll=0;rebuildWidgets();}
     private int left, contentWidth, column, top;
-    private static final String[] TABS = {"Roll", "Crest", "Looks", "Editor", "Elusive", "Audio", "Tracker"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
@@ -74,7 +73,7 @@ public final class TrevorSettingsScreen extends Screen {
             }
             case 4 -> {
                 toggle("Elusive reward", left, 0, () -> r.elusiveReward, v -> r.elusiveReward = v, "Celebrate only ELUSIVE hunts after their roll finishes.");
-                toggle("Reward sound", left + column + 8, 0, () -> r.elusiveSound, v -> r.elusiveSound = v, "Play a cute rising chime. The main sound toggle and volume also apply.");
+                toggle("Reward sound", left + column + 8, 0, () -> r.elusiveSound, v -> r.elusiveSound = v, "Play your two chosen Audio Mixer layers together.");
                 button("Style: " + r.elusiveStyle.label, left, row(1), contentWidth, () -> {
                     var styles = ElusiveReward.Style.values();
                     r.elusiveStyle = styles[(r.elusiveStyle.ordinal() + 1) % styles.length]; rebuildWidgets();
@@ -216,7 +215,7 @@ public final class TrevorSettingsScreen extends Screen {
         if(maximumScroll()>0){double track=viewportBottom()-70,thumb=Math.max(18,track*track/(track+maximumScroll()));
             c.round(left+contentWidth+4,70,2,track,1,0xFF393748);
             c.round(left+contentWidth+4,70+(track-thumb)*scroll/Math.max(1,maximumScroll()),2,thumb,1,0xFFB59BE4);
-            MenuFont.text(g,"Scroll for more",left, height-22,.7,0xFF978CA8);
+            if(page<0)MenuFont.text(g,"Scroll for more",left, height-22,.7,0xFF978CA8);
         }
     }
 }
