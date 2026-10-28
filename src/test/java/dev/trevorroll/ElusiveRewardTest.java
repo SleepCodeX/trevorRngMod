@@ -45,10 +45,25 @@ public final class ElusiveRewardTest {
         }
         var safe = new ElusiveReward(0,-1,null,Double.NaN,Double.POSITIVE_INFINITY,null);
         check(safe.durationMillis()==1500 && safe.style()==ElusiveReward.Style.EXTRA && safe.intensity()==.8, "invalid settings use safe bounds");
+        for(int sheet=0;sheet<4;sheet++) {
+            var image=ImageIO.read(ElusiveRewardTest.class.getResourceAsStream("/assets/trevorroll/textures/gui/coin/coin_"+sheet+".png"));
+            check(image.getWidth()==2048 && image.getHeight()==2048,"HD atlas dimensions");
+            check((image.getRGB(0,0)>>>24)==0,"transparent coin background");
+        }
+        check(RewardSound.DRAGON.notes()==1 && RewardSound.CHIME.notes()==3,"sound presets have bounded sequences");
         preview();
         System.out.println("PASS: " + checks + " Elusive-only reward, timing and painter assertions; comparison GIF rendered");
     }
     private static final class AwtCanvas implements HudPainter.Canvas {
+        private static final BufferedImage[] COINS = java.util.stream.IntStream.range(0,4).mapToObj(i -> {
+            try {return ImageIO.read(ElusiveRewardTest.class.getResourceAsStream("/assets/trevorroll/textures/gui/coin/coin_"+i+".png"));}
+            catch(Exception e){throw new RuntimeException(e);}
+        }).toArray(BufferedImage[]::new);
+        @Override public boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity) {
+            int frame=Math.floorMod((int)Math.round(yaw/(Math.PI*2)*64),64),cell=frame%16;
+            push(x,y,96*scale/512);g.rotate(roll);g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)opacity));
+            g.drawImage(COINS[frame/16],-256,-256,256,256,(cell%4)*512,(cell/4)*512,(cell%4+1)*512,(cell/4+1)*512,null);pop();return true;
+        }
         Graphics2D g; final Deque<Graphics2D> stack = new ArrayDeque<>();
         AwtCanvas(Graphics2D g) { this.g=g; }
         @Override public void push(double x,double y,double s) { stack.push(g);g=(Graphics2D)g.create();g.translate(x,y);g.scale(s,s); }

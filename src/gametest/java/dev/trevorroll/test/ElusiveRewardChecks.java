@@ -25,7 +25,11 @@ public final class ElusiveRewardChecks {
             ctx.takeScreenshot("elusive-reward-"+style.name().toLowerCase(java.util.Locale.ROOT));
             command(ctx,"trevorroll skip");
         }
-        ctx.runOnClient(mc -> TrevorRollClient.settings().elusiveReward=false);
+        for(var sound:RewardSound.values()){
+            ctx.runOnClient(mc -> {TrevorRollClient.settings().elusiveSoundStyle=sound;TrevorRollClient.previewRewardSound();});
+            ctx.waitTicks(12);
+        }
+        ctx.runOnClient(mc -> {TrevorRollClient.settings().elusiveSoundStyle=RewardSound.DRAGON;TrevorRollClient.settings().elusiveReward=false;});
         command(ctx,"trevorroll test elusive");ctx.waitTicks(25);
         ctx.runOnClient(mc -> require(!TrevorRollClient.isElusiveRewardActive(),"Automatic rewards can be disabled"));
         command(ctx,"trevorroll skip");

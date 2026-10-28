@@ -29,6 +29,7 @@ final class RollConfig {
     int gridSize = 8;
     boolean elusiveReward = true;
     boolean elusiveSound = true;
+    RewardSound elusiveSoundStyle = RewardSound.DRAGON;
     int elusiveMillis = 3500;
     double elusiveIntensity = .8;
     double elusiveVolume = .7;
@@ -51,6 +52,7 @@ final class RollConfig {
                     config.elusiveIntensity = HudLayout.finiteClamp(config.elusiveIntensity, .25, 1, .8);
                     config.elusiveVolume = HudLayout.finiteClamp(config.elusiveVolume, 0, 1, .7);
                     if (config.elusiveStyle == null) config.elusiveStyle = ElusiveReward.Style.EXTRA;
+                    if(config.elusiveSoundStyle==null)config.elusiveSoundStyle=RewardSound.DRAGON;
                     return config;
                 }
             }

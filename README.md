@@ -1,3 +1,22 @@
+## Visual and audio refresh (1.6.0-dev)
+
+The settings menu uses shaded charcoal cards, lavender accents, custom sliders,
+toggles and selection states. Open **`/trevormod settings` → Audio** to choose
+**Dragon roar** (default), **Golden chime**, **Level-up** or **Wither fanfare**,
+preview the complete sound, and adjust volume. Elusive-only triggering is retained.
+
+The new coin uses 64 ray-rendered 512-pixel frames with depth-tested intersections,
+rounded metallic relief, a milled rim and four raised toes on both faces. This
+replaces face-average ordering that could incorrectly cover a toe during rotation.
+The atlas keeps expensive rendering out of the gameplay frame loop.
+
+References inspected: [BlackAddons settings widgets](https://github.com/BlackAddons/mod/tree/main/src/main/java/org/blackum/blackaddons/gui),
+[SkyOcean dungeon spinner](https://github.com/meowdding/SkyOcean/blob/main/src/main/kotlin/me/owdding/skyocean/features/gambling/dungeons/DungeonGamblingRenderer.kt),
+and [SkyHanni rare-item alert](https://github.com/SkyHanniStudios/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/features/inventory/experimentationtable/superpairs/UltraRareBookAlert.kt).
+SkyOcean's inspected spinner uses item-pickup ticks; SkyHanni's rare-item alert
+uses vanilla dragon growl. The default here matches the requested dragon roar.
+No third-party sound recordings or UI code are copied into the mod.
+
 ## Elusive reward animations (1.5.0)
 
 Open **`/trevormod settings` → Elusive** to choose **Minimal**, **Classic**,

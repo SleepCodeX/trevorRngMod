@@ -28,6 +28,13 @@ public final class TrevorRollClient implements ClientModInitializer {
     private Reel reel;
     private ElusiveReward reward;
     private int rewardNote;
+    private long audioPreviewStarted;
+    private int audioPreviewNote;
+    private RewardSound audioPreviewStyle;
+    public static void previewRewardSound(){
+        instance.audioPreviewStyle=instance.config.elusiveSoundStyle;
+        instance.audioPreviewStarted=now();instance.audioPreviewNote=0;
+    }
 
     @Override public void onInitializeClient() {
         instance = this;
@@ -43,7 +50,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> tick());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; audioPreviewStarted=0; });
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath("trevorroll", "reveal"), this::draw);
         HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT,
@@ -72,13 +79,17 @@ public final class TrevorRollClient implements ClientModInitializer {
         }
         if (MC.player == null || MC.level == null) { reward = null; reel = null; return; }
         long time = now();
+        if(audioPreviewStarted>0 && audioPreviewNote<audioPreviewStyle.notes()
+                && time-audioPreviewStarted>=audioPreviewNote*180L){
+            RewardAudio.play(audioPreviewStyle,audioPreviewNote,(float)(config.elusiveVolume*config.volume));
+            if(++audioPreviewNote>=audioPreviewStyle.notes())audioPreviewStarted=0;
+        }
         if (reward != null) {
             if ((!config.elusiveReward && !previewReward) || reward.expired(time)) { reward = null; previewReward = false; }
-            else if (rewardNote < (reward.style() == ElusiveReward.Style.MINIMAL ? 1 : 3)
+            else if (rewardNote < config.elusiveSoundStyle.notes()
                     && time - reward.startedAt() >= rewardNote * 180L) {
                 if (config.sound && config.elusiveSound && !MC.gui.hud.isHidden())
-                    MC.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_CHIME.value(),
-                        new float[]{1.0f, 1.26f, 1.5f}[rewardNote], (float) (reward.volume() * config.volume * .45)));
+                    RewardAudio.play(config.elusiveSoundStyle, rewardNote, (float)(reward.volume()*config.volume));
                 rewardNote++;
             }
         }

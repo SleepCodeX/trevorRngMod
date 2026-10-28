@@ -16,7 +16,7 @@ public final class TrevorSettingsScreen extends Screen {
     private final List<net.minecraft.client.gui.components.AbstractWidget> controls = new ArrayList<>();
     private int page;
     private int left, contentWidth, column, top;
-    private static final String[] TABS = {"Roll", "Crest", "Appearance", "Editor", "Elusive"};
+    private static final String[] TABS = {"Roll", "Crest", "Looks", "Editor", "Elusive", "Audio"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
@@ -83,6 +83,15 @@ public final class TrevorSettingsScreen extends Screen {
                 slider("Effect intensity", 3, .25, 1, r.elusiveIntensity, v -> r.elusiveIntensity = v, "%.0f%%", "Adjust sparkle density and the cinematic background tint.");
                 sliderHalfVolumeAndPreview();
             }
+            case 5 -> {
+                button("Sound: " + r.elusiveSoundStyle.label,left,row(0),contentWidth,() -> {
+                    var modes=RewardSound.values();r.elusiveSoundStyle=modes[(r.elusiveSoundStyle.ordinal()+1)%modes.length];rebuildWidgets();
+                });
+                button("Play sound preview",left,row(1),contentWidth,TrevorRollClient::previewRewardSound);
+                slider("Reward volume",2,0,1,r.elusiveVolume,v -> r.elusiveVolume=v,"%.0f%%","Sound volume for the Elusive celebration.");
+                toggle("Reward sound",left,3,()->r.elusiveSound,v->r.elusiveSound=v,"Enable Elusive audio.");
+                toggle("Master sound",left+column+8,3,()->r.sound,v->r.sound=v,"Enable all mod sounds.");
+            }
         }
         button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });
         button("Done", left + column + 8, height - 28, column, this::onClose);
@@ -91,7 +100,7 @@ public final class TrevorSettingsScreen extends Screen {
         var r = TrevorRollClient.settings();
         var b = new AbstractSliderButton(left, row(4), column, 20, Component.empty(), r.elusiveVolume) {
             { updateMessage(); }
-            @Override protected void updateMessage() { setMessage(Component.literal("Reward volume: " + Math.round(value * 100) + "%")); }
+            @Override protected void updateMessage() { MenuTheme.slider(this,value); setMessage(Component.literal("Reward volume: " + Math.round(value * 100) + "%")); }
             @Override protected void applyValue() { r.elusiveVolume = value; }
         };
         controls.add(b); addRenderableWidget(b);
@@ -116,6 +125,7 @@ public final class TrevorSettingsScreen extends Screen {
             { updateMessage(); }
             private double actual() { return min + value * (max - min); }
             @Override protected void updateMessage() {
+                MenuTheme.slider(this,value);
                 double v = actual(); if (format.contains("%%")) v *= 100;
                 setMessage(Component.literal(name + ": " + String.format(Locale.ROOT, format, v)));
             }
@@ -128,14 +138,25 @@ public final class TrevorSettingsScreen extends Screen {
     @Override public void onClose() { save(); minecraft.gui.setScreen(parent); }
     @Override public boolean isPauseScreen() { return false; }
     @Override public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        g.fill(0, 0, width, height, 0xF00E1020);
-        var canvas = new MinecraftCanvas(g);
-        canvas.round(left - 10, 30, contentWidth + 20, height - 36, 12, 0xFF1B1D32);
-        canvas.round(left - 10, 30, contentWidth + 20, 31, 12, 0xFF292841);
-        g.text(font, title, left, 10, 0xFFF4EFFF, false);
-        String hint = "One place for your hunt, crest and HUD layout";
-        if (width > 500) g.text(font, hint, width - font.width(hint) - 16, 12, 0xFFA8A3BF, false);
-        for (var b : controls) b.extractRenderState(g, mx, my, delta);
-        g.text(font, "Changes save automatically • Hover for help", left, height - 43, 0xFFAAA6C5, false);
+        var canvas=new MinecraftCanvas(g);
+        g.fill(0,0,width,height,0xF70D101B);
+        for(int yy=0;yy<height;yy+=2){
+            int a=(int)(18*(1-yy/(double)height));g.fill(0,yy,width,yy+2,(a<<24)|0x67528E);
+        }
+        canvas.glow(left-120,-150,350,310,0x166F50A0);
+        canvas.round(left-13,31,contentWidth+26,height-35,13,0x70000000);
+        canvas.round(left-12,29,contentWidth+24,height-35,12,0xFF353448);
+        canvas.round(left-11,30,contentWidth+22,height-37,11,0xFF171B29);
+        canvas.round(left-10,30,contentWidth+20,32,10,0xFF202333);
+        canvas.round(left-1,62,contentWidth+2,1,0,0xFF303244);
+        canvas.text("TREVOR",left,8,1.1,0xFFECE5FF);
+        canvas.text("SETTINGS",left+49,10,.72,0xFF9992AC);
+        String desc=switch(page){case 0->"Hunt reveals & timing";case 1->"Crest tracking & reminders";case 2->"Size, opacity & lighting";case 3->"Positioning & alignment";case 4->"Elusive celebrations";default->"Reward sounds & previews";};
+        canvas.text(desc,left+contentWidth-canvas.textWidth(desc)*.75,11,.75,0xFFAAA2BA);
+        for(var control:controls)MenuTheme.control(g,control,mx,my);
+        canvas.round(left,height-48,contentWidth,1,0,0xFF303143);
+        canvas.text("SAVED AUTOMATICALLY",left,height-42,.65,0xFF8D87A2);
+        canvas.ellipse(left+contentWidth-7,height-40,4,4,0xFF8BC5AC);
+
     }
 }

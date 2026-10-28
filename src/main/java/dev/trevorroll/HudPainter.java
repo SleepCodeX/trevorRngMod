@@ -21,6 +21,7 @@ public final class HudPainter {
         double textWidth(String text);
         void clip(double x, double y, double w, double h);
         void unclip();
+        default boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity) { return false; }
     }
 
     private final Canvas c;
