@@ -62,7 +62,7 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
         } else if (!config.onlyHypixel || isHypixel(mc)) {
             readHotbar(mc);
             TrevorRollClient.observeCrest(hotbarState);
-        }
+        } else TrevorRollClient.observeCrest(CrestHudState.fromHotbar(List.of()));
     }
 
     private static void render(GuiGraphicsExtractor graphics, DeltaTracker tick) {

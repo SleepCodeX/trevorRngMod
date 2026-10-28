@@ -97,7 +97,7 @@ public final class TrevorSettingsScreen extends Screen {
                 button("Stop tracker",left+column+8,row(1),column,()->PeltTracker.INSTANCE.stop());
                 soundButton("Maxed sound 1",2,r.crestSoundStyle,v->r.crestSoundStyle=v);
                 soundButton("Maxed sound 2",3,r.crestSecondSound,v->r.crestSecondSound=v);
-                button("Preview maxed-crest sounds",left,row(4),contentWidth,()->RewardAudio.pair(r.crestSoundStyle,r.crestSecondSound,0,(float)r.crestSoundVolume,(float)r.crestSecondVolume));
+                button("Preview maxed-crest sounds",left,row(4),contentWidth,()->TrevorRollClient.previewSound(r.crestSoundStyle,r.crestSecondSound,(float)r.crestSoundVolume,(float)r.crestSecondVolume));
             }
         }
         button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });

@@ -35,7 +35,7 @@ public final class TrevorRollClient implements ClientModInitializer {
     public static void previewSound(RewardSound first,RewardSound second,float firstVolume,float secondVolume){
         instance.audioPreviewStyle=first;instance.audioPreviewSecond=second;
         instance.audioPreviewVolume=firstVolume;instance.audioPreviewSecondVolume=secondVolume;
-        instance.audioPreviewStarted=now();instance.audioPreviewNote=0;
+        instance.audioPreviewStarted=Math.max(first.notes(),second.notes())>0?now():0;instance.audioPreviewNote=0;
     }
     public static void previewRewardSound(){
         instance.audioPreviewStyle=instance.config.elusiveSoundStyle;
@@ -145,7 +145,7 @@ public final class TrevorRollClient implements ClientModInitializer {
     public static void observeCrest(dev.crestwatch.trapper.CrestHudState state){
         if(PeltTracker.INSTANCE.observe(state)){
             var c=instance.config;
-            if(c.crestCompleteSound&&c.sound)RewardAudio.pair(c.crestSoundStyle,c.crestSecondSound,0,(float)(c.crestSoundVolume*c.volume),(float)(c.crestSecondVolume*c.volume));
+            if(c.crestCompleteSound&&c.sound)previewSound(c.crestSoundStyle,c.crestSecondSound,(float)(c.crestSoundVolume*c.volume),(float)(c.crestSecondVolume*c.volume));
         }
     }
     public static boolean isElusiveRewardActive() { return instance != null && instance.reward != null; }

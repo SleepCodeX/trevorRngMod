@@ -22,7 +22,7 @@ public final class PeltTracker {
     }
     /** Returns true once per observed transition to a maxed crest. */
     public boolean observe(CrestHudState state){
-        if(state.kind()==CrestHudState.Kind.MISSING||state.peltsEarned()<0){present=false;return false;}
+        if(state.kind()==CrestHudState.Kind.MISSING||state.peltsEarned()<0){present=false;last=-1;slot=-1;return false;}
         present=true;int count=state.peltsEarned();
         boolean changedSlot=slot>=0&&slot!=state.hotbarSlot();
         boolean replacement=last>=0&&(count<last||(changedSlot&&count!=last));
