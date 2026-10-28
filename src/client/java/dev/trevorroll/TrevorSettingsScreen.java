@@ -104,11 +104,8 @@ public final class TrevorSettingsScreen extends Screen {
         button("Done", left + column + 8, height - 28, column, this::onClose);
     }
     private void soundButton(String name,int row,RewardSound current,java.util.function.Consumer<RewardSound> set){
-        button(name+": "+current.label,left,row(row),contentWidth,()->{
-            var values=RewardSound.values();int i=(current.ordinal()+1)%values.length;
-            if(values[i]==RewardSound.DRAGON_LEVEL)i=(i+1)%values.length;
-            set.accept(values[i]);rebuildWidgets();
-        });
+        button(name+": "+current.label,left,row(row),contentWidth,()->
+            minecraft.gui.setScreen(new SoundPickerScreen(this,current,set)));
     }
     private void sliderHalfVolumeAndPreview() {
         var r = TrevorRollClient.settings();

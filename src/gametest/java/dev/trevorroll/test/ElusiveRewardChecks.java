@@ -25,6 +25,10 @@ public final class ElusiveRewardChecks {
             ctx.takeScreenshot("elusive-reward-"+style.name().toLowerCase(java.util.Locale.ROOT));
             command(ctx,"trevorroll skip");
         }
+        ctx.runOnClient(mc -> {
+            mc.gui.setScreen(new SoundPickerScreen(new TrevorSettingsScreen(),RewardSound.DRAGON,v -> TrevorRollClient.settings().elusiveSoundStyle=v));
+        });
+        ctx.waitTicks(2);ctx.takeScreenshot("sound-picker");ctx.setScreen(()->null);
         for(var sound:RewardSound.values()){
             ctx.runOnClient(mc -> {TrevorRollClient.settings().elusiveSoundStyle=sound;TrevorRollClient.previewRewardSound();});
             ctx.waitTicks(12);

@@ -32,6 +32,11 @@ public final class TrevorRollClient implements ClientModInitializer {
     private int audioPreviewNote;
     private RewardSound audioPreviewStyle,audioPreviewSecond;
     private float audioPreviewVolume,audioPreviewSecondVolume;
+    public static void previewSound(RewardSound first,RewardSound second,float firstVolume,float secondVolume){
+        instance.audioPreviewStyle=first;instance.audioPreviewSecond=second;
+        instance.audioPreviewVolume=firstVolume;instance.audioPreviewSecondVolume=secondVolume;
+        instance.audioPreviewStarted=now();instance.audioPreviewNote=0;
+    }
     public static void previewRewardSound(){
         instance.audioPreviewStyle=instance.config.elusiveSoundStyle;
         instance.audioPreviewSecond=instance.config.elusiveSecondSound;
