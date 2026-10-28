@@ -118,7 +118,7 @@ public final class TrevorSettingsScreen extends Screen {
         var b = Button.builder(Component.literal(label + ": " + (get.getAsBoolean() ? "ON" : "OFF")), button -> {
             set.accept(!get.getAsBoolean()); button.setMessage(Component.literal(label + ": " + (get.getAsBoolean() ? "ON" : "OFF")));
         }).bounds(x, row(row), column, 20).build();
-        b.setTooltip(Tooltip.create(Component.literal(help))); controls.add(b); addRenderableWidget(b);
+        b.setTooltip(Tooltip.create(Component.literal(help))); MenuTheme.help(b,help); controls.add(b); addRenderableWidget(b);
     }
     private void slider(String name, int row, double min, double max, double initial, DoubleConsumer set, String format, String help) {
         var b = new AbstractSliderButton(left, row(row), contentWidth, 20, Component.empty(), (initial - min) / (max - min)) {
@@ -131,7 +131,7 @@ public final class TrevorSettingsScreen extends Screen {
             }
             @Override protected void applyValue() { set.accept(actual()); }
         };
-        b.setTooltip(Tooltip.create(Component.literal(help))); controls.add(b); addRenderableWidget(b);
+        b.setTooltip(Tooltip.create(Component.literal(help))); MenuTheme.help(b,help); controls.add(b); addRenderableWidget(b);
     }
     static void save() { TrevorRollClient.settings().save(); TrapperCrestHudClient.settings().save(); }
     @Override public void removed() { save(); }
@@ -155,7 +155,9 @@ public final class TrevorSettingsScreen extends Screen {
         canvas.text(desc,left+contentWidth-canvas.textWidth(desc)*.75,11,.75,0xFFAAA2BA);
         for(var control:controls)MenuTheme.control(g,control,mx,my);
         canvas.round(left,height-48,contentWidth,1,0,0xFF303143);
-        canvas.text("SAVED AUTOMATICALLY",left,height-42,.65,0xFF8D87A2);
+        String help=MenuTheme.hoveredHelp(controls,mx,my);
+        String footer=help.isEmpty()?"SAVED AUTOMATICALLY":help;
+        canvas.text(footer,left,height-42,Math.min(.7,(contentWidth-16.)/Math.max(1,canvas.textWidth(footer))),0xFFAAA0BA);
         canvas.ellipse(left+contentWidth-7,height-40,4,4,0xFF8BC5AC);
 
     }

@@ -6,6 +6,12 @@ import java.util.*;
 /** Native widget input and focus, with a coherent shaded visual layer. */
 final class MenuTheme {
     private static final Map<AbstractWidget,Double> VALUES=new WeakHashMap<>();
+    private static final Map<AbstractWidget,String> HELP=new WeakHashMap<>();
+    static void help(AbstractWidget b,String text){HELP.put(b,text);}
+    static String hoveredHelp(java.util.List<? extends AbstractWidget> controls,int x,int y){
+        for(var b:controls)if(x>=b.getX()&&x<b.getRight()&&y>=b.getY()&&y<b.getBottom())return HELP.getOrDefault(b, "");
+        return "";
+    }
     static void slider(AbstractWidget b,double value){VALUES.put(b,value);}
     static void control(GuiGraphicsExtractor g,AbstractWidget b,int mx,int my){
         if(!b.visible)return;
