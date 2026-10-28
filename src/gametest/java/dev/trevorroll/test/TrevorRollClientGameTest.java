@@ -145,7 +145,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             for (int guiScale : new int[]{2, 3}) {
                 context.runOnClient(mc -> mc.options.guiScale().set(guiScale));
                 context.waitTicks(3);
-                for (int page = 0; page < 4; page++) {
+                for (int page = 0; page < 5; page++) {
                     final int selectedPage = page;
                     context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.settingsPage(mc, selectedPage));
                     context.waitTick();
@@ -167,6 +167,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             command(context, "trevorroll test elusive");
             context.waitTicks(80);
             context.takeScreenshot("original-roll-elusive-complete");
+            dev.trevorroll.ElusiveRewardChecks.run(context);
             System.out.println("PASS: real production client startup, hotbar lore/removal, all commands, HUD scales and original reel");
         }
     }

@@ -27,6 +27,12 @@ final class RollConfig {
     boolean editorGrid = true;
     boolean editorSnap = true;
     int gridSize = 8;
+    boolean elusiveReward = true;
+    boolean elusiveSound = true;
+    int elusiveMillis = 3500;
+    double elusiveIntensity = .8;
+    double elusiveVolume = .7;
+    ElusiveReward.Style elusiveStyle = ElusiveReward.Style.EXTRA;
 
     static RollConfig load() {
         try {
@@ -41,6 +47,10 @@ final class RollConfig {
                     config.volume = HudLayout.finiteClamp(config.volume, 0, 1, 1);
                     config.opacity = HudLayout.finiteClamp(config.opacity, .25, 1, 1);
                     config.gridSize = Math.clamp(config.gridSize, 4, 32);
+                    config.elusiveMillis = Math.clamp(config.elusiveMillis, 1500, 10000);
+                    config.elusiveIntensity = HudLayout.finiteClamp(config.elusiveIntensity, .25, 1, .8);
+                    config.elusiveVolume = HudLayout.finiteClamp(config.elusiveVolume, 0, 1, .7);
+                    if (config.elusiveStyle == null) config.elusiveStyle = ElusiveReward.Style.EXTRA;
                     return config;
                 }
             }

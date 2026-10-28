@@ -26,6 +26,8 @@ public final class TrevorRollClient implements ClientModInitializer {
     private final Random random = new Random();
     private RollConfig config;
     private Reel reel;
+    private ElusiveReward reward;
+    private int rewardNote;
 
     @Override public void onInitializeClient() {
         instance = this;
@@ -34,21 +36,24 @@ public final class TrevorRollClient implements ClientModInitializer {
             if (overlay || !config.enabled || !onHypixel()) return true;
             var hunt = Hunt.parse(message.getString());
             if (hunt.isEmpty()) return true;
+            reward = null;
             // Preserve an earlier assignment if two arrive before the first is revealed.
             if (reel != null && !reel.announced && !reel.demo) announce(reel);
             reel = new Reel(hunt.get(), now(), config.durationMillis, false, random, config.resultMillis);
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> tick());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> reel = null);
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; });
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath("trevorroll", "reveal"), this::draw);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT,
+            Identifier.fromNamespaceAndPath("trevorroll", "elusive_reward"), this::drawReward);
         registerCommands();
     }
 
     /** Lets the crest card yield space to the original reveal without changing the reel. */
     public static boolean isRevealActive() {
-        return instance != null && instance.reel != null;
+        return instance != null && (instance.reel != null || instance.reward != null);
     }
 
     private static long now() { return System.nanoTime() / 1_000_000; }
@@ -65,12 +70,24 @@ public final class TrevorRollClient implements ClientModInitializer {
             openSettingsNextTick = false;
             MC.gui.setScreen(new TrevorSettingsScreen());
         }
-        if (reel == null || MC.player == null) return;
+        if (MC.player == null || MC.level == null) { reward = null; reel = null; return; }
         long time = now();
+        if (reward != null) {
+            if ((!config.elusiveReward && !previewReward) || reward.expired(time)) { reward = null; previewReward = false; }
+            else if (rewardNote < (reward.style() == ElusiveReward.Style.MINIMAL ? 1 : 3)
+                    && time - reward.startedAt() >= rewardNote * 180L) {
+                if (config.sound && config.elusiveSound && !MC.gui.hud.isHidden())
+                    MC.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_CHIME.value(),
+                        new float[]{1.0f, 1.26f, 1.5f}[rewardNote], (float) (reward.volume() * config.volume * .45)));
+                rewardNote++;
+            }
+        }
+        if (reel == null) return;
         if (reel.finished(time)) {
             if (!reel.announced) {
                 announce(reel);
                 sound(1.4f, 0.55f);
+                if (ElusiveReward.eligible(reel.hunt.rarity(), config.elusiveReward)) startReward(reel.hunt.location());
             }
             if (reel.expired(time)) reel = null;
         } else {
@@ -95,7 +112,26 @@ public final class TrevorRollClient implements ClientModInitializer {
             .append(Component.literal("Go to " + roll.hunt.location() + " to kill it now!").withStyle(ChatFormatting.GREEN)));
     }
 
+    private void startReward(String location) {
+        previewReward = false;
+        reward = new ElusiveReward(now(), config.elusiveMillis, config.elusiveStyle,
+            config.elusiveIntensity, config.elusiveVolume, location);
+        rewardNote = 0;
+    }
+
+    public static boolean isElusiveRewardActive() { return instance != null && instance.reward != null; }
+
+    public static int previewElusive() {
+        if (MC.player == null || MC.level == null) return 0;
+        // Explicit preview also works when automatic rewards are disabled.
+        instance.startReward("Overgrown Mushroom Cave");
+        instance.previewReward = true;
+        return 1;
+    }
+    private boolean previewReward;
+
     private void finishPending() {
+        reward = null;
         if (reel != null && !reel.announced && !reel.demo && MC.player != null) announce(reel);
         reel = null;
     }
@@ -113,6 +149,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             literal("trevormod")
                 .executes(ctx -> { feedback("Trevor Mod: /trevormod settings"); return 1; })
                 .then(literal("settings").executes(ctx -> { openSettings(); return 1; }))
+                .then(literal("preview").executes(ctx -> previewElusive()))
         ));
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
             literal("trevorroll")
@@ -147,6 +184,7 @@ public final class TrevorRollClient implements ClientModInitializer {
         if (reel != null && !reel.demo) {
             feedback("Finish the current hunt reveal first, or use /trevorroll skip."); return 0;
         }
+        reward = null;
         reel = new Reel(new Hunt(rarity, "Overgrown Mushroom Cave"), now(), config.durationMillis, true, random, config.resultMillis);
         return 1;
     }
@@ -158,9 +196,15 @@ public final class TrevorRollClient implements ClientModInitializer {
     private void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Reel roll = reel;
         if (MC.gui.screen() instanceof TrevorLayoutScreen) return;
-        if (roll == null || MC.player == null || MC.gui.hud.isHidden()) return;
-        HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow), roll, now(),
+        if (MC.player == null || MC.gui.hud.isHidden()) return;
+        if (roll != null) HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow), roll, now(),
             MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
             config.scale, config.x, config.y, config.customPosition);
+    }
+
+    private void drawReward(GuiGraphicsExtractor g, DeltaTracker delta) {
+        if (reward != null && MC.player != null && !MC.gui.hud.isHidden() && MC.gui.screen() == null)
+            ElusiveRewardPainter.draw(new MinecraftCanvas(g), reward, now(),
+                MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight());
     }
 }
