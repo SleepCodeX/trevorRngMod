@@ -44,4 +44,4 @@ On 2026-10-27, the user confirmed that the refined 1.4.0-dev mod works well and 
 
 ## Elusive animation update authorization
 
-The user requested four selectable Elusive-only reward animations and explicitly instructed merging them into main and making a JAR. Merge the feature after the real Loom build, bytecode checks and production-client tests pass. Keep this new artifact as a development build until in-game validation; the earlier stable-release permission applied to 1.4.0.
+The user requested four selectable Elusive-only reward animations and explicitly instructed merging them into main and making a JAR. Merge the feature after the real Loom build, bytecode checks and production-client tests pass. The user subsequently explicitly requested merging and releasing this update. Publish stable 1.5.0 and mark it Latest after the real build and production-client checks pass.
