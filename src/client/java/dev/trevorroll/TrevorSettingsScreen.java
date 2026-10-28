@@ -156,7 +156,7 @@ public final class TrevorSettingsScreen extends Screen {
     @Override public boolean isPauseScreen() { return false; }
     private void initDashboard(){
         int columns=width<430?2:3,cardW=(contentWidth-(columns-1)*10)/columns;
-        int cardH=60;
+        int cardH=56;
         for(int i=0;i<TITLES.length;i++){
             final int module=i;var b=button(TITLES[i],left+(i%columns)*(cardW+10),70+(i/columns)*(cardH+9),cardW,cardH,()->selectModule(module));
             baseY.put(b,b.getY());
