@@ -39,7 +39,7 @@ public final class PeltTracker {
         last=count;slot=state.hotbarSlot();return reached;
     }
     public String summary(){
-        if(!running)return "Tracker stopped";
+        if(!running)return "Pelts/hour: --";
         return elapsed<10000?"Measuring pelts/hour…":String.format(Locale.ROOT,"%,.0f pelts/hour",earned*3600000./Math.max(1,elapsed));
     }
 

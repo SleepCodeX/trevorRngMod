@@ -12,7 +12,7 @@ layer can be Off. Fire, flowing water, splash, droplets, lightning, thunder,
 amethyst, bell, enchanting, portal and XP sounds are also available.
 The maxed-crest alert supports two layers too.
 
-## Visual and audio refresh (1.6.0-dev)
+## Visual and audio refresh (1.6.0)
 
 The settings menu uses shaded charcoal cards, lavender accents, custom sliders,
 toggles and selection states. Open **`/trevormod settings` → Audio** to choose

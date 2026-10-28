@@ -1,5 +1,6 @@
-- Added Elusive-only reward animations: **Minimal**, **Classic**, **Extra Reward**, and **Jackpot**.
-- Added a spinning 3D golden paw, celebratory rings, sparkles, confetti, and a cute chime.
-- Added controls for animation style, timing, intensity, and sound, plus a preview button.
+- Redesigned the settings menu with shaded cards, custom sliders, switches, hover/focus states and contextual help.
+- Upgraded the spinning coin to depth-tested, high-resolution metallic frames, fixing the missing-toe rendering bug.
+- Added two selectable sound layers, defaulting to simultaneous **Dragon Roar + Level-up**, with fire, water, droplets, lightning, thunder and more options.
+- Added **pelts/hour only** in the crest subtitle, automatic tracking, `/trevormod trackerStart`, and a configurable one-shot maxed-crest alert.
 
-**Setup:** Open **`/trevormod settings` → Elusive** to configure or preview the reward.
+**Setup:** Open **`/trevormod settings`**. Use **Audio** for the Elusive sound mix and **Tracker** for pelts/hour and completion alerts.
