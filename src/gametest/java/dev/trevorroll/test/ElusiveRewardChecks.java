@@ -19,7 +19,7 @@ public final class ElusiveRewardChecks {
             ctx.runOnClient(mc -> require(!TrevorRollClient.isElusiveRewardActive(),"Skip clears reward"));
         }
         for(var style:ElusiveReward.Style.values()) {
-            ctx.runOnClient(mc -> TrevorRollClient.settings().elusiveStyle=style);
+            ctx.runOnClient(mc -> { TrevorRollClient.settings().elusiveStyle=style; mc.gui.hud.getChat().clearMessages(false); });
             command(ctx,"trevormod preview");ctx.waitTicks(10);
             ctx.runOnClient(mc -> require(TrevorRollClient.isElusiveRewardActive(),"Style preview active"));
             ctx.takeScreenshot("elusive-reward-"+style.name().toLowerCase(java.util.Locale.ROOT));

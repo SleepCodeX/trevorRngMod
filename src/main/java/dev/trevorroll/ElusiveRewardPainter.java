@@ -55,7 +55,7 @@ public final class ElusiveRewardPainter {
                 ring(c, 240, cy, 99, .55, alpha(GOLD, fade * .45), seconds * .25);
             }
             particles(c, reward, seconds, t, level, fade, cy);
-            double yaw = (1 - settle) * Math.PI * (level == 3 ? 6 : 4) + Math.sin(seconds * 1.8) * .2;
+            double yaw = (1 - settle) * Math.PI * (level == 3 ? 6 : 4) + .32 + Math.sin(seconds * 1.8) * .18;
             coin(c, 240, cy, size, yaw, Math.sin(seconds * 1.5) * .07, fade);
             // A clean type lockup, with a warm extruded shadow rather than a square panel.
             double textScale = (level == 3 ? 2.8 : level == 2 ? 2.5 : 2.1) * (.85 + .15 * settle);

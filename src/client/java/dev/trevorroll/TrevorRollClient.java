@@ -46,6 +46,8 @@ public final class TrevorRollClient implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; });
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath("trevorroll", "reveal"), this::draw);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT,
+            Identifier.fromNamespaceAndPath("trevorroll", "elusive_reward"), this::drawReward);
         registerCommands();
     }
 
@@ -198,7 +200,10 @@ public final class TrevorRollClient implements ClientModInitializer {
         if (roll != null) HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow), roll, now(),
             MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
             config.scale, config.x, config.y, config.customPosition);
-        if (reward != null && MC.gui.screen() == null)
+    }
+
+    private void drawReward(GuiGraphicsExtractor g, DeltaTracker delta) {
+        if (reward != null && MC.player != null && !MC.gui.hud.isHidden() && MC.gui.screen() == null)
             ElusiveRewardPainter.draw(new MinecraftCanvas(g), reward, now(),
                 MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight());
     }
