@@ -30,9 +30,13 @@ public final class TrevorRollClient implements ClientModInitializer {
     private int rewardNote;
     private long audioPreviewStarted;
     private int audioPreviewNote;
-    private RewardSound audioPreviewStyle;
+    private RewardSound audioPreviewStyle,audioPreviewSecond;
+    private float audioPreviewVolume,audioPreviewSecondVolume;
     public static void previewRewardSound(){
         instance.audioPreviewStyle=instance.config.elusiveSoundStyle;
+        instance.audioPreviewSecond=instance.config.elusiveSecondSound;
+        instance.audioPreviewVolume=(float)(instance.config.elusiveVolume*instance.config.volume);
+        instance.audioPreviewSecondVolume=(float)(instance.config.elusiveSecondVolume*instance.config.volume);
         instance.audioPreviewStarted=now();instance.audioPreviewNote=0;
     }
 
@@ -81,17 +85,17 @@ public final class TrevorRollClient implements ClientModInitializer {
         PeltTracker.INSTANCE.advance(now(),MC.player!=null&&MC.level!=null);
         if (MC.player == null || MC.level == null) { reward = null; reel = null; return; }
         long time = now();
-        if(audioPreviewStarted>0 && audioPreviewNote<audioPreviewStyle.notes()
+        if(audioPreviewStarted>0 && audioPreviewNote<Math.max(audioPreviewStyle.notes(),audioPreviewSecond.notes())
                 && time-audioPreviewStarted>=audioPreviewNote*180L){
-            RewardAudio.play(audioPreviewStyle,audioPreviewNote,(float)(config.elusiveVolume*config.volume));
-            if(++audioPreviewNote>=audioPreviewStyle.notes())audioPreviewStarted=0;
+            RewardAudio.pair(audioPreviewStyle,audioPreviewSecond,audioPreviewNote,audioPreviewVolume,audioPreviewSecondVolume);
+            if(++audioPreviewNote>=Math.max(audioPreviewStyle.notes(),audioPreviewSecond.notes()))audioPreviewStarted=0;
         }
         if (reward != null) {
             if ((!config.elusiveReward && !previewReward) || reward.expired(time)) { reward = null; previewReward = false; }
-            else if (rewardNote < config.elusiveSoundStyle.notes()
+            else if (rewardNote < Math.max(config.elusiveSoundStyle.notes(),config.elusiveSecondSound.notes())
                     && time - reward.startedAt() >= rewardNote * 180L) {
                 if (config.sound && config.elusiveSound && !MC.gui.hud.isHidden())
-                    RewardAudio.play(config.elusiveSoundStyle, rewardNote, (float)(reward.volume()*config.volume));
+                    RewardAudio.pair(config.elusiveSoundStyle,config.elusiveSecondSound,rewardNote,(float)(reward.volume()*config.volume),(float)(config.elusiveSecondVolume*config.volume));
                 rewardNote++;
             }
         }
@@ -136,7 +140,7 @@ public final class TrevorRollClient implements ClientModInitializer {
     public static void observeCrest(dev.crestwatch.trapper.CrestHudState state){
         if(PeltTracker.INSTANCE.observe(state)){
             var c=instance.config;
-            if(c.crestCompleteSound&&c.sound)RewardAudio.play(c.crestSoundStyle,0,(float)(c.crestSoundVolume*c.volume));
+            if(c.crestCompleteSound&&c.sound)RewardAudio.pair(c.crestSoundStyle,c.crestSecondSound,0,(float)(c.crestSoundVolume*c.volume),(float)(c.crestSecondVolume*c.volume));
         }
     }
     public static boolean isElusiveRewardActive() { return instance != null && instance.reward != null; }

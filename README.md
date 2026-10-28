@@ -7,7 +7,10 @@ session, `trackerStop` stops it, and `trackerStats` prints the rate.
 Only observed positive lore changes count. Existing crest progress and offline
 or missing-crest time are excluded. A configurable one-shot maxed-crest sound
 is available in Tracker. Elusive audio defaults to simultaneous **Dragon Roar +
-Level-up**; other presets remain selectable in Audio.
+Level-up**. Audio provides two independently selectable layers and volumes; either
+layer can be Off. Fire, flowing water, splash, droplets, lightning, thunder,
+amethyst, bell, enchanting, portal and XP sounds are also available.
+The maxed-crest alert supports two layers too.
 
 ## Visual and audio refresh (1.6.0-dev)
 

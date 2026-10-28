@@ -33,7 +33,11 @@ final class RollConfig {
     double crestSoundVolume = .6;
     boolean elusiveReward = true;
     boolean elusiveSound = true;
-    RewardSound elusiveSoundStyle = RewardSound.DRAGON_LEVEL;
+    RewardSound elusiveSoundStyle = RewardSound.DRAGON;
+    RewardSound elusiveSecondSound = RewardSound.LEVEL_UP;
+    double elusiveSecondVolume = .7;
+    RewardSound crestSecondSound = RewardSound.NONE;
+    double crestSecondVolume = .6;
     int elusiveMillis = 3500;
     double elusiveIntensity = .8;
     double elusiveVolume = .7;
@@ -59,6 +63,11 @@ final class RollConfig {
                     if(config.elusiveSoundStyle==null)config.elusiveSoundStyle=RewardSound.DRAGON_LEVEL;
                     if(config.crestSoundStyle==null)config.crestSoundStyle=RewardSound.LEVEL_UP;
                     config.crestSoundVolume=HudLayout.finiteClamp(config.crestSoundVolume,0,1,.6);
+                    if(config.elusiveSecondSound==null)config.elusiveSecondSound=RewardSound.LEVEL_UP;
+                    if(config.crestSecondSound==null)config.crestSecondSound=RewardSound.NONE;
+                    if(config.elusiveSoundStyle==RewardSound.DRAGON_LEVEL){config.elusiveSoundStyle=RewardSound.DRAGON;config.elusiveSecondSound=RewardSound.LEVEL_UP;}
+                    config.elusiveSecondVolume=HudLayout.finiteClamp(config.elusiveSecondVolume,0,1,.7);
+                    config.crestSecondVolume=HudLayout.finiteClamp(config.crestSecondVolume,0,1,.6);
                     return config;
                 }
             }

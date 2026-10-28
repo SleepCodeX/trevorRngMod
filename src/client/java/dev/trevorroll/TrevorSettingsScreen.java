@@ -84,28 +84,31 @@ public final class TrevorSettingsScreen extends Screen {
                 sliderHalfVolumeAndPreview();
             }
             case 5 -> {
-                button("Sound: " + r.elusiveSoundStyle.label,left,row(0),contentWidth,() -> {
-                    var modes=RewardSound.values();r.elusiveSoundStyle=modes[(r.elusiveSoundStyle.ordinal()+1)%modes.length];rebuildWidgets();
-                });
-                button("Play sound preview",left,row(1),contentWidth,TrevorRollClient::previewRewardSound);
-                slider("Reward volume",2,0,1,r.elusiveVolume,v -> r.elusiveVolume=v,"%.0f%%","Sound volume for the Elusive celebration.");
-                toggle("Reward sound",left,3,()->r.elusiveSound,v->r.elusiveSound=v,"Enable Elusive audio.");
-                toggle("Master sound",left+column+8,3,()->r.sound,v->r.sound=v,"Enable all mod sounds.");
+                soundButton("Layer 1",0,r.elusiveSoundStyle,v->r.elusiveSoundStyle=v);
+                soundButton("Layer 2",1,r.elusiveSecondSound,v->r.elusiveSecondSound=v);
+                slider("Layer 1 volume",2,0,1,r.elusiveVolume,v->r.elusiveVolume=v,"%.0f%%","Volume of the first sound.");
+                slider("Layer 2 volume",3,0,1,r.elusiveSecondVolume,v->r.elusiveSecondVolume=v,"%.0f%%","Volume of the second sound, played at the same time.");
+                button("Preview both sounds",left,row(4),contentWidth,TrevorRollClient::previewRewardSound);
             }
             case 6 -> {
                 toggle("Show stats",left,0,()->r.trackerVisible,v->r.trackerVisible=v,"Show pelts/hour in the crest card.");
                 toggle("Crest alert",left+column+8,0,()->r.crestCompleteSound,v->r.crestCompleteSound=v,"Play once when a crest reaches 500 pelts.");
                 button("Start / reset pelt session",left,row(1),column,()->PeltTracker.INSTANCE.start());
                 button("Stop tracker",left+column+8,row(1),column,()->PeltTracker.INSTANCE.stop());
-                button("Maxed sound: "+r.crestSoundStyle.label,left,row(2),contentWidth,()->{
-                    var modes=RewardSound.values();r.crestSoundStyle=modes[(r.crestSoundStyle.ordinal()+1)%modes.length];rebuildWidgets();
-                });
-                slider("Maxed crest volume",3,0,1,r.crestSoundVolume,v->r.crestSoundVolume=v,"%.0f%%","Volume for the crest-complete alert.");
-                button("Preview maxed-crest sound",left,row(4),contentWidth,()->RewardAudio.play(r.crestSoundStyle,0,(float)r.crestSoundVolume));
+                soundButton("Maxed sound 1",2,r.crestSoundStyle,v->r.crestSoundStyle=v);
+                soundButton("Maxed sound 2",3,r.crestSecondSound,v->r.crestSecondSound=v);
+                button("Preview maxed-crest sounds",left,row(4),contentWidth,()->RewardAudio.pair(r.crestSoundStyle,r.crestSecondSound,0,(float)r.crestSoundVolume,(float)r.crestSecondVolume));
             }
         }
         button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });
         button("Done", left + column + 8, height - 28, column, this::onClose);
+    }
+    private void soundButton(String name,int row,RewardSound current,java.util.function.Consumer<RewardSound> set){
+        button(name+": "+current.label,left,row(row),contentWidth,()->{
+            var values=RewardSound.values();int i=(current.ordinal()+1)%values.length;
+            if(values[i]==RewardSound.DRAGON_LEVEL)i=(i+1)%values.length;
+            set.accept(values[i]);rebuildWidgets();
+        });
     }
     private void sliderHalfVolumeAndPreview() {
         var r = TrevorRollClient.settings();
