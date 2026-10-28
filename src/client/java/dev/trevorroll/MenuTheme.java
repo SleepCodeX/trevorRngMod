@@ -12,6 +12,7 @@ final class MenuTheme {
         for(var b:controls)if(x>=b.getX()&&x<b.getRight()&&y>=b.getY()&&y<b.getBottom())return HELP.getOrDefault(b, "");
         return "";
     }
+    static String helpText(AbstractWidget b){return HELP.getOrDefault(b,"");}
     static void slider(AbstractWidget b,double value){VALUES.put(b,value);}
     static void control(GuiGraphicsExtractor g,AbstractWidget b,int mx,int my){
         if(!b.visible)return;
@@ -29,17 +30,17 @@ final class MenuTheme {
             c.round(x+10,y+h-5,track,2,1,0xFF121522);
             c.round(x+10,y+h-5,Math.max(1,fill),2,1,0xFFB39AED);
             c.ellipse(x+8+fill,y+h-6,4,4,0xFFE2D4FF);
-            double s=Math.min(.85,(w-20)/Math.max(1,c.textWidth(label)));
-            c.text(label,x+(w-c.textWidth(label)*s)/2,y+4,s,0xFFE3DFF0);
+            double s=Math.min(.85,(w-20)/Math.max(1,MenuFont.width(label)));
+            MenuFont.text(g,label,x+(w-MenuFont.width(label)*s)/2,y+4,s,0xFFE3DFF0);
         }else if(label.endsWith(": ON")||label.endsWith(": OFF")){
             boolean on=label.endsWith(": ON");label=label.substring(0,label.lastIndexOf(':'));
-            double s=Math.min(.9,(w-43)/Math.max(1,c.textWidth(label)));
-            c.text(label,x+9,y+(h-8)/2,s,0xFFDDD9E9);
-            c.round(x+w-32,y+6,23,10,5,on?0xFF9074CA:0xFF414457);
-            c.ellipse(x+w-(on?19:30),y+7,8,8,on?0xFFF4EDFF:0xFF9A9AAD);
+            double s=Math.min(.9,(w-43)/Math.max(1,MenuFont.width(label)));
+            MenuFont.text(g,label,x+9,y+8,s,0xFFDDD9E9);
+            c.round(x+w-32,y+8,23,10,5,on?0xFF9074CA:0xFF414457);
+            c.ellipse(x+w-(on?19:30),y+9,8,8,on?0xFFF4EDFF:0xFF9A9AAD);
         }else{
-            double s=Math.min(.94,(w-20)/Math.max(1,c.textWidth(label)));
-            c.text(label,x+(w-c.textWidth(label)*s)/2,y+(h-8*s)/2,s,!b.active?0xFFE0D1FF:0xFFD9D6E5);
+            double s=Math.min(.94,(w-20)/Math.max(1,MenuFont.width(label)));
+            MenuFont.text(g,label,x+(w-MenuFont.width(label)*s)/2,y+8,s,!b.active?0xFFE0D1FF:0xFFD9D6E5);
         }
     }
 }

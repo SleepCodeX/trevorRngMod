@@ -31,7 +31,7 @@ public final class SoundPickerScreen extends Screen {
     private void add(String text,int x,int y,int w,Runnable action){var b=Button.builder(Component.literal(text),v->action.run()).bounds(x,y,w,20).build();controls.add(b);addRenderableWidget(b);}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float dt){
         g.fill(0,0,width,height,0xFA101321);var c=new MinecraftCanvas(g);
-        c.text("CHOOSE A SOUND",(width-Math.min(450,width-28))/2,15,1,0xFFE3D8F7);
+        MenuFont.text(g,"CHOOSE A SOUND",(width-Math.min(450,width-28))/2,15,1,0xFFE3D8F7);
         for(var b:controls)MenuTheme.control(g,b,mx,my);
     }
     @Override public void onClose(){minecraft.gui.setScreen(parent);}

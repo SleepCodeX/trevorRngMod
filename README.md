@@ -1,3 +1,12 @@
+## Module dashboard
+
+`/trevormod settings` opens a module-card dashboard inspired by the supplied
+reference: Roll, Trapper Crest, Appearance, HUD Layout, Jackpots, Audio Mixer and
+Pelt Tracker. Each card includes its own vector icon, name and description.
+Module pages use rounded settings cards with inline explanations and scrolling;
+Back returns to the dashboard. Nunito (bundled under the SIL Open Font License)
+provides consistent rounded typography for menus and the sound picker.
+
 ## Compact pelts/hour tracker
 
 The crest card's subtitle displays **pelts/hour only**, using the same space as

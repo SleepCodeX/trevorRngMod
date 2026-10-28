@@ -14,22 +14,22 @@ import java.util.function.*;
 public final class TrevorSettingsScreen extends Screen {
     private final Screen parent;
     private final List<net.minecraft.client.gui.components.AbstractWidget> controls = new ArrayList<>();
-    private int page;
+    private int page=-1,scroll;
+    private final Map<net.minecraft.client.gui.components.AbstractWidget,Integer> baseY=new IdentityHashMap<>();
+    private final Set<net.minecraft.client.gui.components.AbstractWidget> fixed=Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final String[] TITLES={"Roll","Trapper Crest","Appearance","HUD Layout","Jackpots","Audio Mixer","Pelt Tracker"};
+    private static final String[] DESCRIPTIONS={"Hunt reveals, pacing and announcements.","Live crest progress and hotbar reminders.","Sizes, opacity and soft lighting.","Drag, resize and align your HUD elements.","Golden Elusive celebrations and effects.","Mix two sounds, audition and set volumes.","Compact pelts/hour and crest-complete alerts."};
+    public void selectModule(int module){page=module;scroll=0;rebuildWidgets();}
     private int left, contentWidth, column, top;
     private static final String[] TABS = {"Roll", "Crest", "Looks", "Editor", "Elusive", "Audio", "Tracker"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
     @Override protected void init() {
-        controls.clear();
-        contentWidth = Math.min(440, width - 28); left = (width - contentWidth) / 2;
-        column = (contentWidth - 8) / 2; top = 70;
-        for (int i = 0; i < TABS.length; i++) {
-            final int tab = i;
-            var b = button(TABS[i], left + i * (contentWidth / TABS.length), 38,
-                contentWidth / TABS.length - 3, () -> { page = tab; rebuildWidgets(); });
-            if (i == page) b.active = false;
-        }
+        controls.clear();baseY.clear();fixed.clear();
+        contentWidth=Math.min(540,width-36);left=(width-contentWidth)/2;column=(contentWidth-10)/2;top=70;
+        if(page<0){initDashboard();return;}
+        var home=button("‹ Modules",left,16,79,22,()->selectModule(-1));fixed.add(home);
         var r = TrevorRollClient.settings(); var c = TrapperCrestHudClient.settings();
         switch (page) {
             case 0 -> {
@@ -100,8 +100,10 @@ public final class TrevorSettingsScreen extends Screen {
                 button("Preview maxed-crest sounds",left,row(4),contentWidth,()->TrevorRollClient.previewSound(r.crestSoundStyle,r.crestSecondSound,(float)r.crestSoundVolume,(float)r.crestSecondVolume));
             }
         }
-        button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });
-        button("Done", left + column + 8, height - 28, column, this::onClose);
+        for(var b:controls)if(!fixed.contains(b)){baseY.put(b,b.getY());b.setHeight(36);}
+        fixed.add(button("Open layout studio",left,height-32,column,()->{save();minecraft.gui.setScreen(new TrevorLayoutScreen(this));}));
+        fixed.add(button("Done",left+column+10,height-32,column,this::onClose));
+        positionRows();
     }
     private void soundButton(String name,int row,RewardSound current,java.util.function.Consumer<RewardSound> set){
         button(name+": "+current.label,left,row(row),contentWidth,()->
@@ -120,7 +122,10 @@ public final class TrevorSettingsScreen extends Screen {
             if (TrevorRollClient.previewElusive() == 1) minecraft.gui.setScreen(null);
         });
     }
-    private int row(int index) { return top + index * 24; }
+    private int row(int index) { return top + index * 44; }
+    private Button button(String label,int x,int y,int w,int h,Runnable action){
+        var b=Button.builder(Component.literal(label),ignored->action.run()).bounds(x,y,w,h).build();controls.add(b);addRenderableWidget(b);return b;
+    }
     private Button button(String label, int x, int y, int w, Runnable action) {
         var b = Button.builder(Component.literal(label), ignored -> action.run()).bounds(x, y, w, 20).build();
         controls.add(b); addRenderableWidget(b); return b;
@@ -148,28 +153,69 @@ public final class TrevorSettingsScreen extends Screen {
     @Override public void removed() { save(); }
     @Override public void onClose() { save(); minecraft.gui.setScreen(parent); }
     @Override public boolean isPauseScreen() { return false; }
-    @Override public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        var canvas=new MinecraftCanvas(g);
-        g.fill(0,0,width,height,0xF70D101B);
-        for(int yy=0;yy<height;yy+=2){
-            int a=(int)(18*(1-yy/(double)height));g.fill(0,yy,width,yy+2,(a<<24)|0x67528E);
+    private void initDashboard(){
+        int columns=width<430?2:3,cardW=(contentWidth-(columns-1)*10)/columns;
+        int cardH=60;
+        for(int i=0;i<TITLES.length;i++){
+            final int module=i;var b=button(TITLES[i],left+(i%columns)*(cardW+10),70+(i/columns)*(cardH+9),cardW,cardH,()->selectModule(module));
+            baseY.put(b,b.getY());
         }
-        canvas.glow(left-120,-150,350,310,0x166F50A0);
-        canvas.round(left-13,31,contentWidth+26,height-35,13,0x70000000);
-        canvas.round(left-12,29,contentWidth+24,height-35,12,0xFF353448);
-        canvas.round(left-11,30,contentWidth+22,height-37,11,0xFF171B29);
-        canvas.round(left-10,30,contentWidth+20,32,10,0xFF202333);
-        canvas.round(left-1,62,contentWidth+2,1,0,0xFF303244);
-        canvas.text("TREVOR",left,8,1.1,0xFFECE5FF);
-        canvas.text("SETTINGS",left+49,10,.72,0xFF9992AC);
-        String desc=switch(page){case 0->"Hunt reveals & timing";case 1->"Crest tracking & reminders";case 2->"Size, opacity & lighting";case 3->"Positioning & alignment";case 4->"Elusive celebrations";case 5->"Reward sounds & previews";default->"Pelt-rate session & crest alert";};
-        canvas.text(desc,left+contentWidth-canvas.textWidth(desc)*.75,11,.75,0xFFAAA2BA);
-        for(var control:controls)MenuTheme.control(g,control,mx,my);
-        canvas.round(left,height-48,contentWidth,1,0,0xFF303143);
-        String help=MenuTheme.hoveredHelp(controls,mx,my);
-        String footer=help.isEmpty()?"SAVED AUTOMATICALLY":help;
-        canvas.text(footer,left,height-42,Math.min(.7,(contentWidth-16.)/Math.max(1,canvas.textWidth(footer))),0xFFAAA0BA);
-        canvas.ellipse(left+contentWidth-7,height-40,4,4,0xFF8BC5AC);
-
+        fixed.add(button("Done",left+contentWidth-90,height-32,90,this::onClose));positionRows();
+    }
+    private int viewportBottom(){return height-45;}
+    private int maximumScroll(){int bottom=76;for(var e:baseY.entrySet())bottom=Math.max(bottom,e.getValue()+e.getKey().getHeight());return Math.max(0,bottom-viewportBottom());}
+    private void positionRows(){scroll=Math.clamp(scroll,0,maximumScroll());for(var e:baseY.entrySet()){
+        var b=e.getKey();b.setY(e.getValue()-scroll);b.visible=b.getY()>=70&&b.getBottom()<=viewportBottom();
+    }}
+    @Override public boolean mouseScrolled(double x,double y,double horizontal,double vertical){
+        if(y>=65&&y<viewportBottom()){scroll+=(int)(-vertical*44);positionRows();return true;}return super.mouseScrolled(x,y,horizontal,vertical);
+    }
+    private void description(GuiGraphicsExtractor g,String text,double x,double y,double width,double scale,int color){
+        String[] words=text.split(" ");String line="";int n=0;
+        for(String word:words){if(MenuFont.width(line+" "+word)*scale>width&&!line.isEmpty()){
+            MenuFont.text(g,line,x,y+n*10,scale,color);line=word;if(++n==2)return;
+        }else line=line.isEmpty()?word:line+" "+word;}
+        if(!line.isEmpty())MenuFont.text(g,line,x,y+n*10,scale,color);
+    }
+    @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float delta){
+        var c=new MinecraftCanvas(g);g.fill(0,0,width,height,0xE8131420);
+        c.glow(left-130,-160,390,350,0x236C4D99);
+        c.round(left-11,9,contentWidth+22,height-17,14,0x80000000);
+        c.round(left-10,8,contentWidth+20,height-20,13,0xFF393748);
+        c.round(left-9,9,contentWidth+18,height-22,12,0xFF202131);
+        c.round(left-8,10,contentWidth+16,49,11,0xFF27283A);
+        if(page<0){
+            MenuFont.text(g,"Modules",left+3,18,1.6,0xFFF0E9FF);
+            MenuFont.text(g,"Make Trevor feel like yours.",left+4,39,.85,0xFFA7A0B9);
+        }else{
+            ModuleIcons.draw(c,page,left+100,29,.7,0xFFBEA5F4);
+            MenuFont.text(g,TITLES[page],left+115,18,1.4,0xFFF0E9FF);
+            MenuFont.text(g,MenuFont.ellipsis(DESCRIPTIONS[page],(contentWidth-118)/.75),left+115,37,.75,0xFFA8A0BA);
+        }
+        g.enableScissor(left-3,65,left+contentWidth+3,viewportBottom()+1);
+        try{
+            for(var b:controls){if(!b.visible||fixed.contains(b))continue;
+                if(page<0){
+                    int i=controls.indexOf(b);boolean hover=mx>=b.getX()&&mx<b.getRight()&&my>=b.getY()&&my<b.getBottom();
+                    c.round(b.getX(),b.getY()+2,b.getWidth(),b.getHeight(),10,0x45000000);
+                    c.round(b.getX(),b.getY(),b.getWidth(),b.getHeight(),10,hover?0xFF9E84CB:0xFF414053);
+                    c.round(b.getX()+1,b.getY()+1,b.getWidth()-2,b.getHeight()-2,9,hover?0xFF353047:0xFF292939);
+                    c.round(b.getX()+10,b.getY()+9,23,23,8,0xFF393149);
+                    ModuleIcons.draw(c,i,b.getX()+21.5,b.getY()+20.5,.62,i==4?0xFFFFD583:0xFFC7AFF1);
+                    MenuFont.text(g,TITLES[i],b.getX()+40,b.getY()+12,.94,0xFFE8DFF5);
+                    description(g,DESCRIPTIONS[i],b.getX()+10,b.getY()+36,b.getWidth()-20,.75,0xFFAAA1BB);
+                }else{
+                    MenuTheme.control(g,b,mx,my);
+                    String help=MenuTheme.helpText(b);
+                    if(!help.isEmpty())MenuFont.text(g,MenuFont.ellipsis(help,(b.getWidth()-20)/.67),b.getX()+9,b.getBottom()-10,.67,0xFF9990AA);
+                }
+            }
+        }finally{g.disableScissor();}
+        for(var b:fixed)MenuTheme.control(g,b,mx,my);
+        if(maximumScroll()>0){double track=viewportBottom()-70,thumb=Math.max(18,track*track/(track+maximumScroll()));
+            c.round(left+contentWidth+4,70,2,track,1,0xFF393748);
+            c.round(left+contentWidth+4,70+(track-thumb)*scroll/Math.max(1,maximumScroll()),2,thumb,1,0xFFB59BE4);
+            MenuFont.text(g,"Scroll for more",left, height-22,.7,0xFF978CA8);
+        }
     }
 }
