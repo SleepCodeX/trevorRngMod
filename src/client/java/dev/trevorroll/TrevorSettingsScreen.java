@@ -29,7 +29,7 @@ public final class TrevorSettingsScreen extends Screen {
         controls.clear();baseY.clear();fixed.clear();
         contentWidth=Math.min(540,width-36);left=(width-contentWidth)/2;column=(contentWidth-10)/2;top=70;
         if(page<0){initDashboard();return;}
-        var home=button("‹ Modules",left,16,79,22,()->selectModule(-1));fixed.add(home);
+        var home=button("← Modules",left,16,79,22,()->selectModule(-1));fixed.add(home);
         var r = TrevorRollClient.settings(); var c = TrapperCrestHudClient.settings();
         switch (page) {
             case 0 -> {
