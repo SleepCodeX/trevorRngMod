@@ -90,3 +90,11 @@ tasks.register('verifyProductionJar', JavaExec) {
         layout.buildDirectory.dir('verification').get().asFile.absolutePath
 }
 tasks.named('check') { dependsOn tasks.named('verifyProductionJar') }
+
+tasks.register('elusiveRewardTest', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.trevorroll.ElusiveRewardTest'
+    jvmArgs '-Djava.awt.headless=true'
+}
+tasks.named('check') { dependsOn tasks.named('elusiveRewardTest') }

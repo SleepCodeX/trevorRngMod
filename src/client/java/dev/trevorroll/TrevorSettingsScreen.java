@@ -16,7 +16,7 @@ public final class TrevorSettingsScreen extends Screen {
     private final List<net.minecraft.client.gui.components.AbstractWidget> controls = new ArrayList<>();
     private int page;
     private int left, contentWidth, column, top;
-    private static final String[] TABS = {"Roll", "Crest", "Appearance", "Editor"};
+    private static final String[] TABS = {"Roll", "Crest", "Appearance", "Editor", "Elusive"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
@@ -26,8 +26,8 @@ public final class TrevorSettingsScreen extends Screen {
         column = (contentWidth - 8) / 2; top = 70;
         for (int i = 0; i < TABS.length; i++) {
             final int tab = i;
-            var b = button((i == page ? "• " : "") + TABS[i], left + i * (contentWidth / 4), 38,
-                contentWidth / 4 - 3, () -> { page = tab; rebuildWidgets(); });
+            var b = button(TABS[i], left + i * (contentWidth / TABS.length), 38,
+                contentWidth / TABS.length - 3, () -> { page = tab; rebuildWidgets(); });
             if (i == page) b.active = false;
         }
         var r = TrevorRollClient.settings(); var c = TrapperCrestHudClient.settings();
@@ -72,9 +72,33 @@ public final class TrevorSettingsScreen extends Screen {
                     c.scale = 1; c.top = 85; c.rightMargin = 12; save(); rebuildWidgets();
                 });
             }
+            case 4 -> {
+                toggle("Elusive reward", left, 0, () -> r.elusiveReward, v -> r.elusiveReward = v, "Celebrate only ELUSIVE hunts after their roll finishes.");
+                toggle("Reward sound", left + column + 8, 0, () -> r.elusiveSound, v -> r.elusiveSound = v, "Play a cute rising chime. The main sound toggle and volume also apply.");
+                button("Style: " + r.elusiveStyle.label, left, row(1), contentWidth, () -> {
+                    var styles = ElusiveReward.Style.values();
+                    r.elusiveStyle = styles[(r.elusiveStyle.ordinal() + 1) % styles.length]; rebuildWidgets();
+                });
+                slider("Reward duration", 2, 1.5, 10, r.elusiveMillis / 1000., v -> r.elusiveMillis = (int) Math.round(v * 1000), "%.1f seconds", "Independent of roll duration and result display time.");
+                slider("Effect intensity", 3, .25, 1, r.elusiveIntensity, v -> r.elusiveIntensity = v, "%.0f%%", "Adjust sparkle density and the cinematic background tint.");
+                sliderHalfVolumeAndPreview();
+            }
         }
         button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });
         button("Done", left + column + 8, height - 28, column, this::onClose);
+    }
+    private void sliderHalfVolumeAndPreview() {
+        var r = TrevorRollClient.settings();
+        var b = new AbstractSliderButton(left, row(4), column, 20, Component.empty(), r.elusiveVolume) {
+            { updateMessage(); }
+            @Override protected void updateMessage() { setMessage(Component.literal("Reward volume: " + Math.round(value * 100) + "%")); }
+            @Override protected void applyValue() { r.elusiveVolume = value; }
+        };
+        controls.add(b); addRenderableWidget(b);
+        button("Preview reward", left + column + 8, row(4), column, () -> {
+            save();
+            if (TrevorRollClient.previewElusive() == 1) minecraft.gui.setScreen(null);
+        });
     }
     private int row(int index) { return top + index * 24; }
     private Button button(String label, int x, int y, int w, Runnable action) {

@@ -40,3 +40,8 @@ See `CODEX_HANDOFF.md` for a detailed plan and failure evidence. Do not recreate
 ## Current release approval
 
 On 2026-10-27, the user confirmed that the refined 1.4.0-dev mod works well and explicitly requested promotion to a stable release and marking it as the latest release. This authorizes merging the settings/HUD studio PR, publishing 1.4.0 and marking it latest after the real Loom build and production-client checks pass. Runtime behavior must remain unchanged during this version-only promotion. The earlier stable 1.3.1 promotion was also user-approved.
+
+
+## Elusive animation update authorization
+
+The user requested four selectable Elusive-only reward animations and explicitly instructed merging them into main and making a JAR. Merge the feature after the real Loom build, bytecode checks and production-client tests pass. Keep this new artifact as a development build until in-game validation; the earlier stable-release permission applied to 1.4.0.

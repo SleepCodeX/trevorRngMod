@@ -1,3 +1,24 @@
+## Elusive reward animations (1.5.0-dev)
+
+Open **`/trevormod settings` → Elusive** to choose **Minimal**, **Classic**,
+**Extra Reward** (default), or **Jackpot**. Each celebrates only an ELUSIVE hunt
+when its original roll reveals. Configure reward duration (1.5–10 seconds),
+intensity, sound and reward volume. Timing is independent of the roll itself.
+Use **Preview reward** or `/trevormod preview` to try the selected style in a world.
+`/trevorroll test elusive` tests the complete roll and reward sequence.
+
+Minimal shows a compact badge; the other styles add a perspective-spinning gold
+paw medallion, rings and increasingly elaborate star/confetti bursts. The chime
+respects the main sound toggle and volume. Skip and disconnect clear the effect;
+F1 hides it and settings screens do not show it over their controls. The animation
+is a cosmetic HUD effect and does not identify or guess the hunted species.
+Other hunt rarities keep their existing reveal. Existing configuration is retained.
+
+Actual renderer previews and in-game screenshots are included in CI validation
+evidence. Visual inspiration: the public Minecraft 26.2 [Rareity reward animation
+lifecycle](https://github.com/arist-pantel/Rareity). The paw model and animations
+are original code using the mod's existing canvas and texture assets.
+
 ## Settings and HUD studio (1.4.0)
 
 Open **`/trevormod settings`** for all settings, or use Trevor Roll's Configure button
