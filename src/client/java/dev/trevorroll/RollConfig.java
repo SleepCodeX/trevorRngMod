@@ -31,8 +31,6 @@ final class RollConfig {
     boolean crestCompleteSound = true;
     RewardSound crestSoundStyle = RewardSound.LEVEL_UP;
     double crestSoundVolume = .6;
-    long lastCrestMillis = 0, totalCrestMillis = 0;
-    int completedCrests = 0;
     boolean elusiveReward = true;
     boolean elusiveSound = true;
     RewardSound elusiveSoundStyle = RewardSound.DRAGON_LEVEL;
@@ -61,9 +59,6 @@ final class RollConfig {
                     if(config.elusiveSoundStyle==null)config.elusiveSoundStyle=RewardSound.DRAGON_LEVEL;
                     if(config.crestSoundStyle==null)config.crestSoundStyle=RewardSound.LEVEL_UP;
                     config.crestSoundVolume=HudLayout.finiteClamp(config.crestSoundVolume,0,1,.6);
-                    config.lastCrestMillis=Math.max(0,config.lastCrestMillis);
-                    config.totalCrestMillis=Math.max(0,config.totalCrestMillis);
-                    config.completedCrests=Math.max(0,config.completedCrests);
                     return config;
                 }
             }

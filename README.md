@@ -1,15 +1,13 @@
-## Compact pelt tracker
+## Compact pelts/hour tracker
 
-The crest card's subtitle now alternates **pelts/hour + current crest time** with
-**last + average full-crest time**, using the same space as Every pelt counts.
-A zero-pelt crest begins a full-crest timer; the first real Trevor assignment starts
-the pelt-rate session automatically. `/trevormod trackerStart` starts or resets a
-session, `trackerStop` pauses it, and `trackerStats` prints the details.
-Only observed positive lore changes count; existing progress is not treated as
-newly earned. Offline/missing-crest time is excluded. Full-crest history is saved.
-A configurable, one-shot maxed-crest sound is available in the new Tracker tab.
-Elusive audio defaults to simultaneous **Dragon Roar + Level-up**; other presets
-remain selectable in Audio. Audio and tracker settings save automatically.
+The crest card's subtitle displays **pelts/hour only**, using the same space as
+Every pelt counts. The first real Trevor assignment starts the rate session;
+a zero-pelt crest also starts it. `/trevormod trackerStart` starts or resets the
+session, `trackerStop` stops it, and `trackerStats` prints the rate.
+Only observed positive lore changes count. Existing crest progress and offline
+or missing-crest time are excluded. A configurable one-shot maxed-crest sound
+is available in Tracker. Elusive audio defaults to simultaneous **Dragon Roar +
+Level-up**; other presets remain selectable in Audio.
 
 ## Visual and audio refresh (1.6.0-dev)
 

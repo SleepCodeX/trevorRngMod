@@ -35,7 +35,7 @@ public final class CrestHudCanvas implements CrestHudPainter.Canvas {
     @Override public void text(String value, double x, double y, double scale, int color) {
         if(value.equals("Every pelt counts.") && dev.trevorroll.TrevorRollClient.trackerVisible()){
             var tracker=dev.trevorroll.PeltTracker.INSTANCE;
-            value=tracker.completedCrests>0&&(System.nanoTime()/4_000_000_000L)%2==1?tracker.history():tracker.summary();
+            value=tracker.summary();
             scale=Math.min(scale,166./Math.max(1,mc.font.width(value)));
         }
         color = alpha(color);
