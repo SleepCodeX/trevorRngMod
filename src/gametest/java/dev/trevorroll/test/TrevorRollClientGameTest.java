@@ -150,6 +150,9 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                     context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.settingsPage(mc, selectedPage));
                     context.waitTick();
                     context.takeScreenshot("settings-page-" + page + "-scale-" + guiScale);
+                    context.runOnClient(mc -> mc.gui.screen().mouseScrolled(200,100,0,-5));
+                    context.waitTick();
+                    context.takeScreenshot("settings-page-bottom-" + page + "-scale-" + guiScale);
                 }
             }
             context.runOnClient(mc -> mc.gui.setScreen(new TrevorLayoutScreen(mc.gui.screen())));

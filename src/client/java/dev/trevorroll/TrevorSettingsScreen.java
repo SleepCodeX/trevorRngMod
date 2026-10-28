@@ -106,8 +106,9 @@ public final class TrevorSettingsScreen extends Screen {
         positionRows();
     }
     private void soundButton(String name,int row,RewardSound current,java.util.function.Consumer<RewardSound> set){
-        button(name+": "+current.label,left,row(row),contentWidth,()->
+        var b=button(name+": "+current.label,left,row(row),contentWidth,()->
             minecraft.gui.setScreen(new SoundPickerScreen(this,current,set)));
+        MenuTheme.help(b,"Choose a sound for this layer, or turn it off.");
     }
     private void sliderHalfVolumeAndPreview() {
         var r = TrevorRollClient.settings();
@@ -207,7 +208,7 @@ public final class TrevorSettingsScreen extends Screen {
                 }else{
                     MenuTheme.control(g,b,mx,my);
                     String help=MenuTheme.helpText(b);
-                    if(!help.isEmpty())MenuFont.text(g,MenuFont.ellipsis(help,(b.getWidth()-20)/.67),b.getX()+9,b.getBottom()-10,.67,0xFF9990AA);
+                    if(!help.isEmpty())MenuFont.text(g,MenuFont.ellipsis(help,(b.getWidth()-20)/.67),b.getX()+9,b.getY()+18,.67,0xFF9990AA);
                 }
             }
         }finally{g.disableScissor();}

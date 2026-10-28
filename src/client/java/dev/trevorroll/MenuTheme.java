@@ -30,8 +30,13 @@ final class MenuTheme {
             c.round(x+10,y+h-5,track,2,1,0xFF121522);
             c.round(x+10,y+h-5,Math.max(1,fill),2,1,0xFFB39AED);
             c.ellipse(x+8+fill,y+h-6,4,4,0xFFE2D4FF);
-            double s=Math.min(.85,(w-20)/Math.max(1,MenuFont.width(label)));
-            MenuFont.text(g,label,x+(w-MenuFont.width(label)*s)/2,y+4,s,0xFFE3DFF0);
+            int split=label.lastIndexOf(':');
+            String name=split<0?label:label.substring(0,split),shown=split<0?"":label.substring(split+1).trim();
+            double ss=Math.min(.92,(w-90)/Math.max(1,MenuFont.width(name)));
+            MenuFont.text(g,name,x+9,y+5,ss,0xFFE3DFF0);
+            double badge=Math.max(42,MenuFont.width(shown)*.8+12);
+            c.round(x+w-badge-8,y+4,badge,14,5,0xFF3F3454);
+            MenuFont.text(g,shown,x+w-badge-2,y+7,.8,0xFFDCC9F9);
         }else if(label.endsWith(": ON")||label.endsWith(": OFF")){
             boolean on=label.endsWith(": ON");label=label.substring(0,label.lastIndexOf(':'));
             double s=Math.min(.9,(w-43)/Math.max(1,MenuFont.width(label)));
