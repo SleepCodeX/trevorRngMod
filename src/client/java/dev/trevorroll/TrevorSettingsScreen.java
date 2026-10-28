@@ -16,7 +16,7 @@ public final class TrevorSettingsScreen extends Screen {
     private final List<net.minecraft.client.gui.components.AbstractWidget> controls = new ArrayList<>();
     private int page;
     private int left, contentWidth, column, top;
-    private static final String[] TABS = {"Roll", "Crest", "Looks", "Editor", "Elusive", "Audio"};
+    private static final String[] TABS = {"Roll", "Crest", "Looks", "Editor", "Elusive", "Audio", "Tracker"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
@@ -92,6 +92,17 @@ public final class TrevorSettingsScreen extends Screen {
                 toggle("Reward sound",left,3,()->r.elusiveSound,v->r.elusiveSound=v,"Enable Elusive audio.");
                 toggle("Master sound",left+column+8,3,()->r.sound,v->r.sound=v,"Enable all mod sounds.");
             }
+            case 6 -> {
+                toggle("Show stats",left,0,()->r.trackerVisible,v->r.trackerVisible=v,"Show pelts/hour and crest time in the crest card.");
+                toggle("Crest alert",left+column+8,0,()->r.crestCompleteSound,v->r.crestCompleteSound=v,"Play once when a crest reaches 500 pelts.");
+                button("Start / reset pelt session",left,row(1),column,()->PeltTracker.INSTANCE.start());
+                button("Stop tracker",left+column+8,row(1),column,()->PeltTracker.INSTANCE.stop());
+                button("Maxed sound: "+r.crestSoundStyle.label,left,row(2),contentWidth,()->{
+                    var modes=RewardSound.values();r.crestSoundStyle=modes[(r.crestSoundStyle.ordinal()+1)%modes.length];rebuildWidgets();
+                });
+                slider("Maxed crest volume",3,0,1,r.crestSoundVolume,v->r.crestSoundVolume=v,"%.0f%%","Volume for the crest-complete alert.");
+                button(PeltTracker.INSTANCE.history(),left,row(4),contentWidth,()->RewardAudio.play(r.crestSoundStyle,0,(float)r.crestSoundVolume));
+            }
         }
         button("Edit layout", left, height - 28, column, () -> { save(); minecraft.gui.setScreen(new TrevorLayoutScreen(this)); });
         button("Done", left + column + 8, height - 28, column, this::onClose);
@@ -151,7 +162,7 @@ public final class TrevorSettingsScreen extends Screen {
         canvas.round(left-1,62,contentWidth+2,1,0,0xFF303244);
         canvas.text("TREVOR",left,8,1.1,0xFFECE5FF);
         canvas.text("SETTINGS",left+49,10,.72,0xFF9992AC);
-        String desc=switch(page){case 0->"Hunt reveals & timing";case 1->"Crest tracking & reminders";case 2->"Size, opacity & lighting";case 3->"Positioning & alignment";case 4->"Elusive celebrations";default->"Reward sounds & previews";};
+        String desc=switch(page){case 0->"Hunt reveals & timing";case 1->"Crest tracking & reminders";case 2->"Size, opacity & lighting";case 3->"Positioning & alignment";case 4->"Elusive celebrations";case 5->"Reward sounds & previews";default->"Pelts/hour & crest timings";};
         canvas.text(desc,left+contentWidth-canvas.textWidth(desc)*.75,11,.75,0xFFAAA2BA);
         for(var control:controls)MenuTheme.control(g,control,mx,my);
         canvas.round(left,height-48,contentWidth,1,0,0xFF303143);

@@ -145,7 +145,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             for (int guiScale : new int[]{2, 3}) {
                 context.runOnClient(mc -> mc.options.guiScale().set(guiScale));
                 context.waitTicks(3);
-                for (int page = 0; page < 6; page++) {
+                for (int page = 0; page < 7; page++) {
                     final int selectedPage = page;
                     context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.settingsPage(mc, selectedPage));
                     context.waitTick();

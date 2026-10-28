@@ -27,9 +27,15 @@ final class RollConfig {
     boolean editorGrid = true;
     boolean editorSnap = true;
     int gridSize = 8;
+    boolean trackerVisible = true;
+    boolean crestCompleteSound = true;
+    RewardSound crestSoundStyle = RewardSound.LEVEL_UP;
+    double crestSoundVolume = .6;
+    long lastCrestMillis = 0, totalCrestMillis = 0;
+    int completedCrests = 0;
     boolean elusiveReward = true;
     boolean elusiveSound = true;
-    RewardSound elusiveSoundStyle = RewardSound.DRAGON;
+    RewardSound elusiveSoundStyle = RewardSound.DRAGON_LEVEL;
     int elusiveMillis = 3500;
     double elusiveIntensity = .8;
     double elusiveVolume = .7;
@@ -52,7 +58,12 @@ final class RollConfig {
                     config.elusiveIntensity = HudLayout.finiteClamp(config.elusiveIntensity, .25, 1, .8);
                     config.elusiveVolume = HudLayout.finiteClamp(config.elusiveVolume, 0, 1, .7);
                     if (config.elusiveStyle == null) config.elusiveStyle = ElusiveReward.Style.EXTRA;
-                    if(config.elusiveSoundStyle==null)config.elusiveSoundStyle=RewardSound.DRAGON;
+                    if(config.elusiveSoundStyle==null)config.elusiveSoundStyle=RewardSound.DRAGON_LEVEL;
+                    if(config.crestSoundStyle==null)config.crestSoundStyle=RewardSound.LEVEL_UP;
+                    config.crestSoundVolume=HudLayout.finiteClamp(config.crestSoundVolume,0,1,.6);
+                    config.lastCrestMillis=Math.max(0,config.lastCrestMillis);
+                    config.totalCrestMillis=Math.max(0,config.totalCrestMillis);
+                    config.completedCrests=Math.max(0,config.completedCrests);
                     return config;
                 }
             }

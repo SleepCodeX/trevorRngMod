@@ -58,8 +58,10 @@ public final class TrapperCrestHudClient implements ClientModInitializer {
             Arrays.fill(CACHED_STACKS, null);
             Arrays.fill(CACHED_CRESTS, null);
             hotbarState = CrestHudState.fromHotbar(List.of());
-        } else if (config.enabled && (!config.onlyHypixel || isHypixel(mc))) {
+            TrevorRollClient.observeCrest(hotbarState);
+        } else if (!config.onlyHypixel || isHypixel(mc)) {
             readHotbar(mc);
+            TrevorRollClient.observeCrest(hotbarState);
         }
     }
 
