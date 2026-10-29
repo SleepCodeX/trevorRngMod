@@ -1,95 +1,101 @@
-## Module dashboard
+# Trevor Roll
 
-`/trevormod settings` opens a module-card dashboard inspired by the supplied
-reference: Roll, Trapper Crest, Appearance, HUD Layout, Jackpots, Audio Mixer and
-Pelt Tracker. Each card includes its own vector icon, name and description.
-Module pages use rounded settings cards with inline explanations and scrolling;
-Back returns to the dashboard. Nunito (bundled under the SIL Open Font License)
-provides consistent rounded typography for menus and the sound picker.
+Animated Trevor hunt reveals, golden Elusive celebrations, and a live Trapper Crest HUD for **Hypixel SkyBlock**.
 
-## Compact pelts/hour tracker
+**[Download the latest JAR](https://github.com/SleepCodeX/trevorRngMod/releases/latest)** · **Open settings: `/trevormod settings`**
 
-The crest card's subtitle displays **pelts/hour only**, using the same space as
-Every pelt counts. The first real Trevor assignment starts the rate session;
-a zero-pelt crest also starts it. `/trevormod trackerStart` starts or resets the
-session, `trackerStop` stops it, and `trackerStats` prints the rate.
-Only observed positive lore changes count. Existing crest progress and offline
-or missing-crest time are excluded. A configurable one-shot maxed-crest sound
-is available in Pelt Tracker. Elusive audio defaults to simultaneous **Dragon Roar +
-Level-up**. Audio Mixer provides two independently selectable layers and volumes; either
-layer can be Off. Fire, flowing water, splash, droplets, lightning, thunder,
-amethyst, bell, enchanting, portal and XP sounds are also available.
-The maxed-crest alert supports two layers too.
+## Get started
 
-## Visual and audio refresh (1.6.0)
+1. Install **Minecraft 26.2**, **Fabric Loader 0.19.5+**, and a compatible **Fabric API for 26.2**.
+2. Put [trevor-roll-1.6.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.6.0/trevor-roll-1.6.0.jar) in your instance's `mods` folder. Remove older Trevor Roll JARs.
+3. Join Hypixel SkyBlock and talk to Trevor. Your next supported hunt assignment starts the reveal automatically.
+4. Put a **Trapper Crest in hotbar slots 1–9** to show its progress. The first crest from the left is the active one.
+5. Run **`/trevormod settings`** to change timing, sounds, sizes and HUD positions.
 
-The settings menu uses shaded charcoal cards, lavender accents, custom sliders,
-toggles and selection states. Open **`/trevormod settings` → Audio Mixer** to choose
-two sounds, preview the complete mix, and adjust each layer's volume.
-Elusive-only triggering is retained.
+The screenshots below show the mod in a local Minecraft test world with demo hunts and crest states. Live hunt detection runs on Hypixel; preview commands also work in singleplayer.
 
-The new coin uses 64 ray-rendered 512-pixel frames with depth-tested intersections,
-rounded metallic relief, a milled rim and four raised toes on both faces. This
-replaces face-average ordering that could incorrectly cover a toe during rotation.
-The atlas keeps expensive rendering out of the gameplay frame loop.
+## Watch your hunt roll in
 
-References inspected: [BlackAddons settings widgets](https://github.com/BlackAddons/mod/tree/main/src/main/java/org/blackum/blackaddons/gui),
-[SkyOcean dungeon spinner](https://github.com/meowdding/SkyOcean/blob/main/src/main/kotlin/me/owdding/skyocean/features/gambling/dungeons/DungeonGamblingRenderer.kt),
-and [SkyHanni rare-item alert](https://github.com/SkyHanniStudios/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/features/inventory/experimentationtable/superpairs/UltraRareBookAlert.kt).
-SkyOcean's inspected spinner uses item-pickup ticks; SkyHanni's rare-item alert
-uses vanilla dragon growl. The default here matches the requested dragon roar.
-No third-party sound recordings or UI code are copied into the mod.
+When Trevor assigns an animal, the rarity cards spin, slow down, and land on **the rarity Trevor already assigned**. The result shows where to go, and the assignment is repeated in chat after the reveal when chat results are enabled.
 
-## Elusive reward animations (1.5.0)
+![Trevor hunt roll showing the rarity cards and centre pointer](docs/media/1.6.0/hunt-roll.png)
 
-Open **`/trevormod settings` → Jackpots** to choose **Minimal**, **Classic**,
-**Extra Reward** (default), or **Jackpot**. Each celebrates only an ELUSIVE hunt
-when its original roll reveals. Configure reward duration (1.5–10 seconds),
-intensity, sound and reward volume. Timing is independent of the roll itself.
-Use **Preview reward** or `/trevormod preview` to try the selected style in a world.
-`/trevorroll test elusive` tests the complete roll and reward sequence.
+The roll is cosmetic: it does not change your hunt, odds or rewards. You can keep moving while it plays, and the hunt timer keeps running. Choose a **1–8 second roll**, change how long the result stays, or resize and move the panel.
 
-Minimal shows a compact badge; the other styles add a perspective-spinning gold
-paw medallion, rings and increasingly elaborate star/confetti bursts. Reward audio
-respects the main sound toggle and volume. Skip and disconnect clear the effect;
-F1 hides it and settings screens do not show it over their controls. The animation
-is a cosmetic HUD effect and does not identify or guess the hunted species.
-Other hunt rarities keep their existing reveal. Existing configuration is retained.
+**Try it:** `/trevorroll test undetected` previews a roll. `/trevorroll test elusive` previews the complete Elusive sequence.
 
-Actual renderer previews and in-game screenshots are included in CI validation
-evidence. Visual inspiration: the public Minecraft 26.2 [Rareity reward animation
-lifecycle](https://github.com/arist-pantel/Rareity). The paw model and animations
-are original code using the mod's existing canvas and texture assets.
+## Make Elusive feel special
 
-## Settings and HUD studio (1.5.0)
+Only an **ELUSIVE** hunt triggers the extra celebration after the roll. A raised gold paw coin spins with rings, stars and confetti, depending on your selected style. The default audio plays **Dragon Roar + Level-up together**.
 
-Open **`/trevormod settings`** for all settings, or use Trevor Roll's Configure button
-in optional Mod Menu 20.x. The old config commands remain aliases.
+![Elusive Jackpot celebration with the HD gold paw coin, sparkles and destination](docs/media/1.6.0/elusive-jackpot.png)
 
-The module dashboard groups settings under **Roll**, **Trapper Crest**,
-**Appearance**, **HUD Layout**, **Jackpots**, **Audio Mixer**, and **Pelt Tracker**.
-Configure roll duration, result display time, sound volume, chat announcements,
-HUD sizes and opacity, glow, crest motion, missing-crest reminders, and whether
-the crest yields during a roll. Hover controls for explanations. Existing config
-files and commands are preserved; new options default to the previous behavior.
+| Style | What you see |
+| --- | --- |
+| Minimal | A compact reward badge |
+| Classic | A spinning gold paw coin and rings |
+| Extra Reward (default) | More stars and celebratory effects |
+| Jackpot | The most elaborate coin, rings and confetti celebration |
 
-**HUD studio** shows the entire screen in a dedicated canvas so controls never
-cover a panel. Select a card or use the Roll/Crest buttons to select overlapping
-cards. Drag a card to move it; drag any corner to resize without changing its
-aspect ratio. Scroll or use the size buttons for fine sizing. Arrows nudge by one
-GUI pixel; Shift+arrows move ten pixels. Shift-drag bypasses snapping.
+**Animated style comparison:**
 
-Snapping offers screen edges, centers, the other card's edges/center, and optional
-grid placement, with cyan alignment guides. Toggle the grid and snapping, lock
-panels to protect their placement, center a selected panel, reset only that panel,
-or undo up to 50 layout actions (Ctrl+Z). Preview cycles all four crest states.
-Done/Escape saves; Escape during a gesture cancels that gesture. Cancel restores
-the positions and sizes from when the editor opened. Hidden HUDs still preview.
+![Animated comparison of Minimal, Classic, Extra Reward and Jackpot Elusive effects](docs/media/1.6.0/elusive-styles.gif)
 
-Interaction references used in the refinement:
-- [Fabric custom screens, Minecraft 26.2](https://docs.fabricmc.net/develop/rendering/gui/custom-screens)
-- [Konva selection and transform tutorial](https://konvajs.org/docs/select_and_transform/Basic_demo.html)
-- [Konva object snapping tutorial](https://konvajs.org/docs/sandbox/Objects_Snapping.html)
+[Open the Elusive animation GIF](docs/media/1.6.0/elusive-styles.gif). This silent comparison is rendered with the mod's actual HUD painter; the screenshot above is captured in Minecraft.
+
+Use **Settings → Jackpots** to choose a style, duration and intensity. Use **Audio Mixer** to choose two sounds, adjust each volume, and preview the mix. Options include dragon roar, level-up, chime, fire, flowing water, droplets, lightning, thunder and more. Either layer can be switched off.
+
+**Try it:** `/trevormod preview` plays your selected reward style in a world.
+
+## Keep your Trapper Crests moving
+
+The crest card reads the active item's **Collected pelts** lore and shows the progress bar, upgrade stage and hotbar slot. A crest in your Accessories Bag is not tracked; keep it in your hotbar.
+
+![Trapper Crest HUD showing 258 of 500 pelts, the active hotbar slot and pelts-per-hour subtitle](docs/media/1.6.0/crest-progress.png)
+
+- **Common:** progress toward 100 pelts.
+- **Uncommon:** progress toward 500 pelts.
+- **500 pelts / Rare:** a gold **SWITCH CRESTS!** reminder identifies which slot to replace.
+- **No crest:** a pink reminder asks you to move a Trapper Crest to your hotbar.
+
+| Time to switch | Missing-crest reminder |
+| --- | --- |
+| ![Gold crest completion reminder showing which hotbar slot to replace](docs/media/1.6.0/crest-complete.png) | ![Pink reminder to move a Trapper Crest to the hotbar](docs/media/1.6.0/crest-missing.png) |
+
+The subtitle shows **pelts/hour only**. Tracking starts on your first real Trevor assignment or when a zero-pelt crest becomes active. The rate measures observed pelt gains, excluding existing progress and time with no crest or while offline. The screenshots use demo states, so the rate shows `--`; a running session first shows a short measuring period before its rate appears.
+
+Use `/trevormod trackerStart` to start or reset a session, `/trevormod trackerStop` to stop, and `/trevormod trackerStats` to print the rate. In **Settings → Pelt Tracker**, choose a one-shot completion alert with up to two sounds when a crest reaches 500.
+
+**Try it:** `/trevorcrest demo uncommon`, `/trevorcrest demo rare`, or `/trevorcrest demo missing`.
+
+## Make the HUD yours
+
+**`/trevormod settings`** opens seven modules with names, icons and descriptions:
+
+![Trevor Mod settings dashboard with Roll, Trapper Crest, Appearance, HUD Layout, Jackpots and Audio Mixer cards](docs/media/1.6.0/settings-modules.png)
+
+| Module | What you can change |
+| --- | --- |
+| Roll | Enable the reveal, roll timing, result duration, sounds and chat results |
+| Trapper Crest | HUD visibility, size, animations and missing-crest reminders |
+| Appearance | Roll and crest size, opacity and glow |
+| HUD Layout | Drag/resize editor, grid, snapping, locks and reset |
+| Jackpots | Elusive style, duration, intensity and reward preview |
+| Audio Mixer | Two Elusive sound layers, individual volumes and previews |
+| Pelt Tracker | Pelts/hour visibility, session controls and completion sounds |
+
+Scroll to reach more modules or settings. Your choices save when you leave the screen. Optional Mod Menu integration opens the same settings.
+
+<details>
+<summary>See the sound mixer and drag/resize editor</summary>
+
+![Audio mixer with independent sound-layer volumes and a Preview both sounds button](docs/media/1.6.0/audio-mixer.png)
+
+Open **HUD Layout → Open layout editor**, select Roll or Crest, then drag the panel or its corner handles. Scroll to fine-tune size, use arrow keys to nudge, or Shift-drag to bypass snapping. Grid, alignment guides, locks and Undo help keep the layout tidy. **Done** saves; **Cancel** restores the layout from when the editor opened.
+
+![HUD editor showing the selected roll panel, corner resize handles, grid and positioning controls](docs/media/1.6.0/hud-editor.png)
+
+</details>
 
 ## Requirements
 
@@ -100,15 +106,6 @@ Interaction references used in the refinement:
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
 | Mod version | 1.6.0 |
-
-## Install
-
-1. Download [trevor-roll-1.6.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.6.0/trevor-roll-1.6.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
-2. Put `trevor-roll-1.6.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
-3. Remove any older Trevor Roll JAR so that only one version is installed.
-4. Launch Minecraft 26.2 with Fabric Loader 0.19.5.
-5. **Open the general settings menu with `/trevormod settings`.** Configure the GUI editor, move GUI elements, and adjust timing here.
-6. Optional: run `/trevorroll test undetected` in a world to preview the roll.
 
 ## Build
 
@@ -146,6 +143,10 @@ All commands run locally on the client.
 | Command | Effect |
 | --- | --- |
 | **`/trevormod settings`** | **Open the general settings menu: GUI editor, element positioning, and timing controls** |
+| `/trevormod preview` | Preview the selected Elusive celebration |
+| `/trevormod trackerStart` | Start or reset the pelts/hour session |
+| `/trevormod trackerStop` | Stop tracking pelts/hour |
+| `/trevormod trackerStats` | Print the current pelts/hour |
 | `/trevorroll` | Show help |
 | `/trevorroll test` | Preview a random rarity |
 | `/trevorroll test elusive` | Preview a chosen rarity |
@@ -201,9 +202,7 @@ When the item's lore includes an MP value, **3 MP = Common, 5 MP = Uncommon, 8 M
 
 The HUD appears by default only on Hypixel, near the upper-right corner. It uses Trevor Roll's rounded shell, paw icon and soft textures. Completion and missing-crest states have a thicker colored border, stronger glow, larger action text, and a slow breathing highlight. The crest card yields during the original reel animation. Hotbar checks run once per client tick; unchanged item components reuse cached lore and state, so rendering does not repeatedly scan items or parse text. Warnings update on the next tick after a swap.
 
-![Trapper Crest floating HUD preview](docs/crest-hud-preview.png)
-
-*Layout preview generated from the renderer's actual drawing instructions, with an approximate system font. Not an in-game screenshot.*
+![Trapper Crest HUD captured in Minecraft](docs/media/1.6.0/crest-progress.png)
 
 ### Crest HUD commands
 
