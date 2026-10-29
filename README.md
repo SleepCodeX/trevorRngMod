@@ -1,6 +1,48 @@
+## Module dashboard
+
+`/trevormod settings` opens a module-card dashboard inspired by the supplied
+reference: Roll, Trapper Crest, Appearance, HUD Layout, Jackpots, Audio Mixer and
+Pelt Tracker. Each card includes its own vector icon, name and description.
+Module pages use rounded settings cards with inline explanations and scrolling;
+Back returns to the dashboard. Nunito (bundled under the SIL Open Font License)
+provides consistent rounded typography for menus and the sound picker.
+
+## Compact pelts/hour tracker
+
+The crest card's subtitle displays **pelts/hour only**, using the same space as
+Every pelt counts. The first real Trevor assignment starts the rate session;
+a zero-pelt crest also starts it. `/trevormod trackerStart` starts or resets the
+session, `trackerStop` stops it, and `trackerStats` prints the rate.
+Only observed positive lore changes count. Existing crest progress and offline
+or missing-crest time are excluded. A configurable one-shot maxed-crest sound
+is available in Pelt Tracker. Elusive audio defaults to simultaneous **Dragon Roar +
+Level-up**. Audio Mixer provides two independently selectable layers and volumes; either
+layer can be Off. Fire, flowing water, splash, droplets, lightning, thunder,
+amethyst, bell, enchanting, portal and XP sounds are also available.
+The maxed-crest alert supports two layers too.
+
+## Visual and audio refresh (1.6.0)
+
+The settings menu uses shaded charcoal cards, lavender accents, custom sliders,
+toggles and selection states. Open **`/trevormod settings` → Audio Mixer** to choose
+two sounds, preview the complete mix, and adjust each layer's volume.
+Elusive-only triggering is retained.
+
+The new coin uses 64 ray-rendered 512-pixel frames with depth-tested intersections,
+rounded metallic relief, a milled rim and four raised toes on both faces. This
+replaces face-average ordering that could incorrectly cover a toe during rotation.
+The atlas keeps expensive rendering out of the gameplay frame loop.
+
+References inspected: [BlackAddons settings widgets](https://github.com/BlackAddons/mod/tree/main/src/main/java/org/blackum/blackaddons/gui),
+[SkyOcean dungeon spinner](https://github.com/meowdding/SkyOcean/blob/main/src/main/kotlin/me/owdding/skyocean/features/gambling/dungeons/DungeonGamblingRenderer.kt),
+and [SkyHanni rare-item alert](https://github.com/SkyHanniStudios/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/features/inventory/experimentationtable/superpairs/UltraRareBookAlert.kt).
+SkyOcean's inspected spinner uses item-pickup ticks; SkyHanni's rare-item alert
+uses vanilla dragon growl. The default here matches the requested dragon roar.
+No third-party sound recordings or UI code are copied into the mod.
+
 ## Elusive reward animations (1.5.0)
 
-Open **`/trevormod settings` → Elusive** to choose **Minimal**, **Classic**,
+Open **`/trevormod settings` → Jackpots** to choose **Minimal**, **Classic**,
 **Extra Reward** (default), or **Jackpot**. Each celebrates only an ELUSIVE hunt
 when its original roll reveals. Configure reward duration (1.5–10 seconds),
 intensity, sound and reward volume. Timing is independent of the roll itself.
@@ -8,7 +50,7 @@ Use **Preview reward** or `/trevormod preview` to try the selected style in a wo
 `/trevorroll test elusive` tests the complete roll and reward sequence.
 
 Minimal shows a compact badge; the other styles add a perspective-spinning gold
-paw medallion, rings and increasingly elaborate star/confetti bursts. The chime
+paw medallion, rings and increasingly elaborate star/confetti bursts. Reward audio
 respects the main sound toggle and volume. Skip and disconnect clear the effect;
 F1 hides it and settings screens do not show it over their controls. The animation
 is a cosmetic HUD effect and does not identify or guess the hunted species.
@@ -24,7 +66,8 @@ are original code using the mod's existing canvas and texture assets.
 Open **`/trevormod settings`** for all settings, or use Trevor Roll's Configure button
 in optional Mod Menu 20.x. The old config commands remain aliases.
 
-The menu has four pages: **Roll**, **Crest**, **Appearance**, and **Editor**.
+The module dashboard groups settings under **Roll**, **Trapper Crest**,
+**Appearance**, **HUD Layout**, **Jackpots**, **Audio Mixer**, and **Pelt Tracker**.
 Configure roll duration, result display time, sound volume, chat announcements,
 HUD sizes and opacity, glow, crest motion, missing-crest reminders, and whether
 the crest yields during a roll. Hover controls for explanations. Existing config
@@ -56,12 +99,12 @@ Interaction references used in the refinement:
 | Fabric Loader | 0.19.5 or newer; built against 0.19.5 |
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
-| Mod version | 1.5.0 |
+| Mod version | 1.6.0 |
 
 ## Install
 
-1. Download [trevor-roll-1.5.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.5.0/trevor-roll-1.5.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
-2. Put `trevor-roll-1.5.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
+1. Download [trevor-roll-1.6.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.6.0/trevor-roll-1.6.0.jar) from the [latest release](https://github.com/SleepCodeX/trevorRngMod/releases/latest), or build the project below.
+2. Put `trevor-roll-1.6.0.jar` in your Minecraft instance's `mods` folder alongside [Fabric API for 26.2](https://modrinth.com/mod/fabric-api/versions?g=26.2).
 3. Remove any older Trevor Roll JAR so that only one version is installed.
 4. Launch Minecraft 26.2 with Fabric Loader 0.19.5.
 5. **Open the general settings menu with `/trevormod settings`.** Configure the GUI editor, move GUI elements, and adjust timing here.
@@ -88,8 +131,8 @@ The included Gradle wrapper downloads Gradle and the required dependencies on th
 Build output:
 
 ```text
-build/libs/trevor-roll-1.5.0.jar          # Install this in Minecraft
-build/libs/trevor-roll-1.5.0-sources.jar  # Java source archive
+build/libs/trevor-roll-1.6.0.jar          # Install this in Minecraft
+build/libs/trevor-roll-1.6.0-sources.jar  # Java source archive
 ```
 
 For a development Minecraft instance, run `gradlew.bat runClient` on Windows or `bash gradlew runClient` on macOS/Linux.
@@ -228,7 +271,7 @@ Versions are configured in `gradle.properties`. Mod compatibility requirements a
 
 `build` runs the Trevor parser/reel tests, the Trapper Crest parsing/state tests, and the layout/animation checks (including the screenshot lore and Rare crest removal). The Trevor checks: all five rarities, messages that must stay visible, the supplied assignment format, and landing/timing behavior over 500 seeded rolls. You can run these checks separately with `gradlew.bat logicTest` or `bash gradlew logicTest`.
 
-All runtime classes in 1.5.0 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
+All runtime classes in 1.6.0 are compiled from source by Fabric Loom against the official dependencies. No classes are reused from the broken 1.3.0 binary. See [VALIDATION.md](VALIDATION.md) for build, bytecode and real-client test evidence and the user-confirmed in-game validation of earlier releases. GitHub Actions repeats the build and production-client tests and uploads only the installable mod JAR as the release artifact, with reports and screenshots in a separate evidence artifact.
 
 ## Upload this project to GitHub
 

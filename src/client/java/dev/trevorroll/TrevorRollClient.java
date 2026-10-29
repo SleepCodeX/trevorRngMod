@@ -28,6 +28,22 @@ public final class TrevorRollClient implements ClientModInitializer {
     private Reel reel;
     private ElusiveReward reward;
     private int rewardNote;
+    private long audioPreviewStarted;
+    private int audioPreviewNote;
+    private RewardSound audioPreviewStyle,audioPreviewSecond;
+    private float audioPreviewVolume,audioPreviewSecondVolume;
+    public static void previewSound(RewardSound first,RewardSound second,float firstVolume,float secondVolume){
+        instance.audioPreviewStyle=first;instance.audioPreviewSecond=second;
+        instance.audioPreviewVolume=firstVolume;instance.audioPreviewSecondVolume=secondVolume;
+        instance.audioPreviewStarted=Math.max(first.notes(),second.notes())>0?now():0;instance.audioPreviewNote=0;
+    }
+    public static void previewRewardSound(){
+        instance.audioPreviewStyle=instance.config.elusiveSoundStyle;
+        instance.audioPreviewSecond=instance.config.elusiveSecondSound;
+        instance.audioPreviewVolume=(float)(instance.config.elusiveVolume*instance.config.volume);
+        instance.audioPreviewSecondVolume=(float)(instance.config.elusiveSecondVolume*instance.config.volume);
+        instance.audioPreviewStarted=now();instance.audioPreviewNote=0;
+    }
 
     @Override public void onInitializeClient() {
         instance = this;
@@ -36,6 +52,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             if (overlay || !config.enabled || !onHypixel()) return true;
             var hunt = Hunt.parse(message.getString());
             if (hunt.isEmpty()) return true;
+            PeltTracker.INSTANCE.startIfIdle();
             reward = null;
             // Preserve an earlier assignment if two arrive before the first is revealed.
             if (reel != null && !reel.announced && !reel.demo) announce(reel);
@@ -43,7 +60,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> tick());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { reel = null; reward = null; audioPreviewStarted=0; });
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath("trevorroll", "reveal"), this::draw);
         HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT,
@@ -70,15 +87,20 @@ public final class TrevorRollClient implements ClientModInitializer {
             openSettingsNextTick = false;
             MC.gui.setScreen(new TrevorSettingsScreen());
         }
+        PeltTracker.INSTANCE.advance(now(),MC.player!=null&&MC.level!=null);
         if (MC.player == null || MC.level == null) { reward = null; reel = null; return; }
         long time = now();
+        if(audioPreviewStarted>0 && audioPreviewNote<Math.max(audioPreviewStyle.notes(),audioPreviewSecond.notes())
+                && time-audioPreviewStarted>=audioPreviewNote*180L){
+            RewardAudio.pair(audioPreviewStyle,audioPreviewSecond,audioPreviewNote,audioPreviewVolume,audioPreviewSecondVolume);
+            if(++audioPreviewNote>=Math.max(audioPreviewStyle.notes(),audioPreviewSecond.notes()))audioPreviewStarted=0;
+        }
         if (reward != null) {
             if ((!config.elusiveReward && !previewReward) || reward.expired(time)) { reward = null; previewReward = false; }
-            else if (rewardNote < (reward.style() == ElusiveReward.Style.MINIMAL ? 1 : 3)
+            else if (rewardNote < Math.max(config.elusiveSoundStyle.notes(),config.elusiveSecondSound.notes())
                     && time - reward.startedAt() >= rewardNote * 180L) {
                 if (config.sound && config.elusiveSound && !MC.gui.hud.isHidden())
-                    MC.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_CHIME.value(),
-                        new float[]{1.0f, 1.26f, 1.5f}[rewardNote], (float) (reward.volume() * config.volume * .45)));
+                    RewardAudio.pair(config.elusiveSoundStyle,config.elusiveSecondSound,rewardNote,(float)(reward.volume()*config.volume),(float)(config.elusiveSecondVolume*config.volume));
                 rewardNote++;
             }
         }
@@ -119,6 +141,13 @@ public final class TrevorRollClient implements ClientModInitializer {
         rewardNote = 0;
     }
 
+    public static boolean trackerVisible(){return instance!=null&&instance.config.trackerVisible;}
+    public static void observeCrest(dev.crestwatch.trapper.CrestHudState state){
+        if(PeltTracker.INSTANCE.observe(state)){
+            var c=instance.config;
+            if(c.crestCompleteSound&&c.sound)previewSound(c.crestSoundStyle,c.crestSecondSound,(float)(c.crestSoundVolume*c.volume),(float)(c.crestSecondVolume*c.volume));
+        }
+    }
     public static boolean isElusiveRewardActive() { return instance != null && instance.reward != null; }
 
     public static int previewElusive() {
@@ -150,6 +179,9 @@ public final class TrevorRollClient implements ClientModInitializer {
                 .executes(ctx -> { feedback("Trevor Mod: /trevormod settings"); return 1; })
                 .then(literal("settings").executes(ctx -> { openSettings(); return 1; }))
                 .then(literal("preview").executes(ctx -> previewElusive()))
+                .then(literal("trackerStart").executes(ctx -> {PeltTracker.INSTANCE.start();feedback("Pelt tracker started");return 1;}))
+                .then(literal("trackerStop").executes(ctx -> {PeltTracker.INSTANCE.stop();feedback("Pelt tracker stopped");return 1;}))
+                .then(literal("trackerStats").executes(ctx -> {feedback(PeltTracker.INSTANCE.summary());return 1;}))
         ));
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
             literal("trevorroll")

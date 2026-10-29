@@ -61,6 +61,18 @@ public final class LogicTest {
         check(EditorGeometry.resize(2000, 2000, 228, 118, .65, 1.6) == 1.6, "corner respects maximum size");
         var hold = new Reel(new Hunt(Hunt.Rarity.ELUSIVE, "Oasis"), 0, 1000, true, new Random(1), 6000);
         check(!hold.expired(6999) && hold.expired(7000), "custom result hold boundary");
+        PeltTracker tracker=new PeltTracker();
+        tracker.observe(new dev.crestwatch.trapper.CrestHudState(dev.crestwatch.trapper.CrestHudState.Kind.COMMON,0,100,0));
+        tracker.advance(0,true);tracker.advance(1000,true);
+        check(!tracker.observe(new dev.crestwatch.trapper.CrestHudState(dev.crestwatch.trapper.CrestHudState.Kind.ALMOST_THERE,250,500,0)),"mid crest does not complete");
+        tracker.advance(2000,true);
+        check(tracker.observe(new dev.crestwatch.trapper.CrestHudState(dev.crestwatch.trapper.CrestHudState.Kind.SWITCH_CREST,500,500,0)),"first 500 alerts once");
+        check(!tracker.observe(new dev.crestwatch.trapper.CrestHudState(dev.crestwatch.trapper.CrestHudState.Kind.SWITCH_CREST,500,500,0)),"maxed crest does not repeat alert");
+        check(tracker.earned()==500,"observed pelt deltas");
+        tracker.advance(3000,false);tracker.advance(100000,false);check(tracker.elapsed()==2000,"offline time excluded");
+        tracker.observe(new dev.crestwatch.trapper.CrestHudState(dev.crestwatch.trapper.CrestHudState.Kind.COMMON,0,100,1));
+        check(tracker.earned()==500,"replacement does not add old pelts");
+        tracker.start();check(tracker.earned()==0&&tracker.elapsed()==0,"manual reset clears rate session");
         System.out.println("Trevor Roll logic checks passed: " + checks);
     }
 }

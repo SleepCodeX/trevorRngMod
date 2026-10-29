@@ -8,6 +8,19 @@ import net.minecraft.resources.Identifier;
 /** Smooth, tinted texture corners avoid jagged scanline approximations. */
 final class MinecraftCanvas implements HudPainter.Canvas {
     private static final Identifier CIRCLE = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/circle.png");
+    private static final Identifier[] COINS = java.util.stream.IntStream.range(0,4)
+        .mapToObj(i -> Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/coin/coin_"+i+".png")).toArray(Identifier[]::new);
+    @Override public boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity) {
+        int frame = Math.floorMod((int)Math.round(yaw / (Math.PI*2) * 64),64);
+        push(x,y,96*scale/512);
+        try {
+            g.pose().rotate((float)roll);
+            int cell=frame%16;
+            g.blit(RenderPipelines.GUI_TEXTURED,COINS[frame/16],-256,-256,(cell%4)*512,(cell/4)*512,
+                512,512,512,512,2048,2048,((int)Math.round(opacity*255)<<24)|0xFFFFFF);
+        } finally { pop(); }
+        return true;
+    }
     private static final Identifier GLOW = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/glow.png");
     private final GuiGraphicsExtractor g;
     private final Minecraft mc = Minecraft.getInstance();

@@ -14,9 +14,8 @@ public final class HudEditorChecks {
         var screen = (TrevorSettingsScreen) mc.gui.screen();
         int w = mc.getWindow().getGuiScaledWidth(), h = mc.getWindow().getGuiScaledHeight();
         int content = Math.min(440, w - 28), left = (w - content) / 2;
-        var e = event(left + page * (content / 5) + 10, 48);
-        screen.mouseClicked(e, false); screen.mouseReleased(e);
-        for (var child : screen.children()) if (child instanceof net.minecraft.client.gui.components.AbstractWidget widget) {
+        screen.selectModule(page);
+        for (var child : screen.children()) if (child instanceof net.minecraft.client.gui.components.AbstractWidget widget && widget.visible) {
             require(widget.getX() >= 0 && widget.getY() >= 0 && widget.getRight() <= w && widget.getBottom() <= h,
                 "Settings control is reachable on page " + page);
         }

@@ -121,6 +121,7 @@ public final class ElusiveRewardPainter {
         for (int i = 0; i < n; i++) faces.add(new Face(new V[]{b[i], b[(i+1)%n], f[(i+1)%n], f[i]}, shade(side, .72 + .28 * (1 - Math.sin(i * 2 * Math.PI / n)) / 2)));
     }
     private static void coin(HudPainter.Canvas c, double cx, double cy, double scale, double yaw, double roll, double opacity) {
+        if (c.medallion(cx,cy,scale,yaw,roll,opacity)) return;
         List<Projected> faces = new ArrayList<>(MEDAL.size());
         double cos = Math.cos(yaw), sin = Math.sin(yaw), cr = Math.cos(roll), sr = Math.sin(roll);
         for (Face f : MEDAL) {

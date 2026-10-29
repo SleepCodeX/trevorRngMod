@@ -189,7 +189,7 @@ public final class TrevorLayoutScreen extends Screen {
             if (Double.isFinite(guideX)) g.fill((int) guideX, 0, (int) guideX + 1, height, 0xFF75E4DC);
             if (Double.isFinite(guideY)) g.fill(0, (int) guideY, width, (int) guideY + 1, 0xFF75E4DC);
         } finally { g.pose().popMatrix(); }
-        for (var button : controls) button.extractRenderState(g, mx, my, delta);
+        for (var button : controls) MenuTheme.control(g, button, mx, my);
         var b = selected();
         String label = String.format(Locale.ROOT, "%s%s  ·  X %.0f  Y %.0f  ·  %.0f × %.0f  ·  %.0f%%", crestSelected ? "CREST" : "ROLL", locked() ? " / LOCKED" : "", b.x(), b.y(), b.width(), b.height(), b.scale() * 100);
         var text = new MinecraftCanvas(g);
