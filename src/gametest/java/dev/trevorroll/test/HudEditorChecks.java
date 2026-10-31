@@ -76,7 +76,7 @@ public final class HudEditorChecks {
                 var map=(Map<AbstractWidget,Integer>)field.get(screen);
                 AbstractWidget tab=map.entrySet().stream().filter(e->e.getValue()==index).findFirst().orElseThrow().getKey();
                 for(int step=0;!tab.visible&&step<8;step++) {
-                    click(screen,widgets(screen).stream().filter(b->b.getMessage().getString().equals(">")&&b.active).findFirst().orElseThrow());
+                    click(screen,widgets(screen).stream().filter(b->b.getMessage().getString().equals("Next modules")&&b.active).findFirst().orElseThrow());
                 }
                 require(tab.visible,"Overflow tab becomes accessible");
                 click(screen,tab);

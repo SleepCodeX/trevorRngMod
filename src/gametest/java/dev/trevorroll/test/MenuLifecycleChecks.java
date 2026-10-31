@@ -11,7 +11,20 @@ public final class MenuLifecycleChecks {
         try {
             ctx.runOnClient(mc->{TrevorRollClient.settings().menuAnimations=true;mc.gui.setScreen(new TrevorSettingsScreen());});
             ctx.waitTicks(8);
+            final net.minecraft.client.gui.components.AbstractWidget[] row={null};
+            final int[] oldY={0};
             ctx.runOnClient(mc->{
+                var screen=(TrevorSettingsScreen)mc.gui.screen();screen.selectModule(0);
+                row[0]=screen.children().stream().filter(net.minecraft.client.gui.components.AbstractWidget.class::isInstance)
+                    .map(net.minecraft.client.gui.components.AbstractWidget.class::cast)
+                    .filter(w->w.getMessage().getString().startsWith("Roll duration:")).findFirst().orElseThrow();
+                oldY[0]=row[0].getY();
+                screen.mouseScrolled(screen.width/2.,(screen.viewportTop()+screen.viewportBottom())/2.,0,-1);
+                require(row[0].getY()==oldY[0],"Wheel starts a continuous transition rather than jumping");
+            });
+            ctx.waitTicks(8);
+            ctx.runOnClient(mc->{
+                require(row[0].getY()<oldY[0],"Real rendered frames advance smooth wheel scrolling");
                 var screen=(TrevorSettingsScreen)mc.gui.screen();screen.onClose();
                 require(mc.gui.screen()==screen,"Close keeps the real menu during its fade");
                 require(screen.keyPressed(new KeyEvent(258,0,0)),"Closing consumes input");

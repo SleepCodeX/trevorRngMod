@@ -23,14 +23,14 @@ public final class TrevorSettingsScreen extends Screen {
     private long lastFrame = System.nanoTime(), closingAt;
     private double closingOpacity = 1, frameOpacity = 1;
     private boolean smoothWheel;
-    private final Map<AbstractWidget,Double> hoverStates = new IdentityHashMap<>();
+    private final double[] hoverStates = new double[8];
     private boolean draggingScrollbar, capturingKey;
     private final long openedAt = System.nanoTime();
     private final Map<net.minecraft.client.gui.components.AbstractWidget,Integer> baseY=new IdentityHashMap<>();
     private final Set<net.minecraft.client.gui.components.AbstractWidget> fixed=Collections.newSetFromMap(new IdentityHashMap<>());
     private static final String[] TITLES={"Roll","Trapper Crest","Appearance","HUD Layout","Jackpots","Audio Mixer","Pelt Tracker","Menu & Keys"};
     private static final String[] DESCRIPTIONS={"Hunt reveals, pacing and announcements.","Live crest progress and hotbar reminders.","Sizes, opacity and soft lighting.","Drag, resize and align your HUD elements.","Golden Elusive celebrations and effects.","Mix two sounds, audition and set volumes.","Compact pelts/hour and crest-complete alerts.","Your shortcut, opening motion and advanced graphics."};
-    public void selectModule(int module){capturingKey=false;page=module;scroll=0;visibleScroll=0;smoothWheel=false;rebuildWidgets();}
+    public void selectModule(int module){capturingKey=false;page=module;if(module<0)tabStart=0;scroll=0;visibleScroll=0;smoothWheel=false;rebuildWidgets();}
     private static final int GAP = 16, CONTROL_HEIGHT = 60;
     private int left, contentWidth, column, top;
     private int frameLeft, frameTop, frameWidth, frameHeight;
@@ -50,13 +50,13 @@ public final class TrevorSettingsScreen extends Screen {
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
     @Override protected void init() {
-        hoverStates.clear();controls.clear();baseY.clear();fixed.clear();modules.clear();navigation.clear();filters.clear();tabs.clear();searchBox=null;draggingScrollbar=false;
+        Arrays.fill(hoverStates,0);controls.clear();baseY.clear();fixed.clear();modules.clear();navigation.clear();filters.clear();tabs.clear();searchBox=null;draggingScrollbar=false;
         frameWidth = Math.min(1180, width - (width >= 600 ? 48 : 20));
         frameHeight = Math.min(780, height - (height >= 300 ? 32 : 20));
         frameLeft = (width - frameWidth) / 2; frameTop = (height - frameHeight) / 2;
         sidebar = frameWidth >= 560 && frameHeight >= 300;
         contentWidth = frameWidth - 40 - (sidebar ? 120 : 0); left = frameLeft + 20 + (sidebar ? 120 : 0);
-        column = (contentWidth - GAP) / 2; top = frameTop + (page<0?(height >= 300 ? 144 : 108):(height >= 300 ? 108 : 78));
+        column = (contentWidth - GAP) / 2; top = frameTop + (page<0?(height >= 300 ? 126 : 108):(height >= 300 ? 108 : 78));
         initModuleTabs();
         if(page<0){initDashboard();return;}
         var home=button("Modules",left,frameTop+14,68,24,()->selectModule(-1));fixed.add(home);
@@ -242,14 +242,14 @@ public final class TrevorSettingsScreen extends Screen {
     }
     /** All modules in one persistent rail; overflow stays readable and keyboard reachable. */
     private void initModuleTabs() {
-        tabY=frameTop+(height>=300?68:44);
+        tabY=frameTop+(height>=300?58:44);
         for(int i=0;i<TITLES.length;i++) {
             final int target=i;
             int w=(int)Math.ceil(MenuFont.width(TITLES[i])*.84)+22;
             var b=button(TITLES[i],left,tabY,w,24,()->selectModule(target));tabs.put(b,i);fixed.add(b);
         }
-        previousTab=button("<",left+contentWidth-38,tabY,18,24,()->{tabStart=Math.max(0,tabStart-1);layoutTabs();});
-        nextTab=button(">",left+contentWidth-18,tabY,18,24,()->{if(lastTab<7)tabStart++;layoutTabs();});
+        previousTab=button("Previous modules",left+contentWidth-38,tabY,18,24,()->{tabStart=Math.max(0,tabStart-1);layoutTabs();});
+        nextTab=button("Next modules",left+contentWidth-18,tabY,18,24,()->{if(lastTab<7)tabStart++;layoutTabs();});
         fixed.add(previousTab);fixed.add(nextTab);
         if(page>=0&&page<tabStart)tabStart=page;
         layoutTabs();
@@ -262,6 +262,7 @@ public final class TrevorSettingsScreen extends Screen {
             var b=tabs.entrySet().stream().filter(e->e.getValue()==index).findFirst().orElseThrow().getKey();
             boolean show=i>=tabStart&&i==lastTab+1&&x+b.getWidth()<=end;
             b.visible=show;b.active=show;
+            if(!show&&getFocused()==b)setFocused(null);
             if(show){b.setX(x);x+=b.getWidth()+5;lastTab=i;}
         }
         previousTab.active=tabStart>0;nextTab.active=lastTab<7;
@@ -297,7 +298,7 @@ public final class TrevorSettingsScreen extends Screen {
         int x=left;
         for(int i=0;i<FILTERS.length;i++) {
             final int category=i;int w=i==0?36:i==2?56:49;
-            var b=button(FILTERS[i],x,frameTop+(height>=300?106:78),w,height>=300?24:20,()->selectFilter(category));
+            var b=button(FILTERS[i],x,frameTop+(height>=300?92:78),w,height>=300?24:20,()->selectFilter(category));
             filters.put(b,i);fixed.add(b);x+=w+7;
         }
         initFooter();layoutDashboard();
@@ -308,7 +309,7 @@ public final class TrevorSettingsScreen extends Screen {
         for(var e:modules.entrySet()){e.getKey().visible=false;e.getKey().active=matches(e.getValue());}
         int columns=contentWidth>=330?3:2;
         int cardW=(contentWidth-(columns-1)*GAP)/columns;
-        int cardH=Math.min(height>=300?142:110,viewportBottom()-top);
+        int cardH=Math.min(height>=300?124:110,viewportBottom()-top);
         for(int i=0;i<shown.size();i++) {
             var b=shown.get(i).getKey();int count=Math.min(columns,shown.size()-(i/columns)*columns);
             int start=left+(contentWidth-count*cardW-(count-1)*GAP)/2;
@@ -376,6 +377,7 @@ public final class TrevorSettingsScreen extends Screen {
         positionRows();
     }
     @Override public boolean mouseDragged(MouseButtonEvent e, double dx, double dy) {
+        if (closingAt != 0) return true;
         if (draggingScrollbar) { scrollToPointer(e.y()); return true; }
         return super.mouseDragged(e, dx, dy);
     }
@@ -421,15 +423,15 @@ public final class TrevorSettingsScreen extends Screen {
     private void moduleCard(GuiGraphicsExtractor g,MinecraftCanvas c,AbstractWidget b,int module,int mx,int my) {
         int x=b.getX(),y=b.getY(),w=b.getWidth(),h=b.getHeight();
         boolean hover=mx>=x&&mx<b.getRight()&&my>=y&&my<b.getBottom()&&my>=top&&my<viewportBottom();
-        double state=hoverStates.getOrDefault(b,0.);
+        double state=hoverStates[module];
         state=MenuMotion.approach(state,hover||b.isFocused()?1:0,frameSeconds,.09);
-        hoverStates.put(b,state);
+        hoverStates[module]=state;
         int tone=accent(module);
         c.round(x,y+3,w,h,12,0x50000000);
         c.round(x,y,w,h,12,MenuMotion.mix(0xFF37424E,tone,state*.8));
         c.round(x+1,y+1,w-2,h-2,11,MenuMotion.mix(0xFF1D2632,0xFF303448,state));
         c.round(x+10,y+10,22,3,1.5,tone);
-        if(h>=112)MenuFont.text(g,"0"+(module+1),x+w-24,y+9,.68,0xFF8896AB);
+        if(h>=112)MenuFont.text(g,MODULE_NUMBERS[module],x+w-24,y+9,.68,0xFF8896AB);
         double iconY=y+(h>=112?51:(h-26)/2.);
         c.glow(x+w/2.-34,iconY-30,68,60,MenuMotion.mix(0x088E68D6,0x388E68D6,state));
         icon(c,module,x+w/2.,iconY-state*2, h>=112?1.8:1.35);
@@ -441,6 +443,7 @@ public final class TrevorSettingsScreen extends Screen {
         double size=Math.min(1.02,(w-18)/MenuFont.width(TITLES[module]));
         MenuFont.text(g,TITLES[module],x+(w-MenuFont.width(TITLES[module])*size)/2,y+h-20,size,0xFFFFF5E5);
     }
+    private static final String[] MODULE_NUMBERS={"01","02","03","04","05","06","07","08"};
     private static final String[] SUMMARIES={"Every hunt, revealed", "Your next upgrade", "Set the mood", "A place for everything",
         "Celebrate the rare ones", "Find your sound", "Keep the pelts coming", "Made to feel like you"};
     private double frameSeconds;
@@ -494,6 +497,19 @@ public final class TrevorSettingsScreen extends Screen {
         c.round(left,viewportBottom()+5,contentWidth,1,0,0xFF303949);
         for(var b:fixed) {
             if(!b.visible)continue;
+            if(b==previousTab||b==nextTab) {
+                boolean hover=mx>=b.getX()&&mx<b.getRight()&&my>=b.getY()&&my<b.getBottom();
+                c.round(b.getX(),b.getY(),b.getWidth(),b.getHeight(),5,
+                    b.isFocused()?0xFFAC91DE:hover&&b.active?0xFF46516A:0xFF293442);
+                c.round(b.getX()+1,b.getY()+1,b.getWidth()-2,b.getHeight()-2,4,0xFF18222F);
+                int direction=b==nextTab?1:-1,center=b.getX()+9;
+                for(int step=0;step<5;step++) {
+                    int ax=center+direction*(2-step),ay=b.getY()+12;
+                    c.round(ax,ay-step,1.3,1.3,0,b.active?0xFFDCCAF4:0xFF536074);
+                    if(step>0)c.round(ax,ay+step,1.3,1.3,0,b.active?0xFFDCCAF4:0xFF536074);
+                }
+                continue;
+            }
             Integer tab=tabs.get(b);
             if(tab!=null) {
                 boolean selected=tab==page;
@@ -508,7 +524,9 @@ public final class TrevorSettingsScreen extends Screen {
                 c.round(b.getX()-7,b.getY()-4,b.getWidth()+10,26,6,searchBox.isFocused()?0xFF8971BD:0xFF34404C);
                 c.round(b.getX()-6,b.getY()-3,b.getWidth()+8,24,5,0xFF202A34);
                 searchBox.setAlpha((float)frameOpacity);
-                searchBox.extractWidgetRenderState(g,mx,my,delta);continue;
+                if(searchBox.getValue().isEmpty()&&!searchBox.isFocused())
+                    MenuFont.text(g,"Search modules...",b.getX()+3,b.getY()+6,.85,0xFF9BA9BB);
+                else searchBox.extractWidgetRenderState(g,mx,my,delta);continue;
             }
             Integer category=filters.get(b);
             if(category!=null) {
