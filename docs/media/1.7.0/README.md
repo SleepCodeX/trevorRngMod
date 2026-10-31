@@ -1,24 +1,25 @@
-# Trevor Roll settings media
+# Trevor Roll 1.7.0 media
 
-This directory documents the **1.7.0 development candidate** shown in the main
-README. It does not announce a stable release.
+These are actual Minecraft 26.2 / Fabric Loader 0.19.5 production-client captures
+from commit `a30d91e1ae2b1bbb751e38d89a724fa0c1a51c5f`, captured on 2026-10-31.
+[Build and client validation run 80](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41233693141)
+passed the real Loom build, production bytecode checks and game tests.
 
-The final assets must come from the candidate's real Minecraft 26.2 / Fabric
-Loader 0.19.5 production-client validation, not a mockup or generated menu image:
-
-| File | View |
+| File | Source screenshot |
 | --- | --- |
-| `settings-modules.png` | Default module browser with search, filters and navigation |
-| `settings-detail.png` | A full-width module configuration page |
-| `modules-advanced.gif` | Actual game frames with optional advanced menu graphics enabled |
-| `menu-keys.png` | Shortcut, fade and graphics preferences |
-| `audio-mixer.png` | Two-layer reward sound configuration |
-| `hud-editor.png` | Drag/resize HUD studio |
+| `settings-modules.png` | `0040_settings-dashboard-1280x720-scale-2.png` |
+| `settings-detail.png` | `0042_settings-page-0-1280x720-scale-2.png` |
+| `menu-keys.png` | `0056_settings-page-7-1280x720-scale-2.png` |
+| `audio-mixer.png` | `0052_settings-page-5-1280x720-scale-2.png` |
+| `hud-editor.png` | `0097_layout-editor.png` |
 
-The opening shortcut is unbound by default. Advanced menu graphics are off by
-default; the animation demonstrates that opt-in setting. This menu artwork is
-original Trevor art, not copied OneClient branding.
+`modules-advanced.gif` uses all twelve `0109`–`0120` actual
+`settings-advanced-rotation-00`–`11` frames, displayed for two seconds each.
+It documents the rotation; it is not a frame-rate or performance measurement.
+The PNG captures are unchanged. The GIF encodes the original game frames.
 
-Gameplay screenshots in [`../1.6.0`](../1.6.0/README.md) remain useful because this
-candidate preserves the hunt reel, Elusive effects and in-game crest HUD. Keep
-that versioned directory available for existing release-page links.
+The shortcut is unbound by default. Advanced graphics are off by default;
+the GIF demonstrates that optional setting. The artwork is original Trevor art.
+These offline demo sessions do not authenticate to Hypixel or validate a personal modpack.
+Gameplay images in [1.6.0](../1.6.0/README.md) remain available for preserved features
+and historical release links.

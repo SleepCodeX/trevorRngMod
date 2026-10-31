@@ -67,4 +67,4 @@ Scroll or use **Tab**, **Page Up / Down**, and **Home / End** in the menu. Setti
 
 [All commands, requirements and building](docs/DEVELOPMENT.md) · [Validation](VALIDATION.md) · [MIT license](LICENSE)
 
-*Images show real local Minecraft demo sessions, not live Hypixel results. [Menu media](docs/media/1.7.0/README.md) · [Gameplay media](docs/media/1.6.0/README.md). Menu organization is inspired by [OneClient](https://polyfrost.org/projects/oneclient); Trevor's artwork is original, and OneClient is not required.*
+*Images show real Minecraft demo sessions, not live Hypixel results. [Menu media](docs/media/1.7.0/README.md) · [Gameplay media](docs/media/1.6.0/README.md). Menu organization is inspired by [OneClient](https://polyfrost.org/projects/oneclient); Trevor's artwork is original, and OneClient is not required.*
