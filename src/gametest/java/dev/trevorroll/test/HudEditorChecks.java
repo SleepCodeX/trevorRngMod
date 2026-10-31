@@ -251,7 +251,7 @@ public final class HudEditorChecks {
             requireModuleNames(screen);
             checkSettingsGeometry(mc, screen);
             settingsKeyboard(screen);
-        if(page==-1)settingsTabs(screen); // Hidden search results must not take keyboard focus.
+        // Hidden search results must not take keyboard focus.
         } finally {
             screen.setSearch(""); screen.selectFilter(0); screen.selectModule(-1);
         }

@@ -306,7 +306,7 @@ public final class TrevorSettingsScreen extends Screen {
         baseY.clear();
         var shown=modules.entrySet().stream().filter(e->matches(e.getValue())).sorted(Map.Entry.comparingByValue()).toList();
         for(var e:modules.entrySet()){e.getKey().visible=false;e.getKey().active=matches(e.getValue());}
-        int columns=contentWidth>=420?3:2;
+        int columns=contentWidth>=330?3:2;
         int cardW=(contentWidth-(columns-1)*GAP)/columns;
         int cardH=Math.min(height>=300?142:110,viewportBottom()-top);
         for(int i=0;i<shown.size();i++) {
