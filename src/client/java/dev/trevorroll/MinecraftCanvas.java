@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix3x2f;
 
 /** Smooth, tinted texture corners avoid jagged scanline approximations. */
 final class MinecraftCanvas implements HudPainter.Canvas {
@@ -23,6 +24,7 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     }
     private static final Identifier GLOW = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/glow.png");
     private final GuiGraphicsExtractor g;
+    private Matrix3x2f artTransform;
     private final Minecraft mc = Minecraft.getInstance();
     private final double opacity;
     private final boolean glows;
@@ -38,6 +40,18 @@ final class MinecraftCanvas implements HudPainter.Canvas {
         g.pose().pushMatrix();
         g.pose().translate((float) x, (float) y);
         g.pose().scale((float) scale, (float) scale);
+    }
+    /** Push an orthographic artwork plane without allocating a matrix per face. */
+    void affine(double x, double y, double xx, double xy, double yx, double yy) {
+        g.pose().pushMatrix();
+        if (artTransform == null) artTransform = new Matrix3x2f();
+        artTransform.set((float)xx, (float)xy, (float)yx, (float)yy, (float)x, (float)y);
+        g.pose().mul(artTransform);
+    }
+    /** Packed pixel sprites already have a transform; emit their runs directly. */
+    void pixelRect(int x, int y, int width, int height, int colour) {
+        colour = alpha(colour);
+        if (width > 0 && height > 0 && (colour >>> 24) != 0) g.fill(x, y, x + width, y + height, colour);
     }
     @Override public void pop() { g.pose().popMatrix(); }
     @Override public double textWidth(String text) { return mc.font.width(text); }

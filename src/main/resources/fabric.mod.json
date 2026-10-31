@@ -3,7 +3,7 @@
   "id": "trevorroll",
   "version": "${version}",
   "name": "Trevor Roll",
-  "description": "Trevor hunt rarity reel plus a floating bubble Trapper Crest HUD that follows actual item lore, with smooth progress and positioning commands.",
+  "description": "Animated Trevor hunt reveals, Elusive celebrations and live Trapper Crest progress for Hypixel SkyBlock, with a searchable module menu, custom pixel artwork, optional 3D menu graphics and a configurable HUD.",
   "authors": ["Anish"],
   "license": "MIT",
   "environment": "client",

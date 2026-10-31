@@ -22,6 +22,8 @@ final class RollConfig {
     boolean chatAnnouncements = true;
     double opacity = 1;
     boolean glow = true;
+    boolean menuAnimations = true;
+    boolean advancedMenuGraphics = false;
     boolean rollLocked = false;
     boolean crestLocked = false;
     boolean editorGrid = true;

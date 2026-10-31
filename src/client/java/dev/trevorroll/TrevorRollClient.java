@@ -48,6 +48,7 @@ public final class TrevorRollClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
         instance = this;
         config = RollConfig.load();
+        MenuKeybind.register();
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (overlay || !config.enabled || !onHypixel()) return true;
             var hunt = Hunt.parse(message.getString());
@@ -83,6 +84,7 @@ public final class TrevorRollClient implements ClientModInitializer {
     }
 
     private void tick() {
+        MenuKeybind.tick(MC);
         if (openSettingsNextTick) {
             openSettingsNextTick = false;
             MC.gui.setScreen(new TrevorSettingsScreen());

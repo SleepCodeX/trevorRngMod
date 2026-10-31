@@ -1,3 +1,12 @@
+# Trevor Roll 1.7.0 validation
+
+- Source: `a30d91e1ae2b1bbb751e38d89a724fa0c1a51c5f`.
+- [Run 80](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41233693141) passed Java 25 wrapper validation, real Loom `clean build check`, production JAR verification and `runProductionClientGameTest`.
+- Client checks cover all eight modules at four window/GUI scale combinations, scrolling and keyboard focus, clipped input, native slider endpoints, search/categories, settings persistence, sound selection, key capture/native Controls/rebinding/reset/chat safety, and normal/depth artwork including edge-on views and OpenGL checks.
+- Existing roll, crest, HUD, reward and audio checks also passed. Actual screenshots were visually inspected; [media provenance](docs/media/1.7.0/README.md) identifies the captures.
+- Tests use a disposable offline singleplayer world. They do not authenticate to Hypixel or validate the user's full modpack.
+- The final main workflow repeats build and client validation before publishing the tested JAR.
+
 # Trevor Roll 1.4.0 validation
 
 The user confirmed that the refined 1.4.0-dev build works well in-game on
