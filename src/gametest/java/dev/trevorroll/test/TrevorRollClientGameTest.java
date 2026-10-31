@@ -136,6 +136,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             }
             dev.trevorroll.MenuKeybindChecks.run(context);
             dev.trevorroll.MenuLifecycleChecks.run(context);
+            context.runOnClient(mc->dev.trevorroll.MenuPerformanceChecks.run());
             command(context, "trevormod settings");
             context.waitTicks(2);
             context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Unified settings command opens menu"));

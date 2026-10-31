@@ -41,18 +41,23 @@ public final class TrevorSettingsScreen extends Screen {
     private String query = "";
     private EditBox searchBox;
     private final Map<AbstractWidget,Integer> filters = new IdentityHashMap<>();
+    private final Map<AbstractWidget,Integer> tabs = new IdentityHashMap<>();
+    private int tabStart, tabY;
+    private Button previousTab,nextTab;
+    private int lastTab;
     private static final String[] FILTERS = {"All", "Hunts", "Visuals", "Audio"};
     public TrevorSettingsScreen() { this(null); }
     public TrevorSettingsScreen(Screen parent) { super(Component.literal("Trevor Mod settings")); this.parent = parent; }
 
     @Override protected void init() {
-        hoverStates.clear();controls.clear();baseY.clear();fixed.clear();modules.clear();navigation.clear();filters.clear();searchBox=null;draggingScrollbar=false;
+        hoverStates.clear();controls.clear();baseY.clear();fixed.clear();modules.clear();navigation.clear();filters.clear();tabs.clear();searchBox=null;draggingScrollbar=false;
         frameWidth = Math.min(1180, width - (width >= 600 ? 48 : 20));
         frameHeight = Math.min(780, height - (height >= 300 ? 32 : 20));
         frameLeft = (width - frameWidth) / 2; frameTop = (height - frameHeight) / 2;
         sidebar = frameWidth >= 560 && frameHeight >= 300;
         contentWidth = frameWidth - 40 - (sidebar ? 120 : 0); left = frameLeft + 20 + (sidebar ? 120 : 0);
-        column = (contentWidth - GAP) / 2; top = frameTop + (height >= 300 ? 108 : 78);
+        column = (contentWidth - GAP) / 2; top = frameTop + (page<0?(height >= 300 ? 144 : 108):(height >= 300 ? 108 : 78));
+        initModuleTabs();
         if(page<0){initDashboard();return;}
         var home=button("Modules",left,frameTop+14,68,24,()->selectModule(-1));fixed.add(home);
         var r = TrevorRollClient.settings(); var c = TrapperCrestHudClient.settings();
@@ -235,20 +240,48 @@ public final class TrevorSettingsScreen extends Screen {
             navigation.put(b,target);fixed.add(b);
         }
     }
+    /** All modules in one persistent rail; overflow stays readable and keyboard reachable. */
+    private void initModuleTabs() {
+        tabY=frameTop+(height>=300?68:44);
+        for(int i=0;i<TITLES.length;i++) {
+            final int target=i;
+            int w=(int)Math.ceil(MenuFont.width(TITLES[i])*.84)+22;
+            var b=button(TITLES[i],left,tabY,w,24,()->selectModule(target));tabs.put(b,i);fixed.add(b);
+        }
+        previousTab=button("<",left+contentWidth-38,tabY,18,24,()->{tabStart=Math.max(0,tabStart-1);layoutTabs();});
+        nextTab=button(">",left+contentWidth-18,tabY,18,24,()->{if(lastTab<7)tabStart++;layoutTabs();});
+        fixed.add(previousTab);fixed.add(nextTab);
+        if(page>=0&&page<tabStart)tabStart=page;
+        layoutTabs();
+        while(page>lastTab&&tabStart<7){tabStart++;layoutTabs();}
+    }
+    private void layoutTabs() {
+        int x=left,end=left+contentWidth-44;lastTab=tabStart-1;
+        for(int i=0;i<8;i++) {
+            final int index=i;
+            var b=tabs.entrySet().stream().filter(e->e.getValue()==index).findFirst().orElseThrow().getKey();
+            boolean show=i>=tabStart&&i==lastTab+1&&x+b.getWidth()<=end;
+            b.visible=show;b.active=show;
+            if(show){b.setX(x);x+=b.getWidth()+5;lastTab=i;}
+        }
+        previousTab.active=tabStart>0;nextTab.active=lastTab<7;
+    }
     public void selectFilter(int next) {
         filter=Math.clamp(next,0,FILTERS.length-1);scroll=0;visibleScroll=0;smoothWheel=false;
         if(page<0)rebuildWidgets();
     }
     public void setSearch(String text) {
-        query=text==null?"":text;
+        query=text==null?"":text;normalizedQuery=query.toLowerCase(Locale.ROOT).strip();
         if(searchBox!=null)searchBox.setValue(query);
         if(page<0)layoutDashboard();
     }
+    private static final String[] SEARCH_TEXT = java.util.stream.IntStream.range(0,8)
+        .mapToObj(i->(TITLES[i]+" "+DESCRIPTIONS[i]).toLowerCase(Locale.ROOT)).toArray(String[]::new);
+    private String normalizedQuery="";
     private boolean matches(int module) {
         boolean category=filter==0 || filter==1&&(module==0||module==1||module==6)
             || filter==2&&(module==2||module==3||module==4) || filter==3&&module==5;
-        return category && (TITLES[module]+" "+DESCRIPTIONS[module]).toLowerCase(Locale.ROOT)
-            .contains(query.toLowerCase(Locale.ROOT).strip());
+        return category && SEARCH_TEXT[module].contains(normalizedQuery);
     }
     private void initDashboard() {
         for(int i=0;i<TITLES.length;i++) {
@@ -259,12 +292,12 @@ public final class TrevorSettingsScreen extends Screen {
         searchBox=new EditBox(font,left+contentWidth-searchW,frameTop+16,searchW,20,Component.literal("Search modules"));
         searchBox.setBordered(false);searchBox.setTextColor(0xEAE6F2);searchBox.setTextShadow(false);
         searchBox.setHint(Component.literal("Search modules..."));searchBox.setMaxLength(64);searchBox.setValue(query);
-        searchBox.setResponder(value->{query=value;scroll=0;visibleScroll=0;smoothWheel=false;layoutDashboard();});
+        searchBox.setResponder(value->{query=value;normalizedQuery=value.toLowerCase(Locale.ROOT).strip();scroll=0;visibleScroll=0;smoothWheel=false;layoutDashboard();});
         controls.add(searchBox);fixed.add(searchBox);addRenderableWidget(searchBox);
         int x=left;
         for(int i=0;i<FILTERS.length;i++) {
             final int category=i;int w=i==0?36:i==2?56:49;
-            var b=button(FILTERS[i],x,frameTop+(height>=300?68:44),w,height>=300?24:20,()->selectFilter(category));
+            var b=button(FILTERS[i],x,frameTop+(height>=300?106:78),w,height>=300?24:20,()->selectFilter(category));
             filters.put(b,i);fixed.add(b);x+=w+7;
         }
         initFooter();layoutDashboard();
@@ -273,7 +306,7 @@ public final class TrevorSettingsScreen extends Screen {
         baseY.clear();
         var shown=modules.entrySet().stream().filter(e->matches(e.getValue())).sorted(Map.Entry.comparingByValue()).toList();
         for(var e:modules.entrySet()){e.getKey().visible=false;e.getKey().active=matches(e.getValue());}
-        int columns=contentWidth>=820?4:contentWidth>=420?3:2;
+        int columns=contentWidth>=420?3:2;
         int cardW=(contentWidth-(columns-1)*GAP)/columns;
         int cardH=Math.min(height>=300?142:110,viewportBottom()-top);
         for(int i=0;i<shown.size();i++) {
@@ -309,6 +342,11 @@ public final class TrevorSettingsScreen extends Screen {
     }
     @Override public boolean mouseScrolled(double x, double y, double horizontal, double vertical) {
         if (closingAt != 0) return true;
+        if(y>=tabY&&y<tabY+24&&x>=left&&x<left+contentWidth&&(horizontal!=0||vertical!=0)) {
+            double direction=horizontal!=0?horizontal:-vertical;
+            if(direction>0&&lastTab<7)tabStart++;else if(direction<0&&tabStart>0)tabStart--;
+            layoutTabs();return true;
+        }
         if (x >= frameLeft && x <= frameLeft + frameWidth && y >= top && y < viewportBottom() && vertical != 0) {
             smoothWheel = Math.abs(vertical) < 10 && Math.abs(vertical) >= .1;
             scroll += (int) Math.round(-vertical * (CONTROL_HEIGHT + GAP)); positionRows(); return true;
@@ -371,13 +409,6 @@ public final class TrevorSettingsScreen extends Screen {
             positionRows(); return true;
         }
         return super.keyPressed(e);
-    }
-    private void description(GuiGraphicsExtractor g,String text,double x,double y,double width,double scale,int color){
-        String[] words=text.split(" ");String line="";int n=0;
-        for(String word:words){if(MenuFont.width(line+" "+word)*scale>width&&!line.isEmpty()){
-            MenuFont.text(g,line,x,y+n*10,scale,color);line=word;if(++n==2)return;
-        }else line=line.isEmpty()?word:line+" "+word;}
-        if(!line.isEmpty())MenuFont.text(g,line,x,y+n*10,scale,color);
     }
     private static int accent(int module) {
         return module==4||module==6?0xFFE7C081:module==1?0xFFA9C8AE:0xFFC4AFE9;
@@ -447,7 +478,7 @@ public final class TrevorSettingsScreen extends Screen {
         } else {
             icon(c,page,left+87,frameTop+27,.7);
             MenuFont.text(g,TITLES[page],left+104,frameTop+18,1.35,0xFFF3EBDD);
-            MenuFont.text(g,MenuFont.ellipsis(DESCRIPTIONS[page],contentWidth/.82),left,frameTop+(height>=300?64:49),.82,0xFFADB5C4);
+            if(height>=300)MenuFont.text(g,MenuFont.ellipsis(DESCRIPTIONS[page],contentWidth/.82),left,frameTop+45,.82,0xFFADB5C4);
         }
         g.enableScissor(left-1,top,left+contentWidth+1,viewportBottom());
         try {
@@ -462,6 +493,17 @@ public final class TrevorSettingsScreen extends Screen {
         } finally {g.disableScissor();}
         c.round(left,viewportBottom()+5,contentWidth,1,0,0xFF303949);
         for(var b:fixed) {
+            if(!b.visible)continue;
+            Integer tab=tabs.get(b);
+            if(tab!=null) {
+                boolean selected=tab==page;
+                boolean hover=mx>=b.getX()&&mx<b.getRight()&&my>=b.getY()&&my<b.getBottom();
+                if(selected||hover||b.isFocused())c.round(b.getX(),b.getY(),b.getWidth(),b.getHeight(),6,
+                    selected?0xFF3C3459:0xFF263140);
+                MenuFont.text(g,TITLES[tab],b.getX()+11,b.getY()+8,.84,selected?0xFFE7D6FF:0xFFAEBBCD);
+                if(selected)c.round(b.getX()+10,b.getBottom()-2,b.getWidth()-20,2,1,0xFFB99AED);
+                continue;
+            }
             if(b==searchBox) {
                 c.round(b.getX()-7,b.getY()-4,b.getWidth()+10,26,6,searchBox.isFocused()?0xFF8971BD:0xFF34404C);
                 c.round(b.getX()-6,b.getY()-3,b.getWidth()+8,24,5,0xFF202A34);
