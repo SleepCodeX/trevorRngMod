@@ -10,7 +10,7 @@ Build instructions, complete commands and implementation details for the current
 | Fabric Loader | 0.19.5 or newer; built against 0.19.5 |
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
-| Current release | 1.7.0 |
+| Current release | 1.8.0 |
 
 ## Build
 
@@ -33,8 +33,8 @@ The included Gradle wrapper downloads Gradle and the required dependencies on th
 Build output:
 
 ```text
-build/libs/trevor-roll-1.7.0.jar          # Installable production JAR
-build/libs/trevor-roll-1.7.0-sources.jar  # Java source archive
+build/libs/trevor-roll-1.8.0.jar          # Installable production JAR
+build/libs/trevor-roll-1.8.0-sources.jar  # Java source archive
 ```
 
 For a development Minecraft instance, run `gradlew.bat runClient` on Windows or `bash gradlew runClient` on macOS/Linux.

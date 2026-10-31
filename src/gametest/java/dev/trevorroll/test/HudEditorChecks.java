@@ -63,6 +63,28 @@ public final class HudEditorChecks {
         screen.mouseScrolled(screen.width / 2., (screen.viewportTop() + screen.viewportBottom()) / 2., 0, 10000);
         require(scroll(screen) == 0, "Wheel returns to the first row");
         settingsKeyboard(screen);
+        if(page==-1)settingsTabs(screen);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void settingsTabs(TrevorSettingsScreen screen) {
+        try {
+            var field=TrevorSettingsScreen.class.getDeclaredField("tabs");field.setAccessible(true);
+            screen.selectModule(0);
+            for(int target=0;target<8;target++) {
+                final int index=target;
+                var map=(Map<AbstractWidget,Integer>)field.get(screen);
+                AbstractWidget tab=map.entrySet().stream().filter(e->e.getValue()==index).findFirst().orElseThrow().getKey();
+                for(int step=0;!tab.visible&&step<8;step++) {
+                    click(screen,widgets(screen).stream().filter(b->b.getMessage().getString().equals("Next modules")&&b.active).findFirst().orElseThrow());
+                }
+                require(tab.visible,"Overflow tab becomes accessible");
+                click(screen,tab);
+                require(bodyControls(screen).size()>0,"Tab opens a module detail page");
+                require(widgets(screen).stream().anyMatch(b->b.getMessage().getString().equals("Modules")),"Cards remain accessible from each tab");
+            }
+            screen.selectModule(-1);
+        } catch(ReflectiveOperationException e){throw new AssertionError(e);}
     }
 
     private static void settingsKeyboard(TrevorSettingsScreen screen) {
@@ -228,7 +250,8 @@ public final class HudEditorChecks {
             screen.setSearch("there-is-no-such-trevor-module");
             requireModuleNames(screen);
             checkSettingsGeometry(mc, screen);
-            settingsKeyboard(screen); // Hidden search results must not take keyboard focus.
+            settingsKeyboard(screen);
+        // Hidden search results must not take keyboard focus.
         } finally {
             screen.setSearch(""); screen.selectFilter(0); screen.selectModule(-1);
         }

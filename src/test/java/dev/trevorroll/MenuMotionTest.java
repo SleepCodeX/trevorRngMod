@@ -14,6 +14,19 @@ public final class MenuMotionTest {
             require(opacity >= previous && opacity <= 1, "Fade is monotonic and bounded");
             previous = opacity;
         }
+        require(MenuMotion.closingOpacity(0,true)==1,"Close starts visible");
+        require(MenuMotion.closingOpacity(MenuMotion.CLOSE_NANOS,true)==0,"Close finishes exactly");
+        require(MenuMotion.closingOpacity(0,false)==0,"Reduced motion closes immediately");
+        double close=1;
+        for(long t=0;t<=MenuMotion.CLOSE_NANOS;t+=1_000_000) {
+            double next=MenuMotion.closingOpacity(t,true);require(next<=close&&next>=0,"Close is monotonic");close=next;
+        }
+        double at30=0,at144=0;
+        for(int i=0;i<30;i++)at30=MenuMotion.approach(at30,100,1./30,.055);
+        for(int i=0;i<144;i++)at144=MenuMotion.approach(at144,100,1./144,.055);
+        require(Math.abs(at30-at144)<1e-9,"Scrolling response is frame-rate independent");
+        require(MenuMotion.mix(0xFF000000,0xFFFFFFFF,0)==0xFF000000,"Color start exact");
+        require(MenuMotion.mix(0xFF000000,0xFFFFFFFF,1)==0xFFFFFFFF,"Color end exact");
         for (int module = 0; module < 8; module++) {
             double a = MenuMotion.iconAngle(0, module);
             require(Math.abs(MenuMotion.iconAngle(24_000_000_000L, module) - a) < 1e-9, "Rotation loops without drift");

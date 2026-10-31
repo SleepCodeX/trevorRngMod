@@ -3,7 +3,7 @@
   "id": "trevorroll",
   "version": "${version}",
   "name": "Trevor Roll",
-  "description": "Animated Trevor hunt reveals, Elusive celebrations and live Trapper Crest progress for Hypixel SkyBlock, with a searchable module menu, custom pixel artwork, optional 3D menu graphics and a configurable HUD.",
+  "description": "Animated Trevor hunt reveals, Elusive celebrations and live Trapper Crest progress for Hypixel SkyBlock, with roomy module cards, quick tabs, smooth menu motion and an adjustable HUD.",
   "authors": ["Anish"],
   "license": "MIT",
   "environment": "client",

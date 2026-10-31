@@ -7,6 +7,19 @@ import java.util.*;
 final class MenuTheme {
     private static final Map<AbstractWidget,Double> VALUES=new WeakHashMap<>();
     private static final Map<AbstractWidget,String> HELP=new WeakHashMap<>();
+    private static final Map<AbstractWidget,Motion> MOTION=new WeakHashMap<>();
+    private static final Map<AbstractWidget,HelpLayout> LINES=new WeakHashMap<>();
+    private static final class Motion { double hover,on; long at=System.nanoTime(); boolean initialized; }
+    private record HelpLayout(String text,int width,String[] lines) {}
+    private static Motion motion(AbstractWidget b,boolean hover,boolean on) {
+        var m=MOTION.computeIfAbsent(b,k->new Motion());long now=System.nanoTime();
+        double dt=Math.min(.1,(now-m.at)/1e9);m.at=now;
+        if(!m.initialized){m.on=on?1:0;m.initialized=true;}
+        boolean animate=TrevorRollClient.settings().menuAnimations;
+        m.hover=animate?MenuMotion.approach(m.hover,hover||b.isFocused()?1:0,dt,.075):(hover?1:0);
+        m.on=animate?MenuMotion.approach(m.on,on?1:0,dt,.065):(on?1:0);
+        return m;
+    }
     static void help(AbstractWidget b,String text){HELP.put(b,text);}
     static String hoveredHelp(java.util.List<? extends AbstractWidget> controls,int x,int y){
         for(var b:controls)if(b.visible&&x>=b.getX()&&x<b.getRight()&&y>=b.getY()&&y<b.getBottom())return HELP.getOrDefault(b, "");
@@ -19,7 +32,7 @@ final class MenuTheme {
         if(b.getHeight()>=44){studioControl(g,b,mx,my);return;}
         double x=b.getX(),y=b.getY(),w=b.getWidth(),h=b.getHeight();
         boolean hover=mx>=x&&mx<x+w&&my>=y&&my<y+h,focus=b.isFocused();
-        var c=new MinecraftCanvas(g);
+        var c=new MinecraftCanvas(g,MenuFont.opacity(),true);
         int edge=!b.active?0xFF9B83E9:focus?0xFFE0D3FF:hover?0xFF8272B0:0xFF3A3D53;
         c.round(x,y+2,w,h,6,0x50000000);c.round(x,y,w,h,6,edge);
         c.round(x+1,y+1,w-2,h-2,5,!b.active?0xFF35304F:hover?0xFF313347:0xFF222536);
@@ -53,11 +66,12 @@ final class MenuTheme {
     private static void studioControl(GuiGraphicsExtractor g, AbstractWidget b, int mx, int my) {
         double x=b.getX(), y=b.getY(), w=b.getWidth(), h=b.getHeight();
         boolean hover=mx>=x&&mx<x+w&&my>=y&&my<y+h;
-        var c=new MinecraftCanvas(g);
-        int edge=b.isFocused()?0xFFD9C5FF:hover?0xFF8E79B5:0xFF34414E;
+        var c=new MinecraftCanvas(g,MenuFont.opacity(),true);
+        var motion=motion(b,hover,b.getMessage().getString().endsWith(": ON"));
+        int edge=b.isFocused()?0xFFD9C5FF:MenuMotion.mix(0xFF34414E,0xFF8E79B5,motion.hover);
         c.round(x,y+2,w,h,9,0x50000000);
         c.round(x,y,w,h,9,edge);
-        c.round(x+1,y+1,w-2,h-2,8,hover?0xFF283242:0xFF1C252F);
+        c.round(x+1,y+1,w-2,h-2,8,MenuMotion.mix(0xFF1C252F,0xFF283242,motion.hover));
         String label=b.getMessage().getString(), help=helpText(b);
         Double value=VALUES.get(b);
         if(value!=null){
@@ -76,25 +90,27 @@ final class MenuTheme {
             boolean on=label.endsWith(": ON"); label=label.substring(0,label.lastIndexOf(':'));
             MenuFont.text(g,MenuFont.ellipsis(label,w-95),x+13,y+11,1,0xFFF3EBDD);
             MenuFont.text(g,on?"On":"Off",x+w-65,y+13,.76,on?0xFFDCCCF6:0xFFA6B1C3);
-            c.round(x+w-45,y+9,32,16,8,on?0xFF8B6DE2:0xFF4C5668);
-            c.ellipse(x+w-(on?27:43),y+11,12,12,on?0xFFF8F3FF:0xFFA8B0C2);
-            helpLines(g,help,x+13,y+29,w-26);
+            c.round(x+w-45,y+9,32,16,8,MenuMotion.mix(0xFF4C5668,0xFF8B6DE2,motion.on));
+            c.ellipse(x+w-43+16*motion.on,y+11,12,12,MenuMotion.mix(0xFFA8B0C2,0xFFF8F3FF,motion.on));
+            helpLines(g,b,help,x+13,y+29,w-26);
         }else{
             double labelY=help.isEmpty()?y+(h-9)/2:y+11;
             MenuFont.text(g,MenuFont.ellipsis(label,(w-28)/1.02),x+14,labelY,1.02,0xFFF0EAFB);
-            if(!help.isEmpty())helpLines(g,help,x+14,y+29,w-28);
+            if(!help.isEmpty())helpLines(g,b,help,x+14,y+29,w-28);
         }
     }
-    private static void helpLines(GuiGraphicsExtractor g,String text,double x,double y,double width){
-        String line="";int row=0;
-        for(String word:text.split(" ")){
-            String next=line.isEmpty()?word:line+" "+word;
-            if(MenuFont.width(next)*.8>width&&!line.isEmpty()){
-                MenuFont.text(g,line,x,y+row*10,.8,0xFFB6BDCF);
-                if(++row==2)return;
-                line=word;
-            }else line=next;
+    private static void helpLines(GuiGraphicsExtractor g,AbstractWidget b,String text,double x,double y,double width){
+        var layout=LINES.get(b);
+        if(layout==null||layout.width!=(int)width||!layout.text.equals(text)) {
+            var lines=new ArrayList<String>();String line="";
+            for(String word:text.split(" ")) {
+                String next=line.isEmpty()?word:line+" "+word;
+                if(MenuFont.width(next)*.8>width&&!line.isEmpty()) {lines.add(line);line=word;} else line=next;
+                if(lines.size()==2)break;
+            }
+            if(lines.size()<2&&!line.isEmpty())lines.add(MenuFont.ellipsis(line,width/.8));
+            layout=new HelpLayout(text,(int)width,lines.toArray(String[]::new));LINES.put(b,layout);
         }
-        if(!line.isEmpty())MenuFont.text(g,MenuFont.ellipsis(line,width/.8),x,y+row*10,.8,0xFFB6BDCF);
+        for(int row=0;row<layout.lines.length;row++)MenuFont.text(g,layout.lines[row],x,y+row*10,.8,0xFFB6BDCF);
     }
 }

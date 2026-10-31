@@ -1,4 +1,4 @@
-# Trevor module browser (1.7.0)
+# Trevor module browser (1.8.0)
 
 The browser follows the [OneClient / OneConfig](https://polyfrost.org/projects/oneclient)
 configuration workflow: a persistent utility sidebar, searchable category-filtered
@@ -9,15 +9,13 @@ all Trevor pixel artwork, menu code and depth effects are original.
 ## What's included
 
 - Eight modules with opaque readable panels, generous gutters, aligned controls,
-  responsive cards and a compact fallback at the minimum 320×240 GUI size.
+  a maximum of three cards per row, quick top tabs and a compact fallback at the minimum 320×240 GUI size.
 - Custom paw/moon logo and eight multi-tone pixel illustrations. Lightweight,
   static artwork is the default.
 - Optional **Advanced graphics** adds slowly rotating, obliquely projected icons:
   a thick square Trapper Crest prism, a custom pelt token and golden coin rims.
-  Text and controls do not rotate. Hidden icons are not rendered; sprites are
-  packed into rectangle runs once, with no animation threads or per-icon clocks.
-- A time-based 220ms opening fade, with a separate reduced-motion toggle. The fade
-  never blocks input or replays during module navigation.
+  Text and controls do not rotate. Hidden icons are not rendered; original sprites use a single baked atlas, with no animation threads or per-icon clocks.
+- Actual-layer fades open over 260 ms and close over 170 ms. Hover, toggles and wheel scrolling use elapsed-time easing. Reduced motion makes them immediate. Module navigation does not replay the opening fade.
 - **Open menu key** is unbound by default. Configure it inline or in native
   Minecraft Controls; both use the same persisted mapping. Escape cancels capture,
   Delete/Backspace clears it, and a Reset button restores Unbound. The shortcut
@@ -41,5 +39,5 @@ and apply, unbound/bind/rebind/reset behavior, chat protection and repeat draini
 Separate deterministic tests check fade timing and frame-rate-independent rotation;
 actual-client screenshots cover normal/advanced modes and edge-on prism/coin views.
 
-The user authorized stable 1.7.0 after final validation. The main-only release
+The user authorized stable 1.8.0 after final validation. The main-only release
 workflow publishes only after the real build and production-client checks pass.
