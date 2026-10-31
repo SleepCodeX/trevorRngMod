@@ -142,19 +142,29 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             context.waitTicks(2);
             context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Roll settings command opens menu"));
             context.takeScreenshot("settings-menu");
-            for (int guiScale : new int[]{2, 3}) {
+            int[][] settingsSizes = {{854, 480, 1}, {1280, 720, 2}, {1280, 720, 3}, {960, 720, 3}};
+            for (int[] size : settingsSizes) {
+                int guiScale = size[2];
+                String suffix = size[0] + "x" + size[1] + "-scale-" + guiScale;
+                context.getInput().resizeWindow(size[0], size[1]);
                 context.runOnClient(mc -> mc.options.guiScale().set(guiScale));
                 context.waitTicks(3);
-                for (int page = 0; page < 7; page++) {
+                for (int page = -1; page < 7; page++) {
                     final int selectedPage = page;
+                    String module = page < 0 ? "dashboard" : "page-" + page;
                     context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.settingsPage(mc, selectedPage));
                     context.waitTick();
-                    context.takeScreenshot("settings-page-" + page + "-scale-" + guiScale);
-                    context.runOnClient(mc -> mc.gui.screen().mouseScrolled(200,100,0,-5));
+                    context.takeScreenshot("settings-" + module + "-" + suffix);
+                    context.runOnClient(dev.trevorroll.HudEditorChecks::settingsBottom);
                     context.waitTick();
-                    context.takeScreenshot("settings-page-bottom-" + page + "-scale-" + guiScale);
+                    context.takeScreenshot("settings-" + module + "-bottom-" + suffix);
                 }
+                context.runOnClient(dev.trevorroll.HudEditorChecks::settingsInputs);
             }
+            // Keep the existing HUD drag/resize test at its established reference size.
+            context.getInput().resizeWindow(1280, 720);
+            context.runOnClient(mc -> mc.options.guiScale().set(3));
+            context.waitTicks(3);
             context.runOnClient(mc -> mc.gui.setScreen(new TrevorLayoutScreen(mc.gui.screen())));
             context.waitTicks(10);
             context.takeScreenshot("layout-editor");

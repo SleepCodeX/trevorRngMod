@@ -28,11 +28,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y xvfb xauth libgl1-mesa-dri mesa-utils
       - name: Launch production JAR and test commands and HUD in Minecraft
         run: bash ./gradlew runProductionClientGameTest --no-daemon
-      - name: Upload installable release JAR
+      - name: Read candidate version
+        id: candidate
+        run: echo "version=$(sed -n 's/^version=//p' gradle.properties)" >> "$GITHUB_OUTPUT"
+      - name: Upload installable candidate JAR
         uses: actions/upload-artifact@v4
         with:
-          name: trevor-roll-1.6.0-mc26.2-loader0.19.5
-          path: build/libs/trevor-roll-1.6.0.jar
+          name: trevor-roll-${{ steps.candidate.outputs.version }}-mc26.2-loader0.19.5
+          path: build/libs/trevor-roll-${{ steps.candidate.outputs.version }}.jar
           if-no-files-found: error
       - name: Upload validation evidence
         if: always()
