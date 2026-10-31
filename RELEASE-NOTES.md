@@ -1,13 +1,31 @@
-# Trevor Roll 1.7.0
+# Trevor Roll 1.8.0
 
-Your hunts, in one cozy little control room.
+Your hunts, with room to breathe.
 
-![Trevor module browser](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.7.0/docs/media/1.7.0/settings-modules.png)
+![Roomy module cards and quick top tabs](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/settings-modules.png)
 
-- **A whole new module menu:** search, categories, roomy controls and original pixel artwork, inspired by OneClient's configuration workflow.
-- **Make it yours:** optional slowly spinning 3D module icons, a custom pelt coin and a thick Trapper Crest. Lightweight graphics stay the default.
-- **Open it your way:** a gentle fade and a configurable menu shortcut, unbound by default. Commands still work as before.
+**Cards and tabs.** Three-column browsing, quick access across the top, and smooth scrolling.
 
-All your hunt reveals, Elusive celebrations, crest tracking, audio layers and HUD controls are still here.
+![Optional turning artwork](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/modules-advanced.gif)
 
-**Install:** Minecraft Java 26.2, Fabric Loader 0.19.5+ and Fabric API for 26.2. Replace the old Trevor Roll JAR with `trevor-roll-1.7.0.jar`—keep only one version installed. Open `/trevormod settings`.
+**Softer motion.** Fade in, fade out, and eased controls. Reduced motion is one toggle away; depth graphics remain optional.
+
+| Hunt reveals | Trapper Crest |
+| --- | --- |
+| ![Hunt reel](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/hunt-roll.png) | ![Crest progress](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/crest-states.gif) |
+
+| Elusive celebrations | Pelt tracker |
+| --- | --- |
+| ![Reward styles](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/elusive-styles.gif) | ![Tracker settings](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/pelt-tracker.png) |
+
+| Two-layer audio | HUD layout |
+| --- | --- |
+| ![Audio mixer](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/audio-mixer.gif) | ![HUD editor](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/hud-editor.png) |
+
+| Appearance | Menu & Keys |
+| --- | --- |
+| ![Appearance](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/appearance.gif) | ![Menu preferences](https://raw.githubusercontent.com/SleepCodeX/trevorRngMod/1.8.0/docs/media/1.8.0/menu-keys.gif) |
+
+**Install:** Minecraft 26.2, Java 25, Fabric Loader 0.19.5+ and Fabric API for 26.2. Replace the older Trevor Roll JAR with `trevor-roll-1.8.0.jar`.
+
+Open **`/trevormod settings`**. The shortcut starts unbound. Hunt odds, commands and gameplay behavior are preserved. Captures are offline demos; the automated suite does not authenticate to Hypixel or validate your entire modpack.

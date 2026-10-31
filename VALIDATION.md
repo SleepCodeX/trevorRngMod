@@ -1,3 +1,14 @@
+# Trevor Roll 1.8.0 validation
+
+- Runtime source: `0bbb8119024ae45d7e509165289070906c6891e6`.
+- [Exact runtime run](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41237911146) passed the real Java 25 Loom `clean build check`, production bytecode verification and `runProductionClientGameTest`.
+- All eight modules at four window/GUI-scale combinations, native sliders/toggles, wheel and keyboard reachability, masked input, tab overflow, search/categories, sound selection and disk persistence passed. New checks cover real smooth-wheel progress, delayed close, repeated Escape, input guarding, opacity cleanup and instant reduced motion. Existing hunt, crest, HUD, reward, keybinding and audio checks passed.
+- Actual normal/advanced screenshots were inspected at large and compact sizes and five artwork angles, including edge-on. [Media provenance](docs/media/1.8.0/README.md) identifies every published frame.
+- Default artwork now uses one texture quad per icon instead of 34–88 rectangle submissions; the logo uses one instead of 168. Runtime sprite packing is removed. Font metrics and help wrapping are cached.
+- A diagnostic on the same runner compared 20,000 identical width calculations: the previous method took 133,793,715 ns median; cached metrics took 1,677,721 ns in [run 41237174226](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41237174226). Widths matched. This is routine-level CPU evidence, not a claim about whole-game startup, frame rate or the user's modpack.
+- The final documentation/media head and main release workflow repeat real build/client validation before publication.
+- Tests use a disposable offline world and do not authenticate to Hypixel or validate the user's full modpack.
+
 # Trevor Roll 1.7.0 validation
 
 - Source: `a30d91e1ae2b1bbb751e38d89a724fa0c1a51c5f`.

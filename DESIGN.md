@@ -18,9 +18,9 @@ The bundled OFL Nunito atlas preserves the established rounded typography.
 The shell uses the available screen with 10–24 logical pixel side margins and
 10–16 pixel vertical margins, capped at 1180 × 780 logical pixels. It is not
 full screen. The rail appears where sufficient space exists. Header, body and
-footer stay separate. Three roomy cards per row are preferred at ordinary sizes;
-large screens can show four and small screens two. Cards use 16 pixel gutters,
-up to 142 pixel height, a short description and a 30 pixel label band. Overflow
+footer stay separate. Three roomy cards per row are used at ordinary sizes;
+small screens use two. Cards use 16 pixel gutters,
+up to 124 pixel height, a short description and a 30 pixel label band. Overflow
 scrolls instead of shrinking the whole grid. Detail rows use 60 pixels plus gutters.
 
 Opening fades actual layers over 260 ms; closing fades over 170 ms. The world

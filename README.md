@@ -1,70 +1,47 @@
 # Trevor Roll
 
-A little more character for every Trevor hunt: animated reveals, golden Elusive celebrations and live Trapper Crest progress for **Hypixel SkyBlock**.
+Small hunts. Big moments. A client-side Trevor companion for **Hypixel SkyBlock**.
 
-**[Download 1.7.0](https://github.com/SleepCodeX/trevorRngMod/releases/latest)** · **[Development builds](https://github.com/SleepCodeX/trevorRngMod/actions/workflows/build.yml)** · **`/trevormod settings`**
+**[Download 1.8.0](https://github.com/SleepCodeX/trevorRngMod/releases/latest)** · **Minecraft 26.2 · Fabric · Java 25**
 
-**Minecraft Java 26.2 · Fabric · Client-side**
+![Trevor's roomy three-column module browser and top module tabs](docs/media/1.8.0/settings-modules.png)
 
-![Trevor's module browser with custom pixel icons, search, filters and navigation](docs/media/1.7.0/settings-modules.png)
+**Your hunt. Your way.** Roomy cards, quick module tabs, search and smooth scrolling. Open **`/trevormod settings`**.
 
-## Little hunts. Big moments.
-
-The reel reveals the rarity Trevor already assigned—it never changes your odds. Elusive hunts get their own celebration, with four styles and two sound layers you can mix yourself.
-
-| Your next hunt | An Elusive moment |
+| Hunt reveals | Trapper Crest |
 | --- | --- |
-| ![Trevor rarity reveal](docs/media/1.6.0/hunt-roll.png) | ![Golden Elusive celebration](docs/media/1.6.0/elusive-jackpot.png) |
+| A little suspense for the rarity Trevor already chose. | The first crest from the left, tracked from its actual item lore. |
+| ![Trevor hunt reveal](docs/media/1.8.0/hunt-roll.png) | ![Crest progress, switch and missing-hotbar reminders](docs/media/1.8.0/crest-states.gif) |
 
-Keep a **Trapper Crest in your hotbar**. The HUD follows the first crest from the left, reads its actual pelt lore, and reminds you when it is time to switch. Pelts/hour and optional completion sounds help you keep going.
+| Elusive celebrations | Pelt tracker |
+| --- | --- |
+| Four golden celebrations for the rare ones. | Pelts/hour and optional crest-completion sounds. |
+| ![Four Elusive reward styles in Minecraft](docs/media/1.8.0/elusive-styles.gif) | ![Pelt tracker controls](docs/media/1.8.0/pelt-tracker.png) |
 
-![Trapper Crest progress, active slot and pelts-per-hour subtitle](docs/media/1.6.0/crest-progress.png)
+| Sound, your way | A place for everything |
+| --- | --- |
+| Mix two sound layers and preview them together. | Drag, resize, snap and lock your HUD. |
+| ![Two-layer Audio Mixer](docs/media/1.8.0/audio-mixer.gif) | ![HUD layout editor](docs/media/1.8.0/hud-editor.png) |
 
-## Make it yours
+| Set the mood | Open it your way |
+| --- | --- |
+| Tune sizes, opacity and glow. | Bind a shortcut or choose instant, reduced-motion menus. |
+| ![Appearance settings](docs/media/1.8.0/appearance.gif) | ![Menu shortcut and motion preferences](docs/media/1.8.0/menu-keys.gif) |
 
-Eight modules keep your roll, crest, HUD layout, rewards, sound and menu preferences in one place. Search for what you need, open a card, and adjust it—without digging through commands.
+Set the menu shortcut in **Menu & Keys** or **Minecraft Controls → Trevor Roll**. During capture, **Escape** cancels and **Delete / Backspace** clears.
 
-![Roomy module settings with clear labels and controls](docs/media/1.7.0/settings-detail.png)
+**A little extra depth.** Optional slowly turning artwork. Smooth fades in and out. Lightweight graphics stay the default; the shortcut starts **unbound**.
 
-The default menu stays lightweight. Turn on **Menu & Keys → Advanced graphics** for slowly rotating pixel artwork, a pelt coin and a thick crest plate. Labels stay still. Prefer instant menus? Switch **Menu fade** off.
+![Optional advanced artwork in the actual menu](docs/media/1.8.0/modules-advanced.gif)
 
-![Optional advanced graphics with original rotating Trevor module artwork](docs/media/1.7.0/modules-advanced.gif)
-
-<details>
-<summary>Sound mixer, HUD editor and menu preferences</summary>
-
-Pick two reward sounds and preview the mix.
-
-![Two-layer Audio Mixer](docs/media/1.7.0/audio-mixer.png)
-
-Drag your HUD panels, resize their corners, and use snapping, locks or Undo to get the placement right. **Done** saves; **Cancel** restores the layout you started with.
-
-![Drag-and-resize HUD editor](docs/media/1.7.0/hud-editor.png)
-
-The opening shortcut is **unbound by default**. Assign it in **Menu & Keys** or Minecraft's **Controls → Key Binds → Trevor Roll**. In the menu, **Escape** cancels key capture and **Delete / Backspace** clears the binding.
-
-![Menu shortcut, fade and advanced graphics preferences](docs/media/1.7.0/menu-keys.png)
-
-</details>
-
-## Install & play
+## Install & hunt
 
 1. Use **Minecraft 26.2**, **Java 25**, **Fabric Loader 0.19.5+** and **Fabric API for 26.2**.
-2. Put one Trevor Roll JAR in your instance's `mods` folder. Remove older copies.
+2. Put [trevor-roll-1.8.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.8.0/trevor-roll-1.8.0.jar) in `mods`. Remove older Trevor Roll JARs.
 3. Join Hypixel SkyBlock, talk to Trevor, and keep your crest in hotbar slots **1–9**.
-4. Open **`/trevormod settings`** to make it feel like yours.
 
-[Download the 1.7.0 JAR](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.7.0/trevor-roll-1.7.0.jar). Prefer building it yourself? See the [developer guide](docs/DEVELOPMENT.md#build).
+**`/trevormod settings`** opens everything. **`/trevorroll test elusive`** previews a hunt; **`/trevormod preview`** previews your reward.
 
-### Handy commands
+[All commands & building](docs/DEVELOPMENT.md) · [Validation](VALIDATION.md) · [MIT license](LICENSE)
 
-- **`/trevormod settings`** — open every setting.
-- **`/trevorroll test elusive`** — preview a complete Elusive reveal.
-- **`/trevormod preview`** — preview your chosen celebration.
-- **`/trevorcrest demo uncommon`** — preview crest progress; `rare` and `missing` work too.
-
-Scroll or use **Tab**, **Page Up / Down**, and **Home / End** in the menu. Settings save when you leave. The optional menu shortcut works during gameplay without stealing chat input.
-
-[All commands, requirements and building](docs/DEVELOPMENT.md) · [Validation](VALIDATION.md) · [MIT license](LICENSE)
-
-*Images show real Minecraft demo sessions, not live Hypixel results. [Menu media](docs/media/1.7.0/README.md) · [Gameplay media](docs/media/1.6.0/README.md). Menu organization is inspired by [OneClient](https://polyfrost.org/projects/oneclient); Trevor's artwork is original, and OneClient is not required.*
+*Actual offline Minecraft demo captures, not live Hypixel results. [Media provenance](docs/media/1.8.0/README.md). Inspired by [OneClient](https://polyfrost.org/projects/oneclient); original Trevor artwork, no OneClient dependency. The mod never changes hunt odds.*
