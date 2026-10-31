@@ -424,7 +424,8 @@ public final class TrevorSettingsScreen extends Screen {
         int x=b.getX(),y=b.getY(),w=b.getWidth(),h=b.getHeight();
         boolean hover=mx>=x&&mx<b.getRight()&&my>=y&&my<b.getBottom()&&my>=top&&my<viewportBottom();
         double state=hoverStates[module];
-        state=MenuMotion.approach(state,hover||b.isFocused()?1:0,frameSeconds,.09);
+        state=TrevorRollClient.settings().menuAnimations
+            ?MenuMotion.approach(state,hover||b.isFocused()?1:0,frameSeconds,.09):(hover||b.isFocused()?1:0);
         hoverStates[module]=state;
         int tone=accent(module);
         c.round(x,y+3,w,h,12,0x50000000);
@@ -434,7 +435,7 @@ public final class TrevorSettingsScreen extends Screen {
         if(h>=112)MenuFont.text(g,MODULE_NUMBERS[module],x+w-24,y+9,.68,0xFF8896AB);
         double iconY=y+(h>=112?51:(h-26)/2.);
         c.glow(x+w/2.-34,iconY-30,68,60,MenuMotion.mix(0x088E68D6,0x388E68D6,state));
-        icon(c,module,x+w/2.,iconY-state*2, h>=112?1.8:1.35);
+        icon(c,module,x+w/2.,iconY-(TrevorRollClient.settings().menuAnimations?state*2:0), h>=112?1.8:1.35);
         if(h>=112)MenuFont.text(g,MenuFont.ellipsis(SUMMARIES[module],(w-18)/.7),
             x+(w-MenuFont.width(MenuFont.ellipsis(SUMMARIES[module],(w-18)/.7))*.7)/2,y+h-48,.7,0xFFA8B4C8);
         int band=MenuMotion.mix(0xFF514779,0xFF7964B5,state);
