@@ -53,6 +53,13 @@ final class MinecraftCanvas implements HudPainter.Canvas {
         colour = alpha(colour);
         if (width > 0 && height > 0 && (colour >>> 24) != 0) g.fill(x, y, x + width, y + height, colour);
     }
+    private static final Identifier MENU_ART = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/menu_art.png");
+    void menuSprite(int cell, int size, double x, double y, double scale) {
+        push(x - size * scale / 2, y - size * scale / 2, scale);
+        try { g.blit(RenderPipelines.GUI_TEXTURED, MENU_ART, 0, 0, cell * 32, 0,
+            size, size, size, size, 288, 32, alpha(0xFFFFFFFF)); }
+        finally { pop(); }
+    }
     @Override public void pop() { g.pose().popMatrix(); }
     @Override public double textWidth(String text) { return mc.font.width(text); }
     @Override public void text(String text, double x, double y, double size, int color) {
