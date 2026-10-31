@@ -70,6 +70,7 @@ public final class HudEditorChecks {
     private static void settingsTabs(TrevorSettingsScreen screen) {
         try {
             var field=TrevorSettingsScreen.class.getDeclaredField("tabs");field.setAccessible(true);
+            screen.selectModule(0);
             for(int target=0;target<8;target++) {
                 final int index=target;
                 var map=(Map<AbstractWidget,Integer>)field.get(screen);
