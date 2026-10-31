@@ -1,45 +1,45 @@
-# Settings studio candidate (1.6.1-dev)
+# Trevor module browser (1.7.0)
 
-A visual-only refresh of the unified Trevor settings menu, based on the 1.6.0
-release. Commands, configuration keys, HUD/reward animations, sounds and live
-hunt/crest detection are unchanged.
+The browser follows the [OneClient / OneConfig](https://polyfrost.org/projects/oneclient)
+configuration workflow: a persistent utility sidebar, searchable category-filtered
+module cards with centered artwork and accent label bands, then full-width settings
+rows inside the same window. OneClient is a design reference, not a dependency;
+all Trevor pixel artwork, menu code and depth effects are original.
 
-- Fully opaque charcoal cards and chrome, with restrained lavender, gold and mint
-  module accents, larger rounded icon wells and clearer text hierarchy.
-- Persistent module sidebar where space allows; compact screens retain the
-  Modules button and responsive dashboard. Incomplete card rows are centered.
-- 52-pixel setting rows, 12-pixel gutters, equal column widths and stacked paired
-  settings on narrow GUI scales. Help text is separated from labels and controls.
-- Scrollable content is clipped independently of the fixed header/footer. Mouse
-  input cannot activate a masked setting. Wheel, draggable scrollbar, Home/End,
-  Page Up/Down and Tab/Shift+Tab all reach settings; keyboard focus scrolls into view.
-- Native Minecraft widgets still provide the setting actions, slider behavior,
-  keyboard activation and narration. No animation or command implementation changed.
+## What's included
+
+- Eight modules with opaque readable panels, generous gutters, aligned controls,
+  responsive cards and a compact fallback at the minimum 320×240 GUI size.
+- Custom paw/moon logo and eight multi-tone pixel illustrations. Lightweight,
+  static artwork is the default.
+- Optional **Advanced graphics** adds slowly rotating, obliquely projected icons:
+  a thick square Trapper Crest prism, a custom pelt token and golden coin rims.
+  Text and controls do not rotate. Hidden icons are not rendered; sprites are
+  packed into rectangle runs once, with no animation threads or per-icon clocks.
+- A time-based 220ms opening fade, with a separate reduced-motion toggle. The fade
+  never blocks input or replays during module navigation.
+- **Open menu key** is unbound by default. Configure it inline or in native
+  Minecraft Controls; both use the same persisted mapping. Escape cancels capture,
+  Delete/Backspace clears it, and a Reset button restores Unbound. The shortcut
+  opens only during gameplay, never stealing chat or other screens.
+- Existing hunt/crest logic, HUD/reward animations, audio layers, config keys and
+  all commands are preserved. New preferences are additive.
 
 ## Validation
 
-The real Java 25 focused source harnesses pass: 91,386 roll assertions, 68 crest
-state/parser assertions, 313 crest visual/layout assertions and 1,233,699 Elusive
-reward assertions. These focused checks are **not** a Loom production build.
+The local sandbox blocks Loom's Unix-domain socket capability probe. No stubs,
+patched toolchain or handmade installable JAR are used. Focused source checks use
+real Java25 and official dependencies; the GitHub workflow performs the required
+real Loom `clean build check`, production bytecode verification and
+`runProductionClientGameTest` against the packaged candidate.
 
-Local Loom execution is blocked by this cloud sandbox denying the Unix-domain
-socket capability probe. Sanctioned escalation failed during sandbox setup; no
-stubbed dependencies, patched toolchain or manually assembled JAR were used.
-The existing GitHub workflow runs the required real `clean build check` and
-`runProductionClientGameTest` on the candidate branch, including bytecode checks.
+The real-client suite covers every control at 854×480/scale1, 1280×720/scale2 and3,
+and 960×720/scale3 (320×240 GUI). It checks preserved controls, scrolling and
+keyboard reachability, masked input boundaries, no overlaps, filter/search empty
+states, sidebar navigation, toggles/sliders and persistence, sound-picker cancel
+and apply, unbound/bind/rebind/reset behavior, chat protection and repeat draining.
+Separate deterministic tests check fade timing and frame-rate-independent rotation;
+actual-client screenshots cover normal/advanced modes and edge-on prism/coin views.
 
-Expanded real-client checks cover every setting and all seven modules at:
-
-| Window | GUI scale | Purpose |
-| --- | --- | --- |
-| 854 × 480 | 1 | Wide sidebar and card grid |
-| 1280 × 720 | 2 | Standard client-style sidebar |
-| 1280 × 720 | 3 | Compact scrolling pages |
-| 960 × 720 | 3 | Minimum 320 × 240 GUI |
-
-They verify control preservation, no visible overlap, complete scroll/keyboard
-reachability, clipping/input boundaries, repeated toggles, actual slider input
-and disk persistence, and sound-picker Back versus Use behavior. Top/bottom
-screenshots of each page are saved in the workflow's validation-evidence artifact.
-
-This is a development candidate for review, not a merged or published release.
+The user authorized stable 1.7.0 after final validation. The main-only release
+workflow publishes only after the real build and production-client checks pass.

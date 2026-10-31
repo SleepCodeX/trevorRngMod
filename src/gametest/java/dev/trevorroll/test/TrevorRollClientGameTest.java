@@ -134,6 +134,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                 command(context, "trevorroll skip");
                 context.runOnClient(mc -> require(!TrevorRollClient.isRevealActive(), "Original skip clears reel"));
             }
+            dev.trevorroll.MenuKeybindChecks.run(context);
             command(context, "trevormod settings");
             context.waitTicks(2);
             context.runOnClient(mc -> require(mc.gui.screen() instanceof TrevorSettingsScreen, "Unified settings command opens menu"));
@@ -149,7 +150,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                 context.getInput().resizeWindow(size[0], size[1]);
                 context.runOnClient(mc -> mc.options.guiScale().set(guiScale));
                 context.waitTicks(3);
-                for (int page = -1; page < 7; page++) {
+                for (int page = -1; page < 8; page++) {
                     final int selectedPage = page;
                     String module = page < 0 ? "dashboard" : "page-" + page;
                     context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.settingsPage(mc, selectedPage));
@@ -160,6 +161,17 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
                     context.takeScreenshot("settings-" + module + "-bottom-" + suffix);
                 }
                 context.runOnClient(dev.trevorroll.HudEditorChecks::settingsInputs);
+                boolean[] previousAdvanced = {false};
+                context.runOnClient(mc -> {
+                    previousAdvanced[0] = dev.trevorroll.HudEditorChecks.setAdvancedPreview(true);
+                    ((TrevorSettingsScreen) mc.gui.screen()).selectModule(-1);
+                });
+                try {
+                    context.waitTicks(4);
+                    context.takeScreenshot("settings-dashboard-advanced-" + suffix);
+                } finally {
+                    context.runOnClient(mc -> dev.trevorroll.HudEditorChecks.setAdvancedPreview(previousAdvanced[0]));
+                }
             }
             // Keep the existing HUD drag/resize test at its established reference size.
             context.getInput().resizeWindow(1280, 720);
@@ -181,6 +193,8 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             context.waitTicks(80);
             context.takeScreenshot("original-roll-elusive-complete");
             dev.trevorroll.ElusiveRewardChecks.run(context);
+            dev.trevorroll.MenuArtChecks.run(context);
+            dev.trevorroll.MenuArtChecks.captureDashboardRotation(context);
             System.out.println("PASS: real production client startup, hotbar lore/removal, all commands, HUD scales and original reel");
         }
     }

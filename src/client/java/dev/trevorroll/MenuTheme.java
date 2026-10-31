@@ -54,28 +54,29 @@ final class MenuTheme {
         double x=b.getX(), y=b.getY(), w=b.getWidth(), h=b.getHeight();
         boolean hover=mx>=x&&mx<x+w&&my>=y&&my<y+h;
         var c=new MinecraftCanvas(g);
-        int edge=b.isFocused()?0xFFD9C5FF:hover?0xFF8E79B5:0xFF41465A;
+        int edge=b.isFocused()?0xFFD9C5FF:hover?0xFF8E79B5:0xFF34414E;
         c.round(x,y+2,w,h,9,0x50000000);
         c.round(x,y,w,h,9,edge);
-        c.round(x+1,y+1,w-2,h-2,8,hover?0xFF2B3043:0xFF232837);
+        c.round(x+1,y+1,w-2,h-2,8,hover?0xFF283242:0xFF1C252F);
         String label=b.getMessage().getString(), help=helpText(b);
         Double value=VALUES.get(b);
         if(value!=null){
             int split=label.lastIndexOf(':');
             String name=split<0?label:label.substring(0,split), shown=split<0?"":label.substring(split+1).trim();
             double badge=Math.max(54,MenuFont.width(shown)*.92+18);
-            MenuFont.text(g,MenuFont.ellipsis(name,w-badge-38),x+13,y+10,1,0xFFF2F0F8);
+            MenuFont.text(g,MenuFont.ellipsis(name,w-badge-38),x+13,y+10,1,0xFFF3EBDD);
             c.round(x+w-badge-12,y+7,badge,18,6,0xFF3F3656);
             MenuFont.text(g,shown,x+w-badge-12+(badge-MenuFont.width(shown)*.92)/2,y+11,.92,0xFFE9D8FF);
             MenuFont.text(g,MenuFont.ellipsis(help,(w-26)/.8),x+13,y+27,.8,0xFFB6BDCF);
-            double track=w-30,fill=track*Math.clamp(value,0,1);
-            c.round(x+15,y+h-8,track,3,1.5,0xFF111622);
-            c.round(x+15,y+h-8,Math.max(1,fill),3,1.5,0xFFBFA1F3);
-            c.ellipse(x+12+fill,y+h-10,7,7,0xFFF0E3FF);
+            double track=w-8,fill=track*Math.clamp(value,0,1);
+            c.round(x+4,y+h-8,track,3,1.5,0xFF111622);
+            c.round(x+4,y+h-8,Math.max(1,fill),3,1.5,0xFFBFA1F3);
+            c.ellipse(x+.5+fill,y+h-10,7,7,0xFFF0E3FF);
         }else if(label.endsWith(": ON")||label.endsWith(": OFF")){
             boolean on=label.endsWith(": ON"); label=label.substring(0,label.lastIndexOf(':'));
-            MenuFont.text(g,MenuFont.ellipsis(label,w-69),x+13,y+11,1,0xFFF2F0F8);
-            c.round(x+w-45,y+9,32,16,8,on?0xFFA88ADD:0xFF454D61);
+            MenuFont.text(g,MenuFont.ellipsis(label,w-95),x+13,y+11,1,0xFFF3EBDD);
+            MenuFont.text(g,on?"On":"Off",x+w-65,y+13,.76,on?0xFFDCCCF6:0xFFA6B1C3);
+            c.round(x+w-45,y+9,32,16,8,on?0xFF8B6DE2:0xFF4C5668);
             c.ellipse(x+w-(on?27:43),y+11,12,12,on?0xFFF8F3FF:0xFFA8B0C2);
             helpLines(g,help,x+13,y+29,w-26);
         }else{
