@@ -1,3 +1,13 @@
+# Trevor Roll 1.9.1 validation
+
+- Runtime source: `de2207a8fc8caa5d0da8d7131a9ac9699c078b56`.
+- [Exact source run](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41417387792) passed real Java 25 Loom `clean build check`, production bytecode verification and `runProductionClientGameTest`. The final local production-client run also passed after reviewing the artwork and typography.
+- Pure painter probes require zero coin submissions for Extreme and a coin for Extra. A separate handoff check verifies the continuous scene clock and full opening opacity. Geometry checks verify curved hunter surfaces, finite coordinates and all three timeline phases; the existing menu-model and cinematic gating checks remain.
+- Live commands verify that the completed Extreme roll clears its coin result reel, starts the native dragon reward with the preserved scene clock, and remains a dragon when the intro is disabled. Other styles and rarities keep normal roll timing; skip, expiry, preview, persisted settings and Elusive-only triggering still pass.
+- Actual GPU captures inspect the sculpted cowboy and hat-tip, approaching dragon, ELUSIVE title and held final reveal at normal and compact GUI sizes. Extra's large coin and all four reward styles with refreshed typography were inspected. Eighty-five fixed-time native frames cover the full hunter-to-dragon sequence. [Media provenance](docs/media/1.9.1/README.md) records the frames and lossless encoding.
+- Existing parser/reel, crest lore/slot priority/removal, HUD editing, settings at four window/GUI combinations, input/focus/clipping, scrolling, search/tabs, native keybinding, audio, persistence and reduced-motion checks pass. The installable JAR still requires Java 25 interface references and excludes Minecraft/Fabric stubs and test harness classes.
+- The final documentation head and main publication workflow repeat the full real build/client checks before release. The automated client uses a disposable offline world; live Hypixel and the user's complete personal modpack are not reproduced.
+
 # Trevor Roll 1.9.0 validation
 
 - Runtime source: `231773910dfa0ae1c80625b12c05c5aeaad2f505`.
