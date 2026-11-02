@@ -28,11 +28,20 @@ public final class SolidModelTest {
         require((PeltCoins.color(Hunt.Rarity.ENDANGERED)&255)>(PeltCoins.color(Hunt.Rarity.ENDANGERED)>>8&255),"Endangered coin is purple");
         require((PeltCoins.color(Hunt.Rarity.ELUSIVE)>>16&255)>(PeltCoins.color(Hunt.Rarity.ELUSIVE)&255),"Elusive coin is golden");
         require(!PeltCoins.tagline(Hunt.Rarity.ELUSIVE).isBlank(),"Elusive has its own reveal slogan");
-        for(int stage=0;stage<5;stage++){
-            double p=(stage+.5)/5;require(ElusiveSequence.stage(p)==stage,"All five chapters remain reachable");
+        double[] midpoints={ElusiveSequence.DRAGON_START/2,(ElusiveSequence.DRAGON_START+ElusiveSequence.REVEAL_START)/2,(ElusiveSequence.REVEAL_START+1)/2};
+        for(int stage=0;stage<3;stage++){
+            double p=midpoints[stage];require(ElusiveSequence.stage(p)==stage,"Hunter, dragon and held reveal remain reachable");
             require(Math.abs(ElusiveSequence.local(p)-.5)<1e-8,"Each chapter has a stable local clock");
         }
-        require(ElusiveSequence.stage(1)==4&&ElusiveSequence.stage(-1)==0,"Timeline bounds clamp");
+        require(ElusiveSequence.stage(1)==2&&ElusiveSequence.stage(-1)==0,"Timeline bounds clamp");
+        for(var mesh:new SolidMesh[]{SceneModelLibrary.TREVOR,SceneModelLibrary.HAT,SceneModelLibrary.ARM,SceneModelLibrary.FOREARM,SceneModelLibrary.HAND,SceneModelLibrary.LEG}){
+            int curved=0;
+            for(var v:mesh.vertices()){
+                require(Float.isFinite(v.x())&&Float.isFinite(v.y())&&Float.isFinite(v.z()),"Hunter rig geometry remains finite");
+                if(Math.abs(v.nx())>.05&&Math.abs(v.ny())>.05&&Math.abs(v.nz())>.05)curved++;
+            }
+            require(curved>30,"Hunter parts have lit curved surfaces rather than cuboid limbs");
+        }
         require(ElusiveSequence.progress(-100,1000)==0&&ElusiveSequence.progress(Long.MAX_VALUE,1000)==1,"Elapsed-time bounds clamp");
         System.out.println("PASS: solid mesh geometry, open palette silhouette, crest depth, and Extreme/Elusive-only cinematic policy");
     }

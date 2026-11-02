@@ -8,6 +8,10 @@ import org.joml.Matrix3x2f;
 
 /** Smooth, tinted texture corners avoid jagged scanline approximations. */
 final class MinecraftCanvas implements HudPainter.Canvas {
+    @Override public boolean extremeReward(double seconds,double progress,double fade,String location){
+        ElusiveCinematicHud.drawFrame(g,1,seconds,mc.getWindow().getGuiScaledWidth(),mc.getWindow().getGuiScaledHeight(),fade*opacity,location);
+        return true;
+    }
     private static final Identifier CIRCLE = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/circle.png");
     private static final Identifier[] COINS = java.util.stream.IntStream.range(0,4)
         .mapToObj(i -> Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/coin/coin_"+i+".png")).toArray(Identifier[]::new);
@@ -29,14 +33,18 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     private final Minecraft mc = Minecraft.getInstance();
     private final double opacity;
     private final boolean glows;
-    private final boolean polishedFont;
+    private final int fontMode;
     public MinecraftCanvas(GuiGraphicsExtractor graphics) { this(graphics, 1, true); }
     public MinecraftCanvas(GuiGraphicsExtractor graphics, double opacity, boolean glows) {
         this(graphics,opacity,glows,false);
     }
     public MinecraftCanvas(GuiGraphicsExtractor graphics,double opacity,boolean glows,boolean polishedFont){
-        this.g=graphics;this.opacity=opacity;this.glows=glows;this.polishedFont=polishedFont;
+        this(graphics,opacity,glows,polishedFont?1:0);
     }
+    private MinecraftCanvas(GuiGraphicsExtractor graphics,double opacity,boolean glows,int fontMode){
+        this.g=graphics;this.opacity=opacity;this.glows=glows;this.fontMode=fontMode;
+    }
+    static MinecraftCanvas reward(GuiGraphicsExtractor graphics){return new MinecraftCanvas(graphics,1,true,2);}
     private int alpha(int color) {
         return (color & 0xFFFFFF) | ((int) Math.round((color >>> 24) * opacity) << 24);
     }
@@ -98,11 +106,19 @@ final class MinecraftCanvas implements HudPainter.Canvas {
         }finally{g.pose().popMatrix();}
     }
     @Override public void pop() { g.pose().popMatrix(); }
-    @Override public double textWidth(String text) { return polishedFont?MenuFont.width(text):mc.font.width(text); }
+    @Override public double textWidth(String text) {
+        return fontMode==2?(text.startsWith("ELUSIVE")?CinematicFont.titleWidth(text):CinematicFont.bodyWidth(text))
+            :fontMode==1?MenuFont.width(text):mc.font.width(text);
+    }
     @Override public void text(String text, double x, double y, double size, int color) {
         color = alpha(color);
         if ((color >>> 24) == 0) return;
-        if(polishedFont){MenuFont.text(g,text,x,y,size,color);return;}
+        if(fontMode==2){
+            if(text.startsWith("ELUSIVE"))CinematicFont.title(g,text,x,y,size,color);
+            else CinematicFont.body(g,text,x,y,size,color);
+            return;
+        }
+        if(fontMode==1){MenuFont.text(g,text,x,y,size,color);return;}
         push(x, y, size);
         try { g.text(mc.font, text, 0, 0, color, false); }
         finally { pop(); }

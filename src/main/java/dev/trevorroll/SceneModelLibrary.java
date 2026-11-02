@@ -2,70 +2,134 @@ package dev.trevorroll;
 
 import static dev.trevorroll.SolidMesh.*;
 
-/** Cached terrain and rig parts, with complete three-dimensional silhouettes. */
+/** Cached sculpted cowboy rig and two environments; the scene contains no reward token. */
 public final class SceneModelLibrary {
     private SceneModelLibrary() {}
-    public static final SolidMesh RABBIT_BODY=rabbitBody(),RABBIT_EAR=ear(),FORELEG=foreleg(),HINDLEG=hindleg();
-    public static final SolidMesh TREVOR=trevor(),ARM=arm(),LEG=leg();
-    private static final SolidMesh[] TERRAIN={terrain(0),terrain(1),terrain(2),terrain(3),terrain(4)};
-    public static SolidMesh terrainFor(int stage){return TERRAIN[Math.clamp(stage,0,4)];}
-    private static SolidMesh terrain(int stage){
-        var b=new Builder();int rock=stage<2?0xFF65574A:stage==2?0xFF9D8868:stage==3?0xFF30233F:0xFF8B6C42;
-        int ground=stage==0?0xFF658E66:stage==1?0xFFC4AB75:stage<4?0xFFB8B08C:0xFFEDC785;
-        b.cylinder(new V(0,11.5,0),new V(0,15,0),24,21,rock,true);
-        b.cylinder(new V(0,10.6,0),new V(0,11.7,0),24.3,24,ground,true);
-        for(int i=0;i<11;i++){
-            double a=i*2*Math.PI/11,x=21*Math.cos(a),z=21*Math.sin(a);
-            if(stage==0){
-                b.box(x,7,z,2,8,2,.3,0xFF7D5944);
-                b.sphere(x,1.5,z,4.1,5.3,4,stage==0?0xFF3F7758:0xFF92A065);
-                b.sphere(x+1,-.7,z,2.7,3,2.7,stage==0?0xFF81AF79:0xFFB5B071);
-            }else if(stage==1){
-                double h=3+(i%4)*1.8;
-                b.box(x,10-h/2,z,5.5,h,4.5,.6,0xFFB58759);
-                if(i%3==0){b.cylinder(new V(x,10-h,z),new V(x,2-h,z),.8,1,0xFF5E8764,true);}
-                else b.sphere(x+2,9-h,z,3,1.8,2.3,0xFFE7C78D);
-            }else if(stage==2){
-                double h=5+(i%3)*2;
-                b.cylinder(new V(x,10,z),new V(x,10-h,z),.6,.9,0xFFAAA3C9,true);
-                b.sphere(x,9-h,z,3.8,1.8,3.8,i%2==0?0xFF7D68AC:0xFF76A6AC);
-                b.sphere(x-1,8-h,z+.5,.5,.2,.5,0xFFE9DFBD);
-            }else if(stage==3){
-                double h=8+(i%3)*4;b.box(x,10-h/2,z,3.4,h,3.4,.35,0xFF241D32);
-                b.box(x,8-h,z,2,3,2,.15,0xFF9766B6);
+    private static final int LEATHER=0xFF79513C,DARK=0xFF3C302C,TAN=0xFFBC9365,SKIN=0xFFD5A47E,
+        SHIRT=0xFFD9CCAE,DENIM=0xFF465B61,SCARF=0xFFAA5545,GOLD=0xFFE8BD72;
+    public static final SolidMesh TREVOR=hunter(),HAT=hat(),ARM=upperArm(),FOREARM=forearm(),HAND=hand(),LEG=leg();
+    private static final SolidMesh TRAIL=terrain(false),END=terrain(true);
+    public static SolidMesh terrainFor(int stage){return stage==0?TRAIL:END;}
+    private static SolidMesh terrain(boolean end){
+        var b=new Builder();
+        b.cylinder(new V(0,11.5,0),new V(0,14.2,0),24,21.5,end?0xFF403446:0xFF87694B,true);
+        b.cylinder(new V(0,10.6,0),new V(0,11.7,0),24.3,24,end?0xFFA89C9C:0xFFD5BA86,true);
+        for(int i=0;i<9;i++){
+            double a=i*2*Math.PI/9,x=21*Math.cos(a),z=21*Math.sin(a);
+            if(end){
+                double h=7+(i%3)*3.2;
+                b.box(x,10-h/2,z,3.1,h,3.1,.45,0xFF282235);
+                b.box(x,8.6-h,z,1.7,2.1,1.7,.3,0xFF9E76BE);
             }else{
-                b.box(x,7,z,3,7,3,.5,0xFFDDB778);b.sphere(x,2.8,z,1.1,1.1,1.1,0xFFFFE8A4);
+                double size=2.5+i%3;
+                b.sphere(x,10-size*.3,z,size,size*.62,size*.72,i%2==0?0xFFB08660:0xFFAA835C);
+                if(i%3==0){
+                    b.cylinder(new V(x-1,10,z),new V(x-1,3,z),.7,.65,0xFF66816A,true);
+                    b.sphere(x-1,3,z,.65,.65,.65,0xFF66816A);
+                    b.cylinder(new V(x-1,6.8,z),new V(x+1,6.8,z),.45,.45,0xFF66816A,true);
+                    b.cylinder(new V(x+1,6.8,z),new V(x+1,4.8,z),.45,.4,0xFF66816A,true);
+                }else{
+                    for(int branch=0;branch<3;branch++){
+                        double dx=Math.cos(branch*2.1)*1.3;
+                        b.cylinder(new V(x-2,10,z+1),new V(x-2+dx,7.8,z+1+branch*.3),.2,.12,0xFF77816A,true);
+                    }
+                }
             }
         }
-        for(int i=0;i<14;i++){
-            double x=((i*17)%35)-17,z=((i*11)%31)-15;
-            b.box(x,10.2,z,2.2,.8,2,.15,stage<2?0xFF8CAC72:stage<4?0xFF8B6B9D:0xFFFFE1A0);
+        for(int i=0;i<8;i++){
+            double x=((i*17)%29)-14,z=((i*11)%27)-13;
+            b.sphere(x,10.6,z,1.3,.35,.9,end?0xFF826A98:0xFFE4CA96);
         }
-        if(stage==4){b.cylinder(new V(0,9.8,0),new V(0,10.9,0),8,8,0xFFB28142,true);}
+        // A subtle contact patch anchors the rig without a square plinth.
+        b.sphere(0,10.55,1,4.8,.08,3,end?0xFF897C88:0xFFBA9B6A);
         return b.build();
     }
-    private static SolidMesh rabbitBody(){
-        var b=new Builder();b.sphere(0,0,0,3.7,3,5.4,0xFFEFE6D5);b.sphere(0,-2,4.7,2.9,2.8,2.8,0xFFFFF6E5);
-        b.sphere(0,.4,-5.2,1.9,1.9,1.9,0xFFFFFFFF);
+    private static SolidMesh hunter(){
+        var b=new Builder();
+        // Rounded shoulder/torso volumes and a tailored waist give the coat real depth.
+        b.sphere(0,-2.0,-.15,3.45,4.15,2.5,LEATHER);
+        b.sphere(0,-4.35,-.3,3.85,1.85,2.65,LEATHER);
+        b.sphere(0,1.8,-.15,2.75,2.3,2.25,DARK);
+        b.sphere(0,-2.2,2.0,2.2,3.65,.75,SHIRT);
         for(int side:new int[]{-1,1}){
-            b.sphere(side*2.65,-2.7,5.3,.42,.7,.7,0xFF262136);
-            b.sphere(side*2.92,-2.9,5.4,.13,.2,.2,0xFFFFFFFF);
-            b.sphere(side*.7,-.8,7.1,.95,.8,.65,0xFFFFFFFF);
+            double x=side*2.45;
+            b.sphere(x,4.1,-.85,1.45,4.7,2.05,LEATHER);
+            double[][] lapel={{side*.9,-5.3},{side*2.5,-5.5},{side*2.4,-1.0},{side*.65,-2.3}};
+            if(side<0){double[] a=lapel[0];lapel[0]=lapel[3];lapel[3]=a;a=lapel[1];lapel[1]=lapel[2];lapel[2]=a;}
+            b.extrude(lapel,2.62,.4,0xFFB4875F);
+            b.cylinder(new V(side*3,-4.2,1.5),new V(side*2.9,1.7,1.9),.16,.12,0xFFCEA77A,true);
         }
-        b.sphere(0,-1.1,7.7,.48,.35,.35,0xFFD69DA7);
+        // Open vest, neckerchief, diagonal field strap and stitched leather belt.
+        b.sphere(0,-6.2,0,1.25,1.3,1.2,SKIN);
+        b.sphere(0,-5.6,.2,1.65,.7,1.35,SCARF);
+        b.extrude(new double[][]{{-1.5,-5.2},{1.5,-5.2},{.55,-2.9}},3.0,.32,SCARF);
+        b.extrude(new double[][]{{-3.0,-5.0},{-2.35,-5.15},{2.9,2.4},{2.25,2.65}},2.9,.3,DARK);
+        for(int i=0;i<3;i++)b.disc(-.35,-1.5+i*1.1,2.85,.16,.15,GOLD);
+        b.box(0,2.6,.1,5.9,.9,4.7,.3,DARK);
+        b.box(0,2.6,2.65,1.35,1.05,.4,.2,GOLD);
+        b.box(0,2.6,2.9,.7,.5,.15,.1,DARK);
+        b.sphere(-3.2,3.3,.5,.9,1.55,1.1,0xFF9B704B);
+        b.box(-3.2,2.4,1.25,1.45,.6,.7,.2,TAN);
+        for(int i=0;i<3;i++)b.ring(3.5,3.5+i*.18,1.3,1.25,.99,.18,0xFFC49E65);
+        // A sculpted head, chin, nose, ears, eyes and brows replace the cuboid face.
+        b.sphere(0,-9.75,-.1,2.5,3.05,2.35,SKIN);
+        b.sphere(0,-8.0,.65,1.85,1.45,1.75,0xFFC79571);
+        b.sphere(0,-11.2,-.45,2.55,1.8,2.35,0xFF4B372E);
+        for(int side:new int[]{-1,1}){
+            b.sphere(side*2.38,-9.8,0,.5,.78,.55,0xFFBF8D69);
+            b.sphere(side*1.0,-10.2,2.08,.64,.37,.32,0xFFF5E4CA);
+            b.sphere(side*1.0,-10.2,2.38,.25,.3,.12,0xFF35504A);
+            b.sphere(side*1.0,-10.2,2.48,.13,.22,.055,0xFF231F23);
+            b.sphere(side*1.0-.07,-10.32,2.53,.075,.07,.035,0xFFFFFFFF);
+            b.cylinder(new V(side*.45,-10.82,2.25),new V(side*1.65,-10.72,2.1),.14,.17,0xFF49342C,true);
+            b.sphere(side*1.85,-9.25,1.05,.34,1.15,.85,0xFF70503D);
+            b.sphere(side*.53,-8.65,2.3,.65,.23,.28,0xFF594031);
+        }
+        b.sphere(0,-9.55,2.15,.43,.72,.95,0xFFE3B38B);
+        b.sphere(0,-7.55,1.83,1.1,.4,.38,0xFF76513D);
+        b.cylinder(new V(-.55,-8.07,2.22),new V(.55,-8.07,2.22),.075,.075,0xFF684133,true);
+        // Small raised star badge, never a reward coin.
+        double[][] star=new double[10][2];
+        for(int i=0;i<10;i++){double a=-Math.PI/2+i*Math.PI/5,r=i%2==0?.6:.28;star[i]=new double[]{1.65+Math.cos(a)*r,-2.6+Math.sin(a)*r};}
+        b.extrude(star,2.85,.2,GOLD);
         return b.build();
     }
-    private static SolidMesh ear(){var b=new Builder();b.sphere(0,-3.6,0,1.05,4.8,.75,0xFFF7EBD8);b.sphere(0,-3.8,.65,.6,3.8,.18,0xFFDBA0AD);return b.build();}
-    private static SolidMesh foreleg(){var b=new Builder();b.sphere(0,1.8,0,.8,2.5,.9,0xFFF0E6D4);b.sphere(0,4,1,.9,.7,1.9,0xFFFFFFFF);return b.build();}
-    private static SolidMesh hindleg(){var b=new Builder();b.sphere(0,1.1,-.8,1.6,2,2,0xFFE2D3BE);b.sphere(0,3.2,1.3,1.2,.8,3.2,0xFFFFF5E5);return b.build();}
-    private static SolidMesh trevor(){
-        var b=new Builder();b.box(0,-1,0,7,9,3.8,.2,0xFF547A58);b.box(0,-1,2.2,5.5,8,.5,.1,0xFF775339);
-        b.box(0,-8,0,6.2,6.2,5.8,.18,0xFFE0B99B);b.box(0,-11.1,-.4,6.7,1.4,6.4,.18,0xFF523F32);
-        b.box(0,-7.1,3,4.5,2.1,.6,.1,0xFF805C42);
-        for(int side:new int[]{-1,1}){b.box(side*1.5,-8.8,3,.9,.8,.4,0,0xFFF3EEE4);b.box(side*1.5,-8.8,3.25,.45,.6,.2,0,0xFF385B46);}
-        b.box(0,3.4,0,7.2,1,4,.1,0xFF332D2A);b.box(0,3.4,2.2,1.4,1.2,.4,.1,0xFFD9AD5F);
+    private static SolidMesh hat(){
+        var b=new Builder();
+        b.sphere(0,-13.05,-.1,6.1,.37,4.1,0xFFAC7E4F);
+        b.sphere(0,-13.2,-.1,5.8,.25,3.95,TAN);
+        for(int side:new int[]{-1,1})b.sphere(side*5.25,-13.5,-.2,.85,.62,2.4,TAN);
+        b.sphere(0,-14.5,-.25,3.35,1.95,2.5,0xFFAA7B4B);
+        b.sphere(0,-13.55,-.2,3.48,.48,2.62,DARK);
+        b.sphere(-1.0,-15.8,-.2,.6,.35,1.8,0xFFC49D6D);
+        b.sphere(1.0,-15.8,-.2,.6,.35,1.8,0xFFC49D6D);
+        b.box(0,-13.65,2.37,1.1,.7,.25,.18,GOLD);
         return b.build();
     }
-    private static SolidMesh arm(){var b=new Builder();b.box(0,2,0,2.5,4,2.8,.15,0xFF547A58);b.box(0,5,0,2.3,2.5,2.5,.15,0xFFDBAF8D);return b.build();}
-    private static SolidMesh leg(){var b=new Builder();b.box(0,3,0,2.8,6,3,.15,0xFF675445);b.box(0,6.3,.7,3,1.6,4.1,.18,0xFF342D2B);return b.build();}
+    private static SolidMesh upperArm(){
+        var b=new Builder();b.sphere(0,.5,0,1.35,1.35,1.45,LEATHER);
+        b.cylinder(new V(0,.4,0),new V(0,3.6,0),1.15,.95,LEATHER,true);
+        b.sphere(0,3.6,0,.97,.8,1.03,LEATHER);return b.build();
+    }
+    private static SolidMesh forearm(){
+        var b=new Builder();b.cylinder(new V(0,0,0),new V(0,2.8,0),.95,.68,0xFF8A6246,true);
+        b.sphere(0,2.7,0,.8,.5,.88,TAN);return b.build();
+    }
+    private static SolidMesh hand(){
+        var b=new Builder();b.sphere(0,.6,0,.72,.95,.38,0xFFD2B184);
+        for(int i=0;i<4;i++){
+            double x=-.48+i*.32,length=i==0||i==3?.95:1.25;
+            b.cylinder(new V(x,.7,0),new V(x,1.0+length,.04),.16,.13,0xFFD2B184,true);
+            b.sphere(x,1.0+length,.04,.13,.15,.16,0xFFDBBC91);
+        }
+        b.cylinder(new V(-.6,.3,.05),new V(-1.03,1,.18),.22,.17,0xFFD2B184,true);return b.build();
+    }
+    private static SolidMesh leg(){
+        var b=new Builder();b.cylinder(new V(0,.4,0),new V(0,5.4,.2),1.13,.85,DENIM,true);
+        b.sphere(0,3.2,.1,1.0,1.3,1.1,DENIM);
+        b.cylinder(new V(0,4.8,.1),new V(0,7.0,.2),.95,1,DARK,true);
+        b.sphere(0,7.1,1.0,1.05,.82,1.9,0xFF5F4031);
+        b.box(0,7.75,.8,2.15,.4,3.8,.18,0xFF302924);
+        b.box(0,7.7,-.45,1.7,.7,1.2,.18,0xFF3F3028);return b.build();
+    }
 }

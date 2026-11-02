@@ -28,7 +28,7 @@ public final class SolidModelRenderer extends PictureInPictureRenderer<SolidMode
     @Override protected float getTranslateY(int height,int guiScale){return height/2f;}
     @Override protected String getTextureLabel(){return "Trevor solid models";}
     @Override protected void renderToTexture(SolidModelState s,PoseStack poses,SubmitNodeCollector nodes){
-        Minecraft.getInstance().gameRenderer.lighting().setupFor(s.model()==8&&ElusiveSequence.stage(s.progress())>=2
+        Minecraft.getInstance().gameRenderer.lighting().setupFor(s.model()==8&&ElusiveSequence.stage(s.progress())>=1
             ?Lighting.Entry.ITEMS_3D:Lighting.Entry.PLAYER_SKIN);
         poses.mulPose(Axis.XP.rotationDegrees(22));
         if(s.model()==8){renderedCinematics++;TrevorScene.submit(poses,nodes,s.seconds(),s.progress());return;}

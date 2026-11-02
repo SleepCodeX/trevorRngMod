@@ -111,7 +111,7 @@ public final class TrevorRollClient implements ClientModInitializer {
         }
         if (reel == null) return;
         if(cinematicSoundReel!=reel){cinematicSoundReel=reel;cinematicRoared=false;}
-        if(!cinematicRoared&&ElusiveSequence.eligible(reel.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)&&reel.progress(time)>=.6&&!reel.finished(time)){
+        if(!cinematicRoared&&ElusiveSequence.eligible(reel.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)&&reel.progress(time)>=ElusiveSequence.ROAR_PROGRESS&&!reel.finished(time)){
             cinematicRoared=true;
             if(config.sound&&config.elusiveSound)MC.getSoundManager().play(SimpleSoundInstance.forUI(
                 SoundEvents.ENDER_DRAGON_GROWL,.9f,(float)(config.volume*config.elusiveVolume*.6)));
@@ -120,7 +120,10 @@ public final class TrevorRollClient implements ClientModInitializer {
             if (!reel.announced) {
                 announce(reel);
                 sound(1.4f, 0.55f);
-                if (ElusiveReward.eligible(reel.hunt.rarity(), config.elusiveReward)) startReward(reel.hunt.location());
+                if (ElusiveReward.eligible(reel.hunt.rarity(), config.elusiveReward)) {
+                    startReward(reel.hunt.location(),ElusiveSequence.eligible(reel.hunt.rarity(),config.elusiveCinematic,config.elusiveStyle)?reel.durationMillis/1000.:0);
+                    if(reward.style()==ElusiveReward.Style.JACKPOT){reel=null;return;}
+                }
             }
             if (reel.expired(time)) reel = null;
         } else {
@@ -146,9 +149,12 @@ public final class TrevorRollClient implements ClientModInitializer {
     }
 
     private void startReward(String location) {
+        startReward(location,0);
+    }
+    private void startReward(String location,double sceneSecondsOffset) {
         previewReward = false;
         reward = new ElusiveReward(now(), config.elusiveMillis, config.elusiveStyle,
-            config.elusiveIntensity, config.elusiveVolume, location);
+            config.elusiveIntensity, config.elusiveVolume, location,sceneSecondsOffset);
         rewardNote = 0;
     }
 
@@ -240,10 +246,13 @@ public final class TrevorRollClient implements ClientModInitializer {
         Reel roll = reel;
         if (MC.gui.screen() instanceof TrevorLayoutScreen) return;
         if (MC.player == null || MC.gui.hud.isHidden()) return;
-        if(roll!=null&&ElusiveSequence.eligible(roll.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)&&!roll.finished(now())) {
+        if(roll!=null&&ElusiveSequence.eligible(roll.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)) {
             ElusiveCinematicHud.draw(g,roll,now(),MC.getWindow().getGuiScaledWidth(),MC.getWindow().getGuiScaledHeight(),config.opacity);
             return;
         }
+        // Extreme's native reward owns the result; don't flash the regular coin card between layers.
+        if(roll!=null&&roll.finished(now())&&ElusiveReward.eligible(roll.hunt.rarity(),config.elusiveReward)
+                &&config.elusiveStyle==ElusiveReward.Style.JACKPOT)return;
         if (roll != null) HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow,true), roll, now(),
             MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
             config.scale, config.x, config.y, config.customPosition);
@@ -251,7 +260,7 @@ public final class TrevorRollClient implements ClientModInitializer {
 
     private void drawReward(GuiGraphicsExtractor g, DeltaTracker delta) {
         if (reward != null && MC.player != null && !MC.gui.hud.isHidden() && MC.gui.screen() == null)
-            ElusiveRewardPainter.draw(new MinecraftCanvas(g), reward, now(),
+            ElusiveRewardPainter.draw(MinecraftCanvas.reward(g), reward, now(),
                 MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight());
     }
 }

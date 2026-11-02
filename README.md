@@ -2,9 +2,9 @@
 
 Small hunts. Big moments. Your client-side Trevor companion for **Hypixel SkyBlock**.
 
-**[Download 1.9.0](https://github.com/SleepCodeX/trevorRngMod/releases/latest)** · **Minecraft 26.2 · Fabric · Java 25**
+**[Download 1.9.1](https://github.com/SleepCodeX/trevorRngMod/releases/latest)** · **Minecraft 26.2 · Fabric · Java 25**
 
-![Trevor's three-column module browser and quick top tabs](docs/media/1.9.0/settings-modules.png)
+![Trevor's three-column module browser and quick top tabs](docs/media/1.9.1/settings-modules.png)
 
 **Your hunt. Your way.** Eight modules, roomy cards, quick tabs, search and smooth scrolling. Open **`/trevormod settings`**.
 
@@ -13,11 +13,11 @@ Small hunts. Big moments. Your client-side Trevor companion for **Hypixel SkyBlo
 | Gray Trackable, purple Endangered, golden Elusive. | Tracks the first crest from the left in hotbar slots **1–9**, using its item lore. |
 | ![Five rarity-colored pelt coins and hunt reveals](docs/media/1.9.0/rarity-reveals.webp) | ![Crest progress, switch and missing-hotbar reminders](docs/media/1.9.0/crest-states.webp) |
 
-**Go Extreme.** Trevor waves you onto a changing trail. A rabbit bolts through new terrain; the Ender Dragon closes in before the golden reveal.
+**Go Extreme.** A cowboy hunter tips his hat. The Ender Dragon closes in, with **ELUSIVE** above it through the final reveal.
 
-![The five-stage Extreme Elusive journey](docs/media/1.9.0/elusive-journey.webp)
+![Cowboy hunter to dragon Elusive reveal](docs/media/1.9.1/elusive-journey.webp)
 
-Choose **Jackpots → Style: Extreme** and enable **Extreme 3D roll**. This sequence plays **only for Elusive**; Minimal, Classic and Extra keep the regular reel. Its duration has a separate control.
+Choose **Jackpots → Style: Extreme** and enable **Extreme 3D roll**. The sequence plays **only for Elusive** and has its own duration control. **Extra** keeps the large spinning coin; Extreme stays on the dragon.
 
 **Made to turn.** A complete roll machine, a paint palette with an open thumb hole, a thick tilted crest—and five more solid models.
 
@@ -29,8 +29,8 @@ Enable **Menu & Keys → Advanced graphics** for the lit, spinning models. Stati
 
 | Celebrate your way | Keep the pelts coming |
 | --- | --- |
-| Minimal, Classic, Extra or Extreme. | Pelts/hour and optional crest-completion sounds. |
-| ![Four Elusive reward styles](docs/media/1.9.0/elusive-styles.webp) | ![Pelt Tracker settings](docs/media/1.9.0/pelt-tracker.png) |
+| Four styles, with new Western titles and clean captions. | Pelts/hour and optional crest-completion sounds. |
+| ![Four Elusive reward styles](docs/media/1.9.1/elusive-styles.webp) | ![Pelt Tracker settings](docs/media/1.9.0/pelt-tracker.png) |
 
 | Sound, your way | A place for everything |
 | --- | --- |
@@ -47,7 +47,7 @@ The shortcut starts **unbound**. Set it in **Menu & Keys** or **Minecraft Contro
 ## Install & hunt
 
 1. Use **Minecraft 26.2**, **Java 25**, **Fabric Loader 0.19.5+** and **Fabric API for 26.2**.
-2. Put [trevor-roll-1.9.0.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.9.0/trevor-roll-1.9.0.jar) in `mods`. Remove older Trevor Roll JARs.
+2. Put [trevor-roll-1.9.1.jar](https://github.com/SleepCodeX/trevorRngMod/releases/download/1.9.1/trevor-roll-1.9.1.jar) in `mods`. Remove older Trevor Roll JARs.
 3. Join Hypixel SkyBlock, talk to Trevor, and keep your crest in the hotbar.
 
 **`/trevormod settings`** opens everything. **`/trevorroll test elusive`** previews a hunt with your selected style; **`/trevormod preview`** previews its reward.
