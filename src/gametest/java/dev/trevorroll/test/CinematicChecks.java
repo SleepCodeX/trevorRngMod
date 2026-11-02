@@ -51,6 +51,13 @@ public final class CinematicChecks {
                 ctx.setScreen(()->new SceneScreen(progress));ctx.waitTicks(2);
                 ctx.takeScreenshot("elusive-rabbit-motion-"+frame);
             }
+            // Time-sampled native GPU frames for a complete, reproducible visual sequence.
+            // Fixed times avoid encoding capture/IO delays as animation stutter in media.
+            for(int frame=0;frame<85;frame++){
+                final double progress=(frame+.5)/85;
+                ctx.setScreen(()->new SceneScreen(progress));ctx.waitTick();
+                ctx.takeScreenshot("elusive-journey-"+String.format(java.util.Locale.ROOT,"%02d",frame));
+            }
             System.out.println("PASS: Extreme-only and Elusive-only live command/HUD routing, other styles, completion, toggle, five native scene chapters and rabbit poses");
         }finally{
             ctx.runOnClient(mc->{mc.gui.setScreen(null);command(mc,"trevorroll skip");r.elusiveStyle=oldStyle;r.elusiveCinematic=oldEnabled;r.elusiveReward=oldReward;r.sound=oldSound;r.durationMillis=oldDuration;r.elusiveCinematicMillis=oldCinematicDuration;r.save();});

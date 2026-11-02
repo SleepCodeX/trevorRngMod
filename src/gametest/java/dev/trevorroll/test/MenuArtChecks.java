@@ -49,7 +49,7 @@ public final class MenuArtChecks {
         } finally { restore(ctx, original); }
     }
 
-    /** Twelve untouched screenshots of the actual animated dashboard, not a mockup. */
+    /** Untouched screenshots of the actual animated dashboard. */
     public static void captureDashboardRotation(ClientGameTestContext ctx) {
         State original = snapshot(ctx);
         try {

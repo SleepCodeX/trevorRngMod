@@ -46,7 +46,7 @@ final class TrevorScene {
             var state=new EnderDragonRenderState();state.flapTime=(float)(seconds*1.7);state.ageInTicks=(float)(seconds*20);
             state.partialTicks=1;for(int i=0;i<64;i++)state.flightHistory.record(Math.sin(seconds+i*.12)*.4,0);
             p.pushPose();p.translate(0,(float)(-8+4*local),(float)(-18+36*ElusiveSequence.smooth(local)));
-            p.mulPose(Axis.YP.rotationDegrees(180));float scale=(float)(2.8+4.3*ElusiveSequence.smooth(local));p.scale(scale,scale,scale);
+            p.mulPose(Axis.YP.rotationDegrees(180));float scale=(float)(1.5+3.3*ElusiveSequence.smooth(local));p.scale(scale,scale,scale);
             nodes.submitModel(dragon,state,p,DRAGON,15728880,OverlayTexture.NO_OVERLAY,0,null);p.popPose();
         }else{
             p.pushPose();p.translate(0,-4,0);p.mulPose(Axis.ZP.rotationDegrees(20));p.mulPose(Axis.YP.rotation((float)(seconds*2.6)));

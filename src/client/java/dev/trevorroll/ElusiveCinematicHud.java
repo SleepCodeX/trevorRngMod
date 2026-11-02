@@ -21,7 +21,9 @@ final class ElusiveCinematicHud {
             c.round(0,0,width,height,0,0xB0181726);
             g.fillGradient(0,0,width,height,((int)(fade*145)<<24)|(sky&0xFFFFFF),(int)(fade*215)<<24|0x0B0C19);
             c.glow(width*.11,height*.1,width*.78,height*.75,stage<2?0x6874B58C:stage<4?0x887E41BC:0x99E5B66F);
-            double x=width*.04,y=height*.12,w=width*.92,h=height*.72,scale=Math.min(w/58,h/40);
+            // Keep the stage's scale/centre while allowing the approaching dragon to
+            // extend above the terrain, rather than cropping at an internal HUD edge.
+            double x=width*.04,y=0,w=width*.92,h=height*.96,scale=Math.min(w/58,height*.72/40);
             double transition=ElusiveSequence.smooth(local/.16);
             if(stage>0&&transition<1)c.cinematic(x,y,w,h,scale,seconds,(stage-.001)/5,1-transition);
             c.cinematic(x,y,w,h,scale,seconds,progress,stage==0?1:transition);
@@ -37,7 +39,7 @@ final class ElusiveCinematicHud {
             String heading=TITLES[stage];double textScale=stage==4?2.1:1.2;
             MenuFont.text(g,heading,(width-MenuFont.width(heading)*textScale)/2,height*.1,textScale,stage==4?0xFFFFDF94:0xFFF1EBDD);
             String sub=stage==4?location:"Trevor's elusive trail";
-            MenuFont.text(g,sub,(width-MenuFont.width(sub)*.85)/2,height*.88,.85,0xFFE0CEB5);
+            MenuFont.text(g,sub,(width-MenuFont.width(sub)*.85)/2,height*.91,.85,0xFFE0CEB5);
             for(int i=0;i<5;i++)c.round(width/2.-44+i*19,height*.94,12,3,1.5,i<=stage?0xFFE6C188:0xFF4E485B);
         } finally {MenuFont.opacity(previous);}
     }
