@@ -45,6 +45,11 @@ public final class MenuArtChecks {
                 final double angle=angles[frame];ctx.setScreen(()->new ModelGallery(angle));ctx.waitTicks(3);
                 ctx.takeScreenshot("solid-model-gallery-angle-"+frame);
             }
+            for(int frame=0;frame<60;frame++){
+                final long sampleNanos=frame*100_000_000L;
+                ctx.setScreen(()->new ModelGallery(sampleNanos));ctx.waitTick();
+                ctx.takeScreenshot("solid-model-motion-"+String.format(java.util.Locale.ROOT,"%02d",frame));
+            }
             System.out.println("PASS: all eight pixel/3D icons render at five angles, including edge-on; native input and GL state remain valid");
         } finally { restore(ctx, original); }
     }
@@ -95,14 +100,16 @@ public final class MenuArtChecks {
 
     private static final class ModelGallery extends Screen {
         private final double angle;
+        private final long sampleNanos;
         private static final String[] LABELS={"Roll machine","Trapper Crest","Paint palette","HUD layout","Jackpot coin","Gramophone","Pelt","Keyboard"};
-        ModelGallery(double angle){super(Component.literal("Solid model gallery"));this.angle=angle;}
+        ModelGallery(double angle){super(Component.literal("Solid model gallery"));this.angle=angle;this.sampleNanos=-1;}
+        ModelGallery(long sampleNanos){super(Component.literal("Solid model gallery"));this.angle=0;this.sampleNanos=sampleNanos;}
         @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float dt){
             g.fill(0,0,width,height,0xFF151C28);var c=new MinecraftCanvas(g);
             MenuFont.text(g,"TREVOR / SOLID MODEL COLLECTION",22,15,1.2,0xFFE8D9F3);
             for(int module=0;module<8;module++){
                 double x=width*(.125+(module%4)*.25),y=95+(module/4)*150;
-                MenuArt.advanced(c,module,x,y,2.7,angle);
+                MenuArt.advanced(c,module,x,y,2.7,sampleNanos<0?angle:MenuMotion.iconAngle(sampleNanos,module));
                 String label=LABELS[module];MenuFont.text(g,label,x-MenuFont.width(label)*.44,y+62,.88,0xFFC5BDCE);
             }
         }
