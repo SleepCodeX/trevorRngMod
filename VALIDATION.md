@@ -1,3 +1,15 @@
+# Trevor Roll 1.9.0 validation
+
+- Runtime source: `231773910dfa0ae1c80625b12c05c5aeaad2f505`.
+- [Exact source run](https://github.com/SleepCodeX/trevorRngMod/actions/runs/41407571274) passed real Java 25 Loom `clean build check`, production JAR bytecode verification and `runProductionClientGameTest`. Local real-client runs also passed; GitHub independently rebuilt the candidate from source.
+- New geometry checks verify finite vertices, unit normals, actual depth, the crest's 15-unit thickness and a ray through the palette's open thumb hole. Native GPU captures inspect all eight objects from five angles, including edge-on/back views, plus 60 time-sampled model frames. Both crest faces show the accessory image.
+- Live command checks verify Elusive + Extreme + enabled rewards/toggle routing, ordinary timing for Minimal/Classic/Extra and all other rarities, the independent duration, toggle-off behavior, actual native rendering and timeline completion. Five scene chapters, eight rabbit poses and 85 native timeline frames were captured. In-frame OpenGL checks passed.
+- Five rarity-result captures verify gray/green/blue/purple/gold pelt coins, matching colored cards and hunt text, the Elusive slogan and rounded typography. Source coins are baked into one 256px-per-rarity atlas; each costs one texture quad. Two gradient draws replace 44 stepped edge-mask rectangles.
+- Existing production checks still cover first-crest hotbar/lore priority and live removal, commands, HUD editing, all eight settings modules at four window/GUI combinations, native input, search/categories, top tabs, scrolling, clipping/focus, slider endpoints, disk persistence, two-layer audio, unbound key mapping and native Controls/chat safety, fades/reduced motion and all four post-roll rewards.
+- The production JAR checks enforce Java 25 class version 69, correct `FabricLoader` interface references, original assets and no bundled Minecraft/Fabric stubs or game-test harness classes.
+- [Media provenance](docs/media/1.9.0/README.md) records the exact captures, crops and animation sampling. These are real game-rendered frames; the documentation sequences do not measure frame rate or whole-game loading time.
+- The final documentation/media head and main release workflow repeat build and client validation before publication. Tests use a disposable offline world and do not authenticate to Hypixel or reproduce the user's complete personal modpack.
+
 # Trevor Roll 1.8.0 validation
 
 - Runtime source: `0bbb8119024ae45d7e509165289070906c6891e6`.

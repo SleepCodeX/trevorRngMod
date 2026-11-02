@@ -1,43 +1,45 @@
-# Trevor module browser (1.8.0)
+# Trevor module browser (1.9.0)
 
 The browser follows the [OneClient / OneConfig](https://polyfrost.org/projects/oneclient)
 configuration workflow: a persistent utility sidebar, searchable category-filtered
 module cards with centered artwork and accent label bands, then full-width settings
-rows inside the same window. OneClient is a design reference, not a dependency;
-all Trevor pixel artwork, menu code and depth effects are original.
+rows inside the same window. Trevor's palette, code and module artwork are its own.
 
 ## What's included
 
 - Eight modules with opaque readable panels, generous gutters, aligned controls,
-  a maximum of three cards per row, quick top tabs and a compact fallback at the minimum 320×240 GUI size.
-- Custom paw/moon logo and eight multi-tone pixel illustrations. Lightweight,
-  static artwork is the default.
-- Optional **Advanced graphics** adds slowly rotating, obliquely projected icons:
-  a thick square Trapper Crest prism, a custom pelt token and golden coin rims.
-  Text and controls do not rotate. Hidden icons are not rendered; original sprites use a single baked atlas, with no animation threads or per-icon clocks.
-- Actual-layer fades open over 260 ms and close over 170 ms. Hover, toggles and wheel scrolling use elapsed-time easing. Reduced motion makes them immediate. Module navigation does not replay the opening fade.
-- **Open menu key** is unbound by default. Configure it inline or in native
-  Minecraft Controls; both use the same persisted mapping. Escape cancels capture,
-  Delete/Backspace clears it, and a Reset button restores Unbound. The shortcut
-  opens only during gameplay, never stealing chat or other screens.
-- Existing hunt/crest logic, HUD/reward animations, audio layers, config keys and
-  all commands are preserved. New preferences are additive.
+  at most three cards per row, quick top tabs and a compact fallback at 320×240 GUI size.
+- A paw/moon logo and eight pixel illustrations in a baked atlas. Static 2D art is the default.
+- **Advanced graphics** switches to eight native lit 3D object models, with cached geometry,
+  true depth, object-specific silhouettes and 2× rendering with linear downsampling.
+  The machine has reels and a lever; the palette has a real thumb hole and raised paint wells.
+  The crest is a 24×24×15 prism, tilted 32° with the accessory image on both faces.
+  Crest rotation takes four seconds; other objects take ten. Labels and controls remain still.
+- Opening fades last 260 ms; closing fades last 170 ms. Hover, toggles and wheel scrolling
+  use elapsed-time easing. Reduced motion makes these immediate. Module navigation does
+  not replay the opening fade. Hidden icons are skipped; no animation thread runs when closed.
+- **Open menu key** starts unbound. Inline capture and native Minecraft Controls use the same
+  persisted mapping. Escape cancels, Delete/Backspace clears, Reset restores Unbound.
+  The shortcut opens only during gameplay and never steals chat or other screens.
+- Jackpots includes the **Extreme 3D roll** toggle and its independent duration. The cinematic
+  requires an Elusive assignment, Extreme style, rewards enabled and that toggle enabled.
+  Minimal, Classic and Extra retain the regular reel. Existing configuration values persist.
 
 ## Validation
 
-The local sandbox blocks Loom's Unix-domain socket capability probe. No stubs,
-patched toolchain or handmade installable JAR are used. Focused source checks use
-real Java25 and official dependencies; the GitHub workflow performs the required
-real Loom `clean build check`, production bytecode verification and
-`runProductionClientGameTest` against the packaged candidate.
+Real Java 25 Loom `clean build check` verifies logic, animation policy, geometry and production
+bytecode. `runProductionClientGameTest` launches the installable JAR in Minecraft 26.2.
+The local environment and GitHub workflow both support native production-client tests.
+No compatibility stubs, patched toolchain or handmade installable JAR are used.
 
-The real-client suite covers every control at 854×480/scale1, 1280×720/scale2 and3,
-and 960×720/scale3 (320×240 GUI). It checks preserved controls, scrolling and
-keyboard reachability, masked input boundaries, no overlaps, filter/search empty
-states, sidebar navigation, toggles/sliders and persistence, sound-picker cancel
-and apply, unbound/bind/rebind/reset behavior, chat protection and repeat draining.
-Separate deterministic tests check fade timing and frame-rate-independent rotation;
-actual-client screenshots cover normal/advanced modes and edge-on prism/coin views.
+The client suite covers every control at 854×480/scale 1, 1280×720/scales 2 and 3,
+and 960×720/scale 3. It checks scrolling, keyboard reachability, clipped input, row bounds,
+search and categories, native sliders, persistence, sound selection, unbound/bind/rebind/reset,
+chat protection, repeated-key draining, reduced motion and clean animated closing.
+GPU captures cover all eight solid models at front, oblique, edge-on and rear angles,
+the actual rotating dashboard, five cinematic chapters, rabbit poses and every rarity card.
+Live commands verify that only Extreme Elusive uses the native cinematic and its duration.
 
-The user authorized stable 1.8.0 after final validation. The main-only release
-workflow publishes only after the real build and production-client checks pass.
+See [VALIDATION.md](../VALIDATION.md) for exact source/run evidence and
+[3D-MODELS.md](3D-MODELS.md) for rendering and asset sources. The main release workflow
+publishes only after a successful real build and production-client run.
