@@ -10,7 +10,7 @@ Build instructions, complete commands and implementation details for the current
 | Fabric Loader | 0.19.5 or newer; built against 0.19.5 |
 | Fabric API | 0.161.0+26.2 or a newer compatible 26.2 build |
 | Java / JDK for building | 25 |
-| Current release | 1.9.0 |
+| Current release | 1.9.1 |
 
 ## Build
 
@@ -33,8 +33,8 @@ The included Gradle wrapper downloads Gradle and the required dependencies on th
 Build output:
 
 ```text
-build/libs/trevor-roll-1.9.0.jar          # Installable production JAR
-build/libs/trevor-roll-1.9.0-sources.jar  # Java source archive
+build/libs/trevor-roll-1.9.1.jar          # Installable production JAR
+build/libs/trevor-roll-1.9.1-sources.jar  # Java source archive
 ```
 
 For a development Minecraft instance, run `gradlew.bat runClient` on Windows or `bash gradlew runClient` on macOS/Linux.
@@ -88,7 +88,7 @@ Go to Overgrown Mushroom Cave to kill it now!
 - Pressing F1 hides the panel with the normal HUD; the result still appears in chat after the roll.
 - The result panel remains visible for 4.5 seconds after the roll ends.
 
-**Extreme Elusive:** select Extreme in Jackpots and enable Extreme 3D roll. Only an Elusive assignment uses the five-stage native 3D scene; Minimal, Classic and Extra retain the regular reel. Its duration is independent of the normal roll duration (5–14 seconds, default 8.5). Disabling the toggle also restores the ordinary reel in Extreme. Muting sounds also mutes the dragon’s one-shot growl. The sequence never creates entities or changes the actual world. See [model/rendering details](3D-MODELS.md).
+**Extreme Elusive:** select Extreme in Jackpots and enable Extreme 3D roll. Only an Elusive assignment uses the hunter-to-dragon native 3D scene; Minimal, Classic and Extra retain the regular reel. Its duration is independent of the normal roll duration (5–14 seconds, default 8.5). Disabling the intro toggle restores the ordinary roll, followed by the dragon reward. Extreme never shows the post-roll coin card or coin celebration; Extra retains the large coin. The scene clock and opacity continue across the roll/reward handoff. Muting sounds also mutes the dragon’s one-shot growl. The sequence never creates entities or changes the actual world. See [model/rendering details](3D-MODELS.md).
 
 ## Trapper Crest HUD
 
@@ -158,7 +158,7 @@ src/client/java/dev/trevorroll/
   MenuArt.java               Default pixel atlas and optional solid models
   SolidModelRenderer.java    Native lit geometry, depth targets and model decals
   TrevorScene.java           Articulated actors and native Ender Dragon
-  ElusiveCinematicHud.java   Extreme-only five-stage scene composition
+  ElusiveCinematicHud.java   Extreme-only hunter and dragon composition
 src/main/java/dev/crestwatch/trapper/
   CrestLoreParser.java     Reads Pelt totals and upgrade stage from item lore
   CrestHudState.java       Derives missing/common/uncommon/rare HUD state

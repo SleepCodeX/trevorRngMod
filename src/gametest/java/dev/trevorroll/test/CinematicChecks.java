@@ -36,20 +36,25 @@ public final class CinematicChecks {
             long before=SolidModelRenderer.renderedCinematics;
             ctx.runOnClient(mc->command(mc,"trevorroll test elusive"));ctx.waitTicks(8);
             require(SolidModelRenderer.renderedCinematics>before,"Extreme Elusive reaches the real native 3D renderer");
-            ctx.waitTicks(110);
-            ctx.runOnClient(mc->{require(reel()==null||reel().finished(System.nanoTime()/1_000_000),"Real cinematic roll completes");command(mc,"trevorroll skip");
-                r.elusiveCinematic=false;command(mc,"trevorroll test elusive");require(reel().durationMillis==1000,"Cinematic toggle preserves the normal reel");command(mc,"trevorroll skip");});
+            boolean handoff=false;
+            for(int tick=0;tick<160;tick++){
+                if(ctx.computeOnClient(mc->reel()==null&&TrevorRollClient.isElusiveRewardActive())){handoff=true;break;}
+                ctx.waitTick();
+            }
+            require(handoff,"Extreme completes directly into its dragon reward");
+            ctx.runOnClient(mc->{require(reward().style()==ElusiveReward.Style.JACKPOT&&reward().sceneSecondsOffset()==5,"Dragon handoff retains the cinematic clock");});
+            ctx.waitTicks(2);ctx.takeScreenshot("extreme-live-dragon-reward");
+            ctx.runOnClient(mc->{require(reel()==null,"Extreme never leaves a coin result reel after completion");command(mc,"trevorroll skip");
+                r.elusiveCinematic=false;command(mc,"trevorroll test elusive");require(reel().durationMillis==1000,"Cinematic toggle preserves the normal reel");});
+            ctx.waitTicks(25);
+            ctx.runOnClient(mc->{require(reel()==null&&reward()!=null&&reward().style()==ElusiveReward.Style.JACKPOT,"Disabling the intro still ends on the dragon, never a coin result");command(mc,"trevorroll skip");});
             // Fixed timeline samples use the actual client/GPU renderer for reviewable chapters.
-            for(int stage=0;stage<5;stage++){
-                final double progress=(stage+.55)/5;
+            double[] phases={.2,.6,.92};
+            for(int stage=0;stage<phases.length;stage++){
+                final double progress=phases[stage];
                 ctx.setScreen(()->new SceneScreen(progress));ctx.waitTicks(4);
                 ctx.runOnClient(mc->require(GL11.glGetError()==GL11.GL_NO_ERROR,"No GPU error in cinematic chapter"));
                 ctx.takeScreenshot("elusive-scene-stage-"+stage);
-            }
-            for(int frame=0;frame<8;frame++){
-                final double progress=.23+frame*.013;
-                ctx.setScreen(()->new SceneScreen(progress));ctx.waitTicks(2);
-                ctx.takeScreenshot("elusive-rabbit-motion-"+frame);
             }
             // Time-sampled native GPU frames for a complete, reproducible visual sequence.
             // Fixed times avoid encoding capture/IO delays as animation stutter in media.
@@ -58,12 +63,18 @@ public final class CinematicChecks {
                 ctx.setScreen(()->new SceneScreen(progress));ctx.waitTick();
                 ctx.takeScreenshot("elusive-journey-"+String.format(java.util.Locale.ROOT,"%02d",frame));
             }
-            System.out.println("PASS: Extreme-only and Elusive-only live command/HUD routing, other styles, completion, toggle, five native scene chapters and rabbit poses");
+            ctx.getInput().resizeWindow(960,720);ctx.runOnClient(mc->mc.options.guiScale().set(3));
+            for(double progress:new double[]{.2,.92}){
+                ctx.setScreen(()->new SceneScreen(progress));ctx.waitTicks(3);
+                ctx.takeScreenshot(progress<.38?"cowboy-compact":"dragon-reveal-compact");
+            }
+            System.out.println("PASS: Extreme-only routing, cowboy/dragon/reveal scenes, seamless dragon reward handoff and no coin result reel");
         }finally{
             ctx.runOnClient(mc->{mc.gui.setScreen(null);command(mc,"trevorroll skip");r.elusiveStyle=oldStyle;r.elusiveCinematic=oldEnabled;r.elusiveReward=oldReward;r.sound=oldSound;r.durationMillis=oldDuration;r.elusiveCinematicMillis=oldCinematicDuration;r.save();});
         }
     }
     private static Reel reel(){try{var f=TrevorRollClient.class.getDeclaredField("instance");f.setAccessible(true);var instance=f.get(null);f=TrevorRollClient.class.getDeclaredField("reel");f.setAccessible(true);return (Reel)f.get(instance);}catch(Exception e){throw new AssertionError(e);}}
+    private static ElusiveReward reward(){try{var f=TrevorRollClient.class.getDeclaredField("instance");f.setAccessible(true);var instance=f.get(null);f=TrevorRollClient.class.getDeclaredField("reward");f.setAccessible(true);return (ElusiveReward)f.get(instance);}catch(Exception e){throw new AssertionError(e);}}
     private static void command(Minecraft mc,String text){try{ClientCommands.getActiveDispatcher().execute(text,(FabricClientCommandSource)mc.player.connection.getSuggestionsProvider());}catch(CommandSyntaxException e){throw new AssertionError(e);}}
     private static void require(boolean value,String text){if(!value)throw new AssertionError(text);}
     private static final class SceneScreen extends Screen {

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.state.EnderDragonRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 
-/** A private display scene: it creates no entities, blocks or biome changes in the world. */
+/** Private hunter-to-dragon display scene; no entities or world mutations. */
 final class TrevorScene {
     private TrevorScene() {}
     private static final Identifier DRAGON=Identifier.withDefaultNamespace("textures/entity/enderdragon/dragon.png");
@@ -18,44 +18,43 @@ final class TrevorScene {
     static void submit(PoseStack p,SubmitNodeCollector nodes,double seconds,double progress){
         int stage=ElusiveSequence.stage(progress);double local=ElusiveSequence.local(progress);
         p.mulPose(Axis.XP.rotationDegrees(10));
-        p.mulPose(Axis.YP.rotationDegrees((float)(168+8*Math.sin(seconds*.3))));
-        int tint=stage<2?0xFFFFFFFF:stage<4?0xFFBBA0E1:0xFFFFE9B8;
+        p.mulPose(Axis.YP.rotationDegrees((float)(168+4*Math.sin(seconds*.25))));
+        int tint=stage==0?0xFFFFE7C6:stage==1?0xFFD6C3EC:0xFFEAD6E4;
         SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.terrainFor(stage),tint);
-        if(stage==0){
-            double npcX=local<.28?-38+32*ElusiveSequence.smooth(local/.28):local>.75?-6+44*ElusiveSequence.smooth((local-.75)/.25):-6;
-            p.pushPose();p.translate((float)npcX,-1,2);p.mulPose(Axis.YP.rotationDegrees(-12));
-            SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.TREVOR,tint);
-            part(nodes,p,SceneModelLibrary.ARM,-4.5,-4.7,0,0,0,-145+15*Math.sin(seconds*12),tint);
-            part(nodes,p,SceneModelLibrary.ARM,4.5,-4.7,0,0,0,8,tint);
-            for(int side:new int[]{-1,1})part(nodes,p,SceneModelLibrary.LEG,side*1.8,3.8,0,0,0,0,tint);
-            p.popPose();
-        }else if(stage<3){
-            p.pushPose();double run=(stage-1+local)/2;
-            p.translate((float)(-15+30*run),(float)(4.5-1.8*Math.abs(Math.sin(seconds*22))),3);
-            p.mulPose(Axis.YP.rotationDegrees((float)(-72+60*run)));
-            SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.RABBIT_BODY,tint);
-            for(int side:new int[]{-1,1}){
-                double stride=Math.sin(seconds*42+side*.9);
-                part(nodes,p,SceneModelLibrary.FORELEG,side*2.1,1.5,3,55*stride,0,0,tint);
-                part(nodes,p,SceneModelLibrary.HINDLEG,side*2.8,1.7,-3.5,-65*stride,0,0,tint);
-                part(nodes,p,SceneModelLibrary.RABBIT_EAR,side*1.4,-3.8,4.3,8*Math.sin(seconds*17),0,side*8,tint);
-            }
-            p.popPose();
-        }else if(stage==3){
-            if(dragon==null)dragon=new EnderDragonModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.ENDER_DRAGON));
-            var state=new EnderDragonRenderState();state.flapTime=(float)(seconds*1.7);state.ageInTicks=(float)(seconds*20);
-            state.partialTicks=1;for(int i=0;i<64;i++)state.flightHistory.record(Math.sin(seconds+i*.12)*.4,0);
-            p.pushPose();p.translate(0,(float)(-8+4*local),(float)(-18+36*ElusiveSequence.smooth(local)));
-            p.mulPose(Axis.YP.rotationDegrees(180));float scale=(float)(1.5+3.3*ElusiveSequence.smooth(local));p.scale(scale,scale,scale);
-            nodes.submitModel(dragon,state,p,DRAGON,15728880,OverlayTexture.NO_OVERLAY,0,null);p.popPose();
-        }else{
-            p.pushPose();p.translate(0,-4,0);p.mulPose(Axis.ZP.rotationDegrees(20));p.mulPose(Axis.YP.rotation((float)(seconds*2.6)));
-            p.scale(.75f,.75f,.75f);SolidModelRenderer.icon(nodes,p,1,0xFFFFF2CB);p.popPose();
-        }
+        if(stage==0)hunter(p,nodes,seconds,local,tint);
+        else dragon(p,nodes,seconds,stage==1?ElusiveSequence.smooth(local):1);
     }
-    private static void part(SubmitNodeCollector nodes,PoseStack p,SolidMesh mesh,double x,double y,double z,double rx,double ry,double rz,int tint){
-        p.pushPose();p.translate((float)x,(float)y,(float)z);p.mulPose(Axis.ZP.rotationDegrees((float)rz));
-        p.mulPose(Axis.YP.rotationDegrees((float)ry));p.mulPose(Axis.XP.rotationDegrees((float)rx));
-        SolidModelRenderer.mesh(nodes,p,mesh,tint);p.popPose();
+    private static void hunter(PoseStack p,SubmitNodeCollector nodes,double seconds,double local,int tint){
+        double x=local<.2?-34+34*ElusiveSequence.smooth(local/.2):local>.8?38*ElusiveSequence.smooth((local-.8)/.2):0;
+        double salute=ElusiveSequence.smooth((local-.25)/.16)*(1-ElusiveSequence.smooth((local-.66)/.16));
+        boolean walking=local<.2||local>.8;
+        p.pushPose();p.translate(0,10.6,0);p.scale(1.2f,1.2f,1.2f);p.translate(0,-10.6,0);
+        p.translate((float)x,-.3,1);p.mulPose(Axis.YP.rotationDegrees(-10));
+        p.mulPose(Axis.ZP.rotationDegrees((float)(.7*Math.sin(seconds*2))));
+        SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.TREVOR,tint);
+        p.pushPose();p.mulPose(Axis.XP.rotationDegrees((float)(-6*salute)));
+        SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.HAT,tint);p.popPose();
+        arm(p,nodes,-3.5,-4.7,7,-19,tint);
+        arm(p,nodes,3.5,-4.7,-8-162*salute,5*salute,tint);
+        for(int side:new int[]{-1,1}){
+            p.pushPose();p.translate(side*1.4,2.8,0);
+            p.mulPose(Axis.XP.rotationDegrees((float)(walking?15*Math.sin(seconds*7+side*Math.PI/2):0)));
+            SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.LEG,tint);p.popPose();
+        }
+        p.popPose();
+    }
+    private static void arm(PoseStack p,SubmitNodeCollector nodes,double x,double y,double shoulder,double elbow,int tint){
+        p.pushPose();p.translate((float)x,(float)y,0);p.mulPose(Axis.ZP.rotationDegrees((float)shoulder));
+        SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.ARM,tint);p.translate(0,3.6,0);
+        p.mulPose(Axis.ZP.rotationDegrees((float)elbow));SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.FOREARM,tint);
+        p.translate(0,2.9,0);SolidModelRenderer.mesh(nodes,p,SceneModelLibrary.HAND,tint);p.popPose();
+    }
+    private static void dragon(PoseStack p,SubmitNodeCollector nodes,double seconds,double approach){
+        if(dragon==null)dragon=new EnderDragonModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.ENDER_DRAGON));
+        var state=new EnderDragonRenderState();state.flapTime=(float)(seconds*1.7);state.ageInTicks=(float)(seconds*20);
+        state.partialTicks=1;for(int i=0;i<64;i++)state.flightHistory.record(Math.sin(seconds+i*.12)*.4,0);
+        p.pushPose();p.translate(0,(float)(-2+4*approach),(float)(-18+30*approach));
+        p.mulPose(Axis.YP.rotationDegrees(180));float scale=(float)(1.5+1.85*approach);p.scale(scale,scale,scale);
+        nodes.submitModel(dragon,state,p,DRAGON,15728880,OverlayTexture.NO_OVERLAY,0,null);p.popPose();
     }
 }

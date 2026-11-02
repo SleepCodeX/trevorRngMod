@@ -26,6 +26,7 @@ public final class HudPainter {
             for(int i=0;i<22;i++){double amount=reverse?i/22.:1-i/22.;round(x+i*w/22.,y,w/22.+.1,h,0,(color&0xFFFFFF)|((int)((color>>>24)*amount)<<24));}
         }
         default boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity) { return false; }
+        default boolean extremeReward(double seconds,double progress,double opacity,String location) { return false; }
     }
 
     private final Canvas c;

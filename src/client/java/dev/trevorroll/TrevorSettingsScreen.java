@@ -115,7 +115,7 @@ public final class TrevorSettingsScreen extends Screen {
                 toggle("Extreme 3D roll",left,5,()->r.elusiveCinematic,v->r.elusiveCinematic=v,
                     "Only Elusive hunts in Extreme style use the scene. Minimal stays minimal.");
                 slider("Extreme roll duration",6,5,14,r.elusiveCinematicMillis/1000.,v->r.elusiveCinematicMillis=(int)Math.round(v*1000),
-                    "%.1f seconds","Time for Trevor, the chase, biome shifts, the dragon and the reveal.");
+                    "%.1f seconds","Time for the cowboy hunter, dragon approach and Elusive reveal.");
             }
             case 5 -> {
                 soundButton("Layer 1",0,r.elusiveSoundStyle,v->r.elusiveSoundStyle=v);
@@ -478,7 +478,7 @@ public final class TrevorSettingsScreen extends Screen {
             MenuFont.text(g,"Little hunts. Big moments.",frameLeft+15,frameTop+48,.68,0xFFB7B1BF);
             MenuFont.text(g,"YOUR WORKSHOP",frameLeft+17,frameTop+67,.65,0xFF8996AB);
             MenuFont.text(g,"MAKE IT YOURS",frameLeft+17,frameTop+177,.65,0xFF8996AB);
-            MenuFont.text(g,"Trevor Roll  /  1.9.0",frameLeft+15,frameTop+frameHeight-23,.65,0xFF8F9AB0);
+            MenuFont.text(g,"Trevor Roll  /  1.9.1",frameLeft+15,frameTop+frameHeight-23,.65,0xFF8F9AB0);
         }
         if(page<0) {
             MenuFont.text(g,(contentWidth>=460?"Your hunt. Your way.":"Modules"),left,frameTop+17,1.45,0xFFF3EBDD);

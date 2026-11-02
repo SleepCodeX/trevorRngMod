@@ -2,25 +2,33 @@ package dev.trevorroll;
 
 import java.util.*;
 
-/** Time-based UI reward with a lit, perspective-projected golden paw medallion. */
+/** Coin celebrations through Extra; Extreme delegates to the native dragon scene. */
 public final class ElusiveRewardPainter {
     private ElusiveRewardPainter() {}
     private static final int GOLD = 0xFFFFC75B, WHITE = 0xFFFFF3C9;
     private record V(double x, double y, double z) {}
     private record Face(V[] vertices, int color) {}
     private record Projected(double[] x, double[] y, double depth, int color) {}
-    private static final List<Face> MEDAL = medal();
+    private static final class MedalCache { static final List<Face> MEDAL=medal(); }
 
     public static void draw(HudPainter.Canvas c, ElusiveReward reward, long now, int width, int height) {
         if (reward.expired(now) || now < reward.startedAt() || width < 160 || height < 100) return;
-        double t = reward.progress(now), fade = smooth(t / .08) * (1 - smooth((t - .82) / .18));
+        double t = reward.progress(now);
+        boolean extreme=reward.style()==ElusiveReward.Style.JACKPOT;
+        double fade=(extreme&&reward.sceneSecondsOffset()>0?1:smooth(t/.08))*(1-smooth((t-.82)/.18));
         if (fade <= 0) return;
+        double seconds=(now-reward.startedAt())/1000.;
+        if(extreme){
+            if(c.extremeReward(seconds+reward.sceneSecondsOffset(),t,fade,reward.location()))return;
+            // Non-game canvases have no native model renderer. Never substitute a coin.
+            center(c,"ELUSIVE",width/2.,height*.12,Math.min(width/240.,height/140.),alpha(GOLD,fade));
+            return;
+        }
         double s = Math.min(width / 480., height / 270.);
-        int level = reward.style().ordinal();
+        int level = reward.style()==ElusiveReward.Style.EXTRA?3:reward.style().ordinal();
         if (level > 0) c.round(0, 0, width, height, 0, alpha(0xFF0C0B1E, fade * (.1 + level * .045) * reward.intensity()));
         c.push((width - 480 * s) / 2, (height - 270 * s) / 2, s);
         try {
-            double seconds = (now - reward.startedAt()) / 1000.;
             if (level == 0) {
                 double y = 27 - 9 * (1 - smooth(t / .15));
                 c.glow(188, y - 12, 104, 65, alpha(GOLD, .18 * fade));
@@ -122,9 +130,9 @@ public final class ElusiveRewardPainter {
     }
     private static void coin(HudPainter.Canvas c, double cx, double cy, double scale, double yaw, double roll, double opacity) {
         if (c.medallion(cx,cy,scale,yaw,roll,opacity)) return;
-        List<Projected> faces = new ArrayList<>(MEDAL.size());
+        List<Projected> faces = new ArrayList<>(MedalCache.MEDAL.size());
         double cos = Math.cos(yaw), sin = Math.sin(yaw), cr = Math.cos(roll), sr = Math.sin(roll);
-        for (Face f : MEDAL) {
+        for (Face f : MedalCache.MEDAL) {
             double[] xs = new double[f.vertices.length], ys = new double[xs.length]; double depth = 0;
             for (int i = 0; i < xs.length; i++) {
                 V v = f.vertices[i];
