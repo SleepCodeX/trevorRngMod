@@ -41,6 +41,10 @@ public final class MenuArtChecks {
                 });
                 ctx.takeScreenshot("menu-art-angle-" + frame);
             }
+            for(int frame=0;frame<5;frame++){
+                final double angle=angles[frame];ctx.setScreen(()->new ModelGallery(angle));ctx.waitTicks(3);
+                ctx.takeScreenshot("solid-model-gallery-angle-"+frame);
+            }
             System.out.println("PASS: all eight pixel/3D icons render at five angles, including edge-on; native input and GL state remain valid");
         } finally { restore(ctx, original); }
     }
@@ -57,8 +61,8 @@ public final class MenuArtChecks {
                 mc.gui.setScreen(new TrevorSettingsScreen());
             });
             ctx.waitTicks(5);
-            for (int frame = 0; frame < 12; frame++) {
-                if (frame > 0) ctx.waitTicks(40);
+            for (int frame = 0; frame < 24; frame++) {
+                if (frame > 0) ctx.waitTicks(4);
                 ctx.runOnClient(mc -> {
                     require(mc.gui.screen() instanceof TrevorSettingsScreen, "Rotation capture stays in the real settings screen");
                     require(GL11.glGetError() == GL11.GL_NO_ERROR, "No OpenGL error during dashboard rotation");
@@ -89,6 +93,21 @@ public final class MenuArtChecks {
         if (!ok) throw new AssertionError(description);
     }
 
+    private static final class ModelGallery extends Screen {
+        private final double angle;
+        private static final String[] LABELS={"Roll machine","Trapper Crest","Paint palette","HUD layout","Jackpot coin","Gramophone","Pelt","Keyboard"};
+        ModelGallery(double angle){super(Component.literal("Solid model gallery"));this.angle=angle;}
+        @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float dt){
+            g.fill(0,0,width,height,0xFF151C28);var c=new MinecraftCanvas(g);
+            MenuFont.text(g,"TREVOR / SOLID MODEL COLLECTION",22,15,1.2,0xFFE8D9F3);
+            for(int module=0;module<8;module++){
+                double x=width*(.125+(module%4)*.25),y=95+(module/4)*150;
+                MenuArt.advanced(c,module,x,y,2.7,angle);
+                String label=LABELS[module];MenuFont.text(g,label,x-MenuFont.width(label)*.44,y+62,.88,0xFFC5BDCE);
+            }
+        }
+        @Override public boolean isPauseScreen(){return false;}
+    }
     private static final class ArtScreen extends Screen {
         private final double angle;
         private final String angleLabel;
@@ -107,8 +126,8 @@ public final class MenuArtChecks {
             g.fill(0, 0, width, height, 0xFF191E2B);
             var c = new MinecraftCanvas(g);
             MenuArt.logo(c, 36, 35, 1);
-            MenuFont.text(g, "TREVOR / ORIGINAL PIXEL ART", 62, 23, 1.2, 0xFFF2E6C9);
-            MenuFont.text(g, "Eight hand-authored sprites. Optional shaded depth.", 62, 41, .9, 0xFFB8A8CC);
+            MenuFont.text(g, "TREVOR / 2D AND SOLID 3D", 62, 23, 1.2, 0xFFF2E6C9);
+            MenuFont.text(g, "Eight hand-authored sprites. Full native 3D object models.", 62, 41, .9, 0xFFB8A8CC);
             MenuFont.text(g, "STATIC / BASELINE", 24, 76, .85, 0xFFBFCDBF);
             MenuFont.text(g, angleLabel, 24, 179, .85, 0xFFE5C98F);
             double spacing = (width - 48.) / 8;

@@ -33,7 +33,7 @@ public final class HudEditorChecks {
             {"Crest HUD:", "Hypixel only:", "Missing reminder:", "Yield to roll:", "Animations:", "Crest size:", "Preview all crest states"},
             {"Roll size:", "Crest size:", "Roll opacity:", "Crest opacity:", "Roll glow:", "Crest glow:"},
             {"Grid:", "Snapping:", "Grid spacing:", "Lock roll:", "Lock crest:", "Open layout editor", "Reset sizes and positions"},
-            {"Elusive reward:", "Reward sound:", "Style:", "Reward duration:", "Effect intensity:", "Reward volume:", "Preview reward"},
+            {"Elusive reward:", "Reward sound:", "Style:", "Reward duration:", "Effect intensity:", "Reward volume:", "Preview reward", "Extreme 3D roll:", "Extreme roll duration:"},
             {"Layer 1:", "Layer 2:", "Layer 1 volume:", "Layer 2 volume:", "Preview both sounds"},
             {"Show stats:", "Crest alert:", "Start / reset pelt session", "Stop tracker", "Maxed sound 1:", "Maxed sound 2:", "Preview maxed-crest sounds"},
             {"Open menu key:", "Reset key to unbound", "Menu fade:", "Advanced graphics:"}

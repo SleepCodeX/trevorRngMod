@@ -3,15 +3,31 @@
   "id": "trevorroll",
   "version": "${version}",
   "name": "Trevor Roll",
-  "description": "Animated Trevor hunt reveals, Elusive celebrations and live Trapper Crest progress for Hypixel SkyBlock, with roomy module cards, quick tabs, smooth menu motion and an adjustable HUD.",
-  "authors": ["Anish"],
+  "description": "Colored pelt-coin hunt reveals, an Extreme-only 3D Elusive journey, standalone 3D menu models, and live Trapper Crest tracking for Hypixel SkyBlock.",
+  "authors": [
+    "Anish"
+  ],
   "license": "MIT",
   "environment": "client",
-  "entrypoints": { "client": ["dev.trevorroll.TrevorRollClient", "dev.crestwatch.trapper.TrapperCrestHudClient"], "modmenu": ["dev.trevorroll.TrevorModMenu"] },
+  "entrypoints": {
+    "client": [
+      "dev.trevorroll.TrevorRollClient",
+      "dev.crestwatch.trapper.TrapperCrestHudClient"
+    ],
+    "modmenu": [
+      "dev.trevorroll.TrevorModMenu"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "26.2",
     "java": ">=25",
     "fabric-api": ">=0.161.0+26.2"
-  }
+  },
+  "mixins": [
+    {
+      "config": "trevorroll.client.mixins.json",
+      "environment": "client"
+    }
+  ]
 }

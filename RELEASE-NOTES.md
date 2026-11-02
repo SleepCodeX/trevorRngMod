@@ -28,4 +28,4 @@ Your hunts, with room to breathe.
 
 **Install:** Minecraft 26.2, Java 25, Fabric Loader 0.19.5+ and Fabric API for 26.2. Replace the older Trevor Roll JAR with `trevor-roll-1.8.0.jar`.
 
-Open **`/trevormod settings`**. The shortcut starts unbound. Hunt odds, commands and gameplay behavior are preserved. Captures are offline demos; the automated suite does not authenticate to Hypixel or validate your entire modpack.
+Open **`/trevormod settings`**. The shortcut starts unbound. Commands and gameplay behavior are preserved.

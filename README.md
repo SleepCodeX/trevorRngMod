@@ -43,5 +43,3 @@ Set the menu shortcut in **Menu & Keys** or **Minecraft Controls → Trevor Roll
 **`/trevormod settings`** opens everything. **`/trevorroll test elusive`** previews a hunt; **`/trevormod preview`** previews your reward.
 
 [All commands & building](docs/DEVELOPMENT.md) · [Validation](VALIDATION.md) · [MIT license](LICENSE)
-
-*Actual offline Minecraft demo captures, not live Hypixel results. [Media provenance](docs/media/1.8.0/README.md). Inspired by [OneClient](https://polyfrost.org/projects/oneclient); original Trevor artwork, no OneClient dependency. The mod never changes hunt odds.*

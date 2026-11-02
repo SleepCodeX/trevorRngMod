@@ -3,7 +3,7 @@ package dev.trevorroll;
 /** Cosmetic reward state. The winning rarity remains the server's assignment. */
 public record ElusiveReward(long startedAt, int durationMillis, Style style, double intensity, double volume, String location) {
     public enum Style {
-        MINIMAL("Minimal"), CLASSIC("Classic"), EXTRA("Extra Reward"), JACKPOT("Jackpot");
+        MINIMAL("Minimal"), CLASSIC("Classic"), EXTRA("Extra Reward"), JACKPOT("Extreme");
         public final String label;
         Style(String label) { this.label = label; }
     }
