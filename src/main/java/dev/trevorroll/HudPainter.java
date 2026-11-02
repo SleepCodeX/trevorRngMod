@@ -21,6 +21,10 @@ public final class HudPainter {
         double textWidth(String text);
         void clip(double x, double y, double w, double h);
         void unclip();
+        default boolean peltCoin(double x,double y,double radius,Hunt.Rarity rarity,double opacity){return false;}
+        default void horizontalFade(double x,double y,double w,double h,int color,boolean reverse){
+            for(int i=0;i<22;i++){double amount=reverse?i/22.:1-i/22.;round(x+i*w/22.,y,w/22.+.1,h,0,(color&0xFFFFFF)|((int)((color>>>24)*amount)<<24));}
+        }
         default boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity) { return false; }
     }
 
@@ -63,7 +67,7 @@ public final class HudPainter {
         round(16, 14, 25, 25, 9, 0xFF343047);
         paw(28.5, 26, .54, 0xFFD8C7FF);
         text("Trevor's hunt", 49, 16, 1, INK);
-        text("A little luck. A new hunt.", 49, 29, .70, MUTED);
+        text(revealed?PeltCoins.tagline(reel.hunt.rarity()):"A little luck. A new hunt.", 49, 29, .65, revealed?accent:MUTED);
         String status = reel.demo ? "Preview" : revealed ? "Revealed" : "Rolling";
         round(314, 16, 82, 21, 10.5, tint(accent, .11));
         dot(325, 26.5, 2, accent);
@@ -87,11 +91,8 @@ public final class HudPainter {
                 card(x, 50 - focus * 2.5 - bounce, reel.cards[i], visibility, focus, winner, since);
             }
             // Feather the cut-off cards into the shell instead of a hard crop.
-            for (int i = 0; i < 22; i++) {
-                int fade = tint(PANEL, .92 * (1 - i / 22.0));
-                round(12 + i, 46, 1, 74, 0, fade);
-                round(WIDTH - 13 - i, 46, 1, 74, 0, fade);
-            }
+            c.horizontalFade(12,46,22,74,tint(PANEL,opacity*.92),false);
+            c.horizontalFade(WIDTH-34,46,22,74,tint(PANEL,opacity*.92),true);
         } finally { c.unclip(); }
 
         // The pointer sits outside the cards so it never crosses the text/icon.
@@ -101,13 +102,15 @@ public final class HudPainter {
 
         if (revealed) {
             double footer = smooth(since / .25);
-            List<String> lines = wrap("Go to " + reel.hunt.location(), 365, .86);
-            double y = 129 + (1 - footer) * 4;
+            String rarityName=PeltCoins.name(reel.hunt.rarity());
+            center("Go hunt "+rarityName,WIDTH/2,126+(1-footer)*4,.88,tint(accent,footer));
+            List<String> lines = wrap(reel.hunt.location(), 365, .75);
+            double y = 140 + (1 - footer) * 4;
             for (String line : lines) {
-                center(line, WIDTH / 2, y, .86, tint(INK, footer));
+                center(line, WIDTH / 2, y, .75, tint(INK, footer));
                 y += 11;
             }
-            center("to kill it now!", WIDTH / 2, Math.min(149, y + 1), .73, tint(accent, footer));
+
             if (since < 1.1) sparkles(since, accent);
         } else {
             center("A little suspense...", WIDTH / 2, 132, .79, MUTED);
@@ -121,13 +124,15 @@ public final class HudPainter {
     private void card(double x, double y, Hunt.Rarity rarity, double visibility, double focus, boolean winner, double since) {
         int accent = color(rarity);
         if (winner) glow(x - 12, y - 9, CARD + 24, 86, tint(accent, .22 + .15 * Math.exp(-since * 4)));
-        round(x, y, CARD, 64, 13, tint(mix(0xFF3F3B55, accent, winner ? .64 : .15 + focus * .12), visibility));
-        round(x + 1, y + 1, CARD - 2, 62, 12, tint(mix(0xFF252438, accent, winner ? .16 : .065), visibility));
-        glow(x + 10, y + 1, 60, 47, tint(accent, visibility * .12));
-        dot(x + 40, y + 25, 16, tint(accent, visibility * .12));
-        paw(x + 40, y + 25, .85, tint(accent, visibility));
-        String name = rarity.name().substring(0, 1) + rarity.name().substring(1).toLowerCase(Locale.ROOT);
-        center(name, x + 40, y + 48, .82, tint(accent, visibility));
+        round(x,y+3,CARD,64,9,tint(0xFF080B13,visibility*.7));
+        round(x,y,CARD,64,9,tint(mix(0xFF465064,accent,winner?.9:.58),visibility));
+        round(x+1,y+1,CARD-2,62,8,tint(mix(0xFF151D2C,accent,winner?.2:.09),visibility));
+        round(x+4,y+2,CARD-8,1,0,tint(mix(accent,INK,.45),visibility*.55));
+        center(PeltCoins.tier(rarity),x+40,y+6,.47,tint(accent,visibility*.85));
+        if(!c.peltCoin(x+40,y+27,13.5,rarity,opacity*visibility))PeltCoins.draw(c,x+40,y+27,13.5,rarity,opacity*visibility);
+        int band=tint(mix(0xFF1B2233,accent,.35),visibility);
+        round(x+1,y+45,CARD-2,18,8,band);round(x+1,y+45,CARD-2,8,0,band);
+        center(PeltCoins.name(rarity),x+40,y+50,.79,tint(mix(accent,INK,.3),visibility));
         if (winner) {
             star(x + 64, y + 12, 2.7, tint(accent, .9));
             star(x + 15, y + 34, 1.6, tint(accent, .65));
@@ -178,7 +183,7 @@ public final class HudPainter {
         return lines;
     }
 
-    private static int color(Hunt.Rarity rarity) { return COLORS[rarity.ordinal()]; }
+    private static int color(Hunt.Rarity rarity) { return PeltCoins.color(rarity); }
     private static double smooth(double t) { t = Math.clamp(t, 0, 1); return t * t * (3 - 2 * t); }
     private static int tint(int color, double alpha) { return (color & 0xFFFFFF) | ((int) Math.round((color >>> 24) * Math.clamp(alpha, 0, 1)) << 24); }
     private static int mix(int a, int b, double t) {

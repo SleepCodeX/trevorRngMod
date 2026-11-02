@@ -25,12 +25,17 @@ final class MinecraftCanvas implements HudPainter.Canvas {
     private static final Identifier GLOW = Identifier.fromNamespaceAndPath("trevorroll", "textures/gui/glow.png");
     private final GuiGraphicsExtractor g;
     private Matrix3x2f artTransform;
+    private net.minecraft.client.gui.navigation.ScreenRectangle modelClip;
     private final Minecraft mc = Minecraft.getInstance();
     private final double opacity;
     private final boolean glows;
+    private final boolean polishedFont;
     public MinecraftCanvas(GuiGraphicsExtractor graphics) { this(graphics, 1, true); }
     public MinecraftCanvas(GuiGraphicsExtractor graphics, double opacity, boolean glows) {
-        this.g = graphics; this.opacity = opacity; this.glows = glows;
+        this(graphics,opacity,glows,false);
+    }
+    public MinecraftCanvas(GuiGraphicsExtractor graphics,double opacity,boolean glows,boolean polishedFont){
+        this.g=graphics;this.opacity=opacity;this.glows=glows;this.polishedFont=polishedFont;
     }
     private int alpha(int color) {
         return (color & 0xFFFFFF) | ((int) Math.round((color >>> 24) * opacity) << 24);
@@ -60,19 +65,53 @@ final class MinecraftCanvas implements HudPainter.Canvas {
             size, size, size, size, 288, 32, alpha(0xFFFFFFFF)); }
         finally { pop(); }
     }
+    void model(int module,double x,double y,double scale,double angle) {
+        if(opacity<=0)return;
+        int diameter=(int)Math.ceil(42*scale);
+        submitModel(module,x-diameter/2.,y-diameter/2.,diameter,diameter,scale,angle,0,0,opacity,2);
+    }
+    void cinematic(double x,double y,double width,double height,double scale,double seconds,double progress,double fade) {
+        submitModel(8,x,y,(int)width,(int)height,scale,0,seconds,progress,fade*opacity,1);
+    }
+    private void submitModel(int model,double x,double y,int w,int h,double scale,double angle,
+                             double seconds,double progress,double alpha,int samples) {
+        if(alpha<=0||w<=0||h<=0)return;
+        var pose=new Matrix3x2f(g.pose()).translate((float)x,(float)y).scale(1f/samples);
+        var bounds=new net.minecraft.client.gui.navigation.ScreenRectangle(0,0,w*samples,h*samples).transformMaxBounds(pose);
+        if(modelClip!=null){bounds=bounds.intersection(modelClip);if(bounds==null)return;}
+        var state=new SolidModelState(model,angle,seconds,progress,(float)alpha,0,0,w*samples,h*samples,
+            (float)(scale*samples),pose,modelClip,bounds);
+        ((dev.trevorroll.mixin.GuiGraphicsAccess)(Object)g).trevorroll$renderState().addPicturesInPictureState(state);
+    }
+    private static final Identifier PELT_COINS=Identifier.fromNamespaceAndPath("trevorroll","textures/gui/pelt_coins.png");
+    @Override public boolean peltCoin(double x,double y,double radius,Hunt.Rarity rarity,double fade){
+        push(x-radius,y-radius,radius/128);
+        try{g.blit(RenderPipelines.GUI_TEXTURED,PELT_COINS,0,0,rarity.ordinal()*256,0,256,256,256,256,1280,256,alpha(((int)Math.round(fade*255)<<24)|0xFFFFFF));}
+        finally{pop();}return true;
+    }
+    @Override public void horizontalFade(double x,double y,double w,double h,int color,boolean reverse){
+        g.pose().pushMatrix();
+        try{
+            g.pose().translate((float)(reverse?x+w:x),(float)(reverse?y:y+h));
+            g.pose().rotate((float)(reverse?Math.PI/2:-Math.PI/2));
+            g.fillGradient(0,0,(int)h,(int)w,alpha(color),color&0xFFFFFF);
+        }finally{g.pose().popMatrix();}
+    }
     @Override public void pop() { g.pose().popMatrix(); }
-    @Override public double textWidth(String text) { return mc.font.width(text); }
+    @Override public double textWidth(String text) { return polishedFont?MenuFont.width(text):mc.font.width(text); }
     @Override public void text(String text, double x, double y, double size, int color) {
         color = alpha(color);
         if ((color >>> 24) == 0) return;
+        if(polishedFont){MenuFont.text(g,text,x,y,size,color);return;}
         push(x, y, size);
         try { g.text(mc.font, text, 0, 0, color, false); }
         finally { pop(); }
     }
     @Override public void clip(double x, double y, double w, double h) {
+        modelClip=new net.minecraft.client.gui.navigation.ScreenRectangle((int)x,(int)y,(int)w,(int)h).transformMaxBounds(g.pose());
         g.enableScissor((int) x, (int) y, (int) (x + w), (int) (y + h));
     }
-    @Override public void unclip() { g.disableScissor(); }
+    @Override public void unclip() { modelClip=null;g.disableScissor(); }
 
     @Override public void round(double x, double y, double w, double h, double radius, int color) {
         color = alpha(color);

@@ -197,6 +197,8 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             dev.trevorroll.ElusiveRewardChecks.run(context);
             dev.trevorroll.MenuArtChecks.run(context);
             dev.trevorroll.MenuArtChecks.captureDashboardRotation(context);
+            dev.trevorroll.CinematicChecks.run(context);
+            dev.trevorroll.RarityVisualChecks.run(context);
             System.out.println("PASS: real production client startup, hotbar lore/removal, all commands, HUD scales and original reel");
         }
     }

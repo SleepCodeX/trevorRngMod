@@ -4,7 +4,7 @@ package dev.trevorroll;
 public final class MenuMotion {
     public static final long OPEN_NANOS = 260_000_000L;
     public static final long CLOSE_NANOS = 170_000_000L;
-    private static final long REVOLUTION_NANOS = 24_000_000_000L;
+    public static long revolutionNanos(int module){return module==1?4_000_000_000L:10_000_000_000L;}
     private MenuMotion() {}
 
     public static double openingOpacity(long elapsedNanos, boolean enabled) {
@@ -28,7 +28,8 @@ public final class MenuMotion {
         return result;
     }
     public static double iconAngle(long elapsedNanos, int module) {
-        double phase = Math.floorMod(elapsedNanos, REVOLUTION_NANOS) / (double) REVOLUTION_NANOS;
+        long period=revolutionNanos(module);
+        double phase = Math.floorMod(elapsedNanos,period) / (double)period;
         return phase * Math.PI * 2 + .38 + module * .11;
     }
 }

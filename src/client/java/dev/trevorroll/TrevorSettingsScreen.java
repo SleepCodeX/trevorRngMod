@@ -112,6 +112,10 @@ public final class TrevorSettingsScreen extends Screen {
                 slider("Reward duration", 2, 1.5, 10, r.elusiveMillis / 1000., v -> r.elusiveMillis = (int) Math.round(v * 1000), "%.1f seconds", "Independent of roll duration and result display time.");
                 slider("Effect intensity", 3, .25, 1, r.elusiveIntensity, v -> r.elusiveIntensity = v, "%.0f%%", "Adjust sparkle density and the cinematic background tint.");
                 sliderHalfVolumeAndPreview();
+                toggle("Extreme 3D roll",left,5,()->r.elusiveCinematic,v->r.elusiveCinematic=v,
+                    "Only Elusive hunts in Extreme style use the scene. Minimal stays minimal.");
+                slider("Extreme roll duration",6,5,14,r.elusiveCinematicMillis/1000.,v->r.elusiveCinematicMillis=(int)Math.round(v*1000),
+                    "%.1f seconds","Time for Trevor, the chase, biome shifts, the dragon and the reveal.");
             }
             case 5 -> {
                 soundButton("Layer 1",0,r.elusiveSoundStyle,v->r.elusiveSoundStyle=v);
@@ -132,7 +136,7 @@ public final class TrevorSettingsScreen extends Screen {
                 toggle("Menu fade", left, 2, () -> r.menuAnimations, v -> r.menuAnimations = v,
                     "Smooth opening, closing and scrolling. Off makes menus instant.");
                 toggle("Advanced graphics", left + column + GAP, 2, () -> r.advancedMenuGraphics, v -> r.advancedMenuGraphics = v,
-                    "Slow 3D icons and richer effects. Off by default for lightweight rendering.");
+                    "Full 3D models with lighting and depth. Uses more graphics resources.");
             }
             case 6 -> {
                 toggle("Show stats",left,0,()->r.trackerVisible,v->r.trackerVisible=v,"Show pelts/hour in the crest card.");
@@ -435,7 +439,7 @@ public final class TrevorSettingsScreen extends Screen {
         if(h>=112)MenuFont.text(g,MODULE_NUMBERS[module],x+w-24,y+9,.68,0xFF8896AB);
         double iconY=y+(h>=112?51:(h-26)/2.);
         c.glow(x+w/2.-34,iconY-30,68,60,MenuMotion.mix(0x088E68D6,0x388E68D6,state));
-        icon(c,module,x+w/2.,iconY-(TrevorRollClient.settings().menuAnimations?state*2:0), h>=112?1.8:1.35);
+        icon(c,module,x+w/2.,(TrevorRollClient.settings().advancedMenuGraphics?iconY-5:iconY)-(TrevorRollClient.settings().menuAnimations?state*2:0), h>=112?1.8:1.35);
         if(h>=112)MenuFont.text(g,MenuFont.ellipsis(SUMMARIES[module],(w-18)/.7),
             x+(w-MenuFont.width(MenuFont.ellipsis(SUMMARIES[module],(w-18)/.7))*.7)/2,y+h-48,.7,0xFFA8B4C8);
         int band=MenuMotion.mix(0xFF514779,0xFF7964B5,state);
@@ -474,7 +478,7 @@ public final class TrevorSettingsScreen extends Screen {
             MenuFont.text(g,"Little hunts. Big moments.",frameLeft+15,frameTop+48,.68,0xFFB7B1BF);
             MenuFont.text(g,"YOUR WORKSHOP",frameLeft+17,frameTop+67,.65,0xFF8996AB);
             MenuFont.text(g,"MAKE IT YOURS",frameLeft+17,frameTop+177,.65,0xFF8996AB);
-            MenuFont.text(g,"Trevor Roll  /  1.8.0",frameLeft+15,frameTop+frameHeight-23,.65,0xFF8F9AB0);
+            MenuFont.text(g,"Trevor Roll  /  1.9.0",frameLeft+15,frameTop+frameHeight-23,.65,0xFF8F9AB0);
         }
         if(page<0) {
             MenuFont.text(g,(contentWidth>=460?"Your hunt. Your way.":"Modules"),left,frameTop+17,1.45,0xFFF3EBDD);
@@ -484,7 +488,7 @@ public final class TrevorSettingsScreen extends Screen {
             MenuFont.text(g,TITLES[page],left+104,frameTop+18,1.35,0xFFF3EBDD);
             if(height>=300)MenuFont.text(g,MenuFont.ellipsis(DESCRIPTIONS[page],contentWidth/.82),left,frameTop+45,.82,0xFFADB5C4);
         }
-        g.enableScissor(left-1,top,left+contentWidth+1,viewportBottom());
+        c.clip(left-1,top,contentWidth+2,viewportBottom()-top);
         try {
             for(var b:controls) {
                 if(!b.visible||fixed.contains(b))continue;
@@ -494,7 +498,7 @@ public final class TrevorSettingsScreen extends Screen {
                 MenuFont.text(g,"No modules found",left+12,top+18,1,0xFFE4DAEE);
                 MenuFont.text(g,"Try a different search or category.",left+12,top+35,.8,0xFF9FAABE);
             }
-        } finally {g.disableScissor();}
+        } finally {c.unclip();}
         c.round(left,viewportBottom()+5,contentWidth,1,0,0xFF303949);
         for(var b:fixed) {
             if(!b.visible)continue;

@@ -1,0 +1,1 @@
+{"required":true,"package":"dev.trevorroll.mixin","compatibilityLevel":"JAVA_25","client":["GuiGraphicsAccess","PipTextureAccess"],"injectors":{"defaultRequire":1}}

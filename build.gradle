@@ -105,3 +105,10 @@ tasks.register('menuMotionTest', JavaExec) {
     mainClass = 'dev.trevorroll.MenuMotionTest'
 }
 tasks.named('check') { dependsOn tasks.named('menuMotionTest') }
+
+tasks.register('solidModelTest', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.trevorroll.SolidModelTest'
+}
+tasks.named('check') { dependsOn tasks.named('solidModelTest') }

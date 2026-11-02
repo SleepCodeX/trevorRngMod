@@ -29,8 +29,8 @@ public final class MenuMotionTest {
         require(MenuMotion.mix(0xFF000000,0xFFFFFFFF,1)==0xFFFFFFFF,"Color end exact");
         for (int module = 0; module < 8; module++) {
             double a = MenuMotion.iconAngle(0, module);
-            require(Math.abs(MenuMotion.iconAngle(24_000_000_000L, module) - a) < 1e-9, "Rotation loops without drift");
-            require(Math.abs(MenuMotion.iconAngle(12_000_000_000L, module) - a - Math.PI) < 1e-9, "Slow half rotation");
+            require(Math.abs(MenuMotion.iconAngle(MenuMotion.revolutionNanos(module), module) - a) < 1e-9, "Rotation loops without drift");
+            require(Math.abs(MenuMotion.iconAngle(MenuMotion.revolutionNanos(module)/2, module) - a - Math.PI) < 1e-9, "Slow half rotation");
             require(Double.isFinite(MenuMotion.iconAngle(Long.MAX_VALUE, module)), "Rotation remains finite");
         }
         System.out.println("PASS: menu fade timing, reduced motion, bounded easing and slow frame-independent icon rotation");

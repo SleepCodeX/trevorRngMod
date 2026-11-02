@@ -26,6 +26,8 @@ public final class TrevorRollClient implements ClientModInitializer {
     private final Random random = new Random();
     private RollConfig config;
     private Reel reel;
+    private Reel cinematicSoundReel;
+    private boolean cinematicRoared;
     private ElusiveReward reward;
     private int rewardNote;
     private long audioPreviewStarted;
@@ -49,6 +51,7 @@ public final class TrevorRollClient implements ClientModInitializer {
         instance = this;
         config = RollConfig.load();
         MenuKeybind.register();
+        SolidModelRenderer.register();
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (overlay || !config.enabled || !onHypixel()) return true;
             var hunt = Hunt.parse(message.getString());
@@ -57,7 +60,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             reward = null;
             // Preserve an earlier assignment if two arrive before the first is revealed.
             if (reel != null && !reel.announced && !reel.demo) announce(reel);
-            reel = new Reel(hunt.get(), now(), config.durationMillis, false, random, config.resultMillis);
+            reel = new Reel(hunt.get(), now(), ElusiveSequence.duration(hunt.get().rarity(),config.elusiveCinematic&&config.elusiveReward,config.durationMillis,config.elusiveCinematicMillis,config.elusiveStyle), false, random, config.resultMillis);
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> tick());
@@ -107,6 +110,12 @@ public final class TrevorRollClient implements ClientModInitializer {
             }
         }
         if (reel == null) return;
+        if(cinematicSoundReel!=reel){cinematicSoundReel=reel;cinematicRoared=false;}
+        if(!cinematicRoared&&ElusiveSequence.eligible(reel.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)&&reel.progress(time)>=.6&&!reel.finished(time)){
+            cinematicRoared=true;
+            if(config.sound&&config.elusiveSound)MC.getSoundManager().play(SimpleSoundInstance.forUI(
+                SoundEvents.ENDER_DRAGON_GROWL,.9f,(float)(config.volume*config.elusiveVolume*.6)));
+        }
         if (reel.finished(time)) {
             if (!reel.announced) {
                 announce(reel);
@@ -219,7 +228,7 @@ public final class TrevorRollClient implements ClientModInitializer {
             feedback("Finish the current hunt reveal first, or use /trevorroll skip."); return 0;
         }
         reward = null;
-        reel = new Reel(new Hunt(rarity, "Overgrown Mushroom Cave"), now(), config.durationMillis, true, random, config.resultMillis);
+        reel = new Reel(new Hunt(rarity, "Overgrown Mushroom Cave"), now(), ElusiveSequence.duration(rarity,config.elusiveCinematic&&config.elusiveReward,config.durationMillis,config.elusiveCinematicMillis,config.elusiveStyle), true, random, config.resultMillis);
         return 1;
     }
 
@@ -231,7 +240,11 @@ public final class TrevorRollClient implements ClientModInitializer {
         Reel roll = reel;
         if (MC.gui.screen() instanceof TrevorLayoutScreen) return;
         if (MC.player == null || MC.gui.hud.isHidden()) return;
-        if (roll != null) HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow), roll, now(),
+        if(roll!=null&&ElusiveSequence.eligible(roll.hunt.rarity(),config.elusiveCinematic&&config.elusiveReward,config.elusiveStyle)&&!roll.finished(now())) {
+            ElusiveCinematicHud.draw(g,roll,now(),MC.getWindow().getGuiScaledWidth(),MC.getWindow().getGuiScaledHeight(),config.opacity);
+            return;
+        }
+        if (roll != null) HudPainter.draw(new MinecraftCanvas(g, config.opacity, config.glow,true), roll, now(),
             MC.getWindow().getGuiScaledWidth(), MC.getWindow().getGuiScaledHeight(),
             config.scale, config.x, config.y, config.customPosition);
     }

@@ -27,12 +27,14 @@ Opening fades actual layers over 260 ms; closing fades over 170 ms. The world
 remains visible through the transition. Exponential hover, toggle and wheel
 responses use elapsed time. Keyboard reveal and scrollbar dragging remain immediate.
 Reduced motion bypasses transitions and scrolling interpolation. Optional artwork
-depth retains slow continuous rotation; text and controls remain still.
+models rotate continuously (crest: 4 s, other objects: 10 s); text and controls remain still.
 
 Original icon pixels live in tools/menu-art.json and bake to one texture atlas.
 Default icons use one texture quad each, replacing many rectangle submissions.
 Glyph metrics are numeric and loaded once; hot text loops allocate no code-point arrays.
-Help wrapping is cached per widget and width. No blur framebuffer, animation worker,
+Help wrapping is cached per widget and width. Advanced icons use native depth targets and
+cached lit meshes, each with its own silhouette. The palette has an open thumb hole; the
+crest is intentionally a thick square prism. See docs/3D-MODELS.md. No blur framebuffer, animation worker,
 or closed-menu rendering is introduced. These reductions do not establish a claim
 about whole-game startup time or the user's modpack performance.
 
