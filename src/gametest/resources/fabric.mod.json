@@ -7,5 +7,6 @@
   "entrypoints": {
     "fabric-client-gametest": ["dev.trevorroll.test.TrevorRollClientGameTest"]
   },
-  "depends": {"trevorroll": "*"}
+  "depends": {"trevorroll": "*"},
+  "mixins": ["trevorroll-tests.mixins.json"]
 }

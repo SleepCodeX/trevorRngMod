@@ -31,6 +31,59 @@ public record SolidMesh(Vertex[] vertices) {
             wall(outer,z-depth/2+b,outer,z+depth/2-b,color);
             cap(inner,z+depth/2,false,color);cap(inner,z-depth/2,true,color);
         }
+        /** True rounded edges/corners with continuous normals, baked once per object. */
+        public void roundedBox(double x,double y,double z,double w,double h,double depth,double radius,int color){
+            double[] half={w/2,h/2,depth/2};
+            double r=Math.min(radius,Math.min(half[0],Math.min(half[1],half[2]))*.92);
+            if(r<=0){box(x,y,z,w,h,depth,0,color);return;}
+            for(int axis=0;axis<3;axis++)for(int sign:new int[]{-1,1}){
+                int ua=(axis+1)%3,va=(axis+2)%3;double[] us=edgeSamples(half[ua],r),vs=edgeSamples(half[va],r);
+                for(int i=0;i<us.length-1;i++)for(int j=0;j<vs.length-1;j++){
+                    V[] p=new V[4],n=new V[4];double[][] uv={{us[i],vs[j]},{us[i+1],vs[j]},{us[i+1],vs[j+1]},{us[i],vs[j+1]}};
+                    for(int k=0;k<4;k++){
+                        double[] q={0,0,0};q[axis]=sign*half[axis];q[ua]=uv[k][0];q[va]=uv[k][1];
+                        double[] inner=new double[3];for(int a=0;a<3;a++)inner[a]=Math.clamp(q[a],-half[a]+r,half[a]-r);
+                        n[k]=new V(q[0]-inner[0],q[1]-inner[1],q[2]-inner[2]).unit();
+                        p[k]=new V(x+inner[0]+n[k].x*r,y+inner[1]+n[k].y*r,z+inner[2]+n[k].z*r);
+                    }
+                    if(sign>0)smooth(p[0],p[1],p[2],p[3],n[0],n[1],n[2],n[3],color);
+                    else smooth(p[3],p[2],p[1],p[0],n[3],n[2],n[1],n[0],color);
+                }
+            }
+        }
+        private static double[] edgeSamples(double half,double r){return new double[]{-half,-half+r*.25,-half+r*.5,-half+r*.75,-half+r,half-r,half-r*.75,half-r*.5,half-r*.25,half};}
+        public void torus(V center,V axis,double major,double minor,double depth,int color){
+            V normal=axis.unit(),right=normal.cross(Math.abs(normal.y)<.9?new V(0,1,0):new V(1,0,0)).unit(),up=normal.cross(right).unit();
+            for(int u=0;u<64;u++)for(int v=0;v<12;v++){
+                V[] p=new V[4],n=new V[4];int[][] uv={{u,v},{u+1,v},{u+1,v+1},{u,v+1}};
+                for(int k=0;k<4;k++){
+                    double a=uv[k][0]*Math.PI*2/64,b=uv[k][1]*Math.PI*2/12;
+                    V radial=right.mul(Math.cos(a)).add(up.mul(Math.sin(a)));
+                    p[k]=center.add(radial.mul(major+minor*Math.cos(b))).add(normal.mul(depth*Math.sin(b)));
+                    n[k]=radial.mul(Math.cos(b)/minor).add(normal.mul(Math.sin(b)/depth)).unit();
+                }
+                smooth(p[0],p[1],p[2],p[3],n[0],n[1],n[2],n[3],color);
+            }
+        }
+        /** Hollow bell with a curved centre line; the mouth stays open. */
+        public void bell(V[] path,double[] radii,int outside,int inside){
+            int segments=48;
+            V[][] outer=new V[path.length][segments],inner=new V[path.length][segments];
+            V[] axes=new V[path.length];
+            for(int i=0;i<path.length;i++){
+                V axis=(i==0?path[1].sub(path[0]):i==path.length-1?path[i].sub(path[i-1]):path[i+1].sub(path[i-1])).unit();axes[i]=axis;
+                V right=axis.cross(new V(0,0,1)).unit(),up=axis.cross(right).unit();
+                for(int j=0;j<segments;j++){
+                    double a=j*Math.PI*2/segments;V radial=right.mul(Math.cos(a)).add(up.mul(Math.sin(a)));
+                    outer[i][j]=path[i].add(radial.mul(radii[i]));inner[i][j]=path[i].add(radial.mul(Math.max(.2,radii[i]-.45)));
+                }
+            }
+            for(int i=0;i<path.length-1;i++)for(int j=0;j<segments;j++){
+                int k=(j+1)%segments;quad(outer[i][j],outer[i][k],outer[i+1][k],outer[i+1][j],outside);
+                quad(inner[i][j],inner[i+1][j],inner[i+1][k],inner[i][k],inside);
+            }
+            torus(path[path.length-1],axes[path.length-1],radii[radii.length-1]-.2,.38,.38,outside);
+        }
         private static double[][] rect(double x,double y,double w,double h,double b){
             if(b==0)return new double[][]{{x-w/2,y-h/2},{x+w/2,y-h/2},{x+w/2,y+h/2},{x-w/2,y+h/2}};
             return new double[][]{{x-w/2+b,y-h/2},{x+w/2-b,y-h/2},{x+w/2,y-h/2+b},{x+w/2,y+h/2-b},

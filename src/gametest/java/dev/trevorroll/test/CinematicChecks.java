@@ -9,16 +9,18 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.opengl.GL11;
+import dev.trevorroll.test.CinematicSoundProbe;
 
 /** True native rendering plus actual command/style gating and timeline completion. */
 public final class CinematicChecks {
     private CinematicChecks() {}
     public static void run(ClientGameTestContext ctx){
         var r=ctx.computeOnClient(mc->TrevorRollClient.settings());
-        var oldStyle=r.elusiveStyle;boolean oldEnabled=r.elusiveCinematic,oldReward=r.elusiveReward,oldSound=r.sound;
+        var oldStyle=r.elusiveStyle;boolean oldEnabled=r.elusiveCinematic,oldReward=r.elusiveReward,oldSound=r.sound,oldRewardSound=r.elusiveSound;
         int oldDuration=r.durationMillis,oldCinematicDuration=r.elusiveCinematicMillis;
         try {
             ctx.getInput().resizeWindow(1280,720);ctx.runOnClient(mc->{mc.options.guiScale().set(2);r.elusiveCinematic=true;r.elusiveReward=true;r.sound=false;r.durationMillis=1000;r.elusiveCinematicMillis=5000;mc.gui.setScreen(null);});
+            ctx.runOnClient(mc->CinematicSoundProbe.start(()->{var current=reel();return current==null?-1:current.progress(System.nanoTime()/1_000_000);}));
             for(var style:ElusiveReward.Style.values()){
                 ctx.runOnClient(mc->{r.elusiveStyle=style;command(mc,"trevorroll test elusive");
                     require(reel().durationMillis==(style==ElusiveReward.Style.JACKPOT?5000:1000),"Style gates actual roll duration");});
@@ -34,7 +36,7 @@ public final class CinematicChecks {
                 ctx.runOnClient(mc->command(mc,"trevorroll skip"));
             }
             long before=SolidModelRenderer.renderedCinematics;
-            ctx.runOnClient(mc->command(mc,"trevorroll test elusive"));ctx.waitTicks(8);
+            ctx.runOnClient(mc->{require(CinematicSoundProbe.count==0,"Muted and other-rarity rolls never play the dragon cue");r.sound=true;r.elusiveSound=true;command(mc,"trevorroll test elusive");});ctx.waitTicks(8);
             require(SolidModelRenderer.renderedCinematics>before,"Extreme Elusive reaches the real native 3D renderer");
             boolean handoff=false;
             for(int tick=0;tick<160;tick++){
@@ -42,7 +44,12 @@ public final class CinematicChecks {
                 ctx.waitTick();
             }
             require(handoff,"Extreme completes directly into its dragon reward");
-            ctx.runOnClient(mc->{require(reward().style()==ElusiveReward.Style.JACKPOT&&reward().sceneSecondsOffset()==5,"Dragon handoff retains the cinematic clock");});
+            ctx.runOnClient(mc->{
+                require(CinematicSoundProbe.count==1,"The real SoundManager receives exactly one transition roar per cinematic");
+                require(CinematicSoundProbe.progress>=ElusiveSequence.DRAGON_START&&CinematicSoundProbe.progress<ElusiveSequence.DRAGON_START+.15,"The roar starts with the dragon and changed heading");
+                require(reward().style()==ElusiveReward.Style.JACKPOT&&reward().sceneSecondsOffset()==5,"Dragon handoff retains the cinematic clock");
+                CinematicSoundProbe.stop();r.sound=false;
+            });
             ctx.waitTicks(2);ctx.takeScreenshot("extreme-live-dragon-reward");
             ctx.runOnClient(mc->{require(reel()==null,"Extreme never leaves a coin result reel after completion");command(mc,"trevorroll skip");
                 r.elusiveCinematic=false;command(mc,"trevorroll test elusive");require(reel().durationMillis==1000,"Cinematic toggle preserves the normal reel");});
@@ -66,11 +73,11 @@ public final class CinematicChecks {
             ctx.getInput().resizeWindow(960,720);ctx.runOnClient(mc->mc.options.guiScale().set(3));
             for(double progress:new double[]{.2,.92}){
                 ctx.setScreen(()->new SceneScreen(progress));ctx.waitTicks(3);
-                ctx.takeScreenshot(progress<.38?"cowboy-compact":"dragon-reveal-compact");
+                ctx.takeScreenshot(progress<.38?"beth-compact":"dragon-reveal-compact");
             }
-            System.out.println("PASS: Extreme-only routing, cowboy/dragon/reveal scenes, seamless dragon reward handoff and no coin result reel");
+            System.out.println("PASS: Extreme-only Beth/dragon scenes, synchronized heading/roar, seamless dragon reward handoff and no coin result reel");
         }finally{
-            ctx.runOnClient(mc->{mc.gui.setScreen(null);command(mc,"trevorroll skip");r.elusiveStyle=oldStyle;r.elusiveCinematic=oldEnabled;r.elusiveReward=oldReward;r.sound=oldSound;r.durationMillis=oldDuration;r.elusiveCinematicMillis=oldCinematicDuration;r.save();});
+            ctx.runOnClient(mc->{CinematicSoundProbe.stop();mc.gui.setScreen(null);command(mc,"trevorroll skip");r.elusiveStyle=oldStyle;r.elusiveCinematic=oldEnabled;r.elusiveReward=oldReward;r.sound=oldSound;r.elusiveSound=oldRewardSound;r.durationMillis=oldDuration;r.elusiveCinematicMillis=oldCinematicDuration;r.save();});
         }
     }
     private static Reel reel(){try{var f=TrevorRollClient.class.getDeclaredField("instance");f.setAccessible(true);var instance=f.get(null);f=TrevorRollClient.class.getDeclaredField("reel");f.setAccessible(true);return (Reel)f.get(instance);}catch(Exception e){throw new AssertionError(e);}}

@@ -1,9 +1,10 @@
 package dev.trevorroll;
 
-/** Hunter, dragon approach, then a dragon-held reveal. */
+/** Beth notices the player, then the dragon approaches and holds the reveal. */
 public final class ElusiveSequence {
     public static final int DEFAULT_MILLIS=8500;
-    public static final double DRAGON_START=.38, REVEAL_START=.78, ROAR_PROGRESS=.5;
+    public static final double DRAGON_START=.38, REVEAL_START=.78, ROAR_PROGRESS=DRAGON_START;
+    public static final String BETH_CAPTION="beth notices you", DRAGON_CAPTION="ELUSIVE MOB FOUND";
     private static final int[] SKY={0xFF706050,0xFF241B35,0xFF453344};
     private ElusiveSequence() {}
     public static boolean eligible(Hunt.Rarity rarity,boolean enabled,ElusiveReward.Style style){return enabled&&style==ElusiveReward.Style.JACKPOT&&rarity==Hunt.Rarity.ELUSIVE;}
@@ -12,6 +13,7 @@ public final class ElusiveSequence {
     }
     public static double progress(long elapsed,int duration){return Math.clamp(elapsed/(double)Math.max(1,duration),0,1);}
     public static int stage(double progress){return progress<DRAGON_START?0:progress<REVEAL_START?1:2;}
+    public static String caption(double progress){return stage(progress)==0?BETH_CAPTION:DRAGON_CAPTION;}
     public static double local(double progress){
         int stage=stage(progress);
         double start=stage==0?0:stage==1?DRAGON_START:REVEAL_START;

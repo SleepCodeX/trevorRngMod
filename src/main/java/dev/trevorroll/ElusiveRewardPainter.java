@@ -21,7 +21,7 @@ public final class ElusiveRewardPainter {
         if(extreme){
             if(c.extremeReward(seconds+reward.sceneSecondsOffset(),t,fade,reward.location()))return;
             // Non-game canvases have no native model renderer. Never substitute a coin.
-            center(c,"ELUSIVE",width/2.,height*.12,Math.min(width/240.,height/140.),alpha(GOLD,fade));
+            center(c,ElusiveSequence.DRAGON_CAPTION,width/2.,height*.12,Math.min(width/300.,height/140.),alpha(GOLD,fade));
             return;
         }
         double s = Math.min(width / 480., height / 270.);

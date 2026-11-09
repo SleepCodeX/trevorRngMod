@@ -24,7 +24,11 @@ public final class ProductionJarTest {
             for (String name : new String[]{"dev/trevorroll/TrevorRollClient.class",
                     "dev/crestwatch/trapper/TrapperCrestHudClient.class",
                     "assets/trevorroll/textures/gui/circle.png",
-                    "assets/trevorroll/textures/gui/glow.png"}) {
+                    "assets/trevorroll/textures/gui/glow.png",
+                    "dev/trevorroll/BethRenderer.class",
+                    "assets/trevorroll/models/beth.bin.gz",
+                    "assets/trevorroll/textures/gui/beth.png",
+                    "assets/trevorroll/model-licenses/KayKit-CC0.txt"}) {
                 require(archive.getJarEntry(name) != null, "Missing production entry: " + name);
             }
         }

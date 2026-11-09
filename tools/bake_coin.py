@@ -1,7 +1,7 @@
-"""Deterministic 512px, 64-angle gold medallion; ray intersections resolve occlusion per pixel."""
+"""Deterministic 512px, 64-angle illustrated gold token with broad toon shading."""
 from pathlib import Path
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 SIZE=512; FRAMES=64
 root=Path(__file__).resolve().parents[1]/'src/main/resources/assets/trevorroll/textures/gui/coin'
 root.mkdir(parents=True,exist_ok=True)
@@ -37,23 +37,28 @@ for sheet in range(4):
    a=vx*vx+vy*vy+vz*vz;b=2*(px*vx+py*vy+pz*vz);cc=px*px+py*py+pz*pz-1;disc=b*b-4*a*cc
    t=(-b-np.sqrt(np.maximum(0,disc)))/(2*a);nx=(ox+t*dx-cx)/(rx*rx);ny=(oy+t*dy-cy)/(ry*ry);nz=(oz+t*dz-cz)/(rz*rz)
    hit(t,nx,ny,nz,disc>=0,material)
-  cylinder(35,-4,4,1)
-  # Rounded milled rim, built from a dense ring of small ellipsoids.
-  for a in np.linspace(0,2*np.pi,160,endpoint=False):
-   ellipsoid(33.8*np.cos(a),33.8*np.sin(a),0,2.1,2.1,5.2,2)
-  cylinder(31.7,-4.9,4.9,0)
+  cylinder(36,-5,5,1)
+  # Rounded milled rim, built from a broad ring of softly rounded stamps.
+  for a in np.linspace(0,2*np.pi,32,endpoint=False):
+   ellipsoid(33.6*np.cos(a),33.6*np.sin(a),0,3.5,3.5,5.7,2)
+  cylinder(31.2,-5.2,5.2,0)
   # Four non-overlapping toes on BOTH faces; no face-average sorting.
   for side in [-1,1]:
    ellipsoid(0,9,side*5.5,14,11,3.7,3)
    for i,(cx,cy) in enumerate([(-18,-7),(-7,-18),(7,-18),(18,-7)]):
     ellipsoid(cx,cy,side*5.5,5.8,7.6,3.4,4+i)
   norm/=np.maximum(np.linalg.norm(norm,axis=2,keepdims=True),1e-8)
-  ndl=np.maximum(0,norm@light);half=light+np.array([0,0,-1]);half/=np.linalg.norm(half);spec=np.maximum(0,norm@half)**45
-  reflection=np.clip(.5+.5*np.sin((norm[:,:,0]*1.5+norm[:,:,1]*.7)*6),0,1)
-  base=np.zeros((*x.shape,3),np.float32);base[:]=[.85,.46,.08];base[mat==1]=[.72,.36,.055];base[mat==2]=[1,.68,.2];base[mat>=3]=[1,.76,.32]
-  rgb=base*(.3+.55*ndl[:,:,None]+.23*reflection[:,:,None])+spec[:,:,None]*np.array([.8,.72,.5])
+  ndl=np.maximum(0,norm@light)
+  # Deliberate painted value bands: no specular hotspots or environment reflections.
+  bands=np.select([ndl<.25,ndl<.5,ndl<.78],[.58,.73,.88],default=1.)
+  base=np.zeros((*x.shape,3),np.float32);base[:]=[1.,.76,.27]
+  base[mat==1]=[.73,.39,.13];base[mat==2]=[1.,.84,.40];base[mat>=3]=[1.,.91,.66]
+  rgb=base*bands[:,:,None]
   rgba=np.zeros((*x.shape,4),np.uint8);rgba[:,:,:3]=np.uint8(np.clip(rgb,0,1)*255);rgba[:,:,3]=np.where(np.isfinite(depth),255,0)
-  frame=Image.fromarray(rgba).resize((SIZE,SIZE),Image.Resampling.LANCZOS)
+  painted=Image.fromarray(rgba)
+  outline=Image.new('RGBA',(SIZE,SIZE),(96,53,27,0))
+  outline.putalpha(painted.getchannel('A').filter(ImageFilter.MaxFilter(7)))
+  frame=Image.alpha_composite(outline,painted)
   atlas.paste(frame,((cell%4)*SIZE,(cell//4)*SIZE))
   if sheet==0 and cell==3: frame.save(root/'poster.png')
  atlas.save(root/f'coin_{sheet}.png',optimize=True)

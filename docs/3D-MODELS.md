@@ -7,26 +7,31 @@ coin, gramophone, hide, keyboard and layout windows have their own geometry and 
 The palette has a real open thumb hole. The crest is a 24×24×15 beveled prism with an oblique
 axis and four-second revolution; other menu objects revolve over ten seconds.
 
+The Roll machine and Appearance palette remain the user-approved visual anchors; regression
+signatures preserve their exact geometry and material colours. The other six objects use
+new rounded cases, a curved hollow gramophone bell, shaped/stitched hide edges, deep keyboard
+keycaps and broad stamped coin trim. [Art direction and viewed references](ART-DIRECTION.md)
+record the restrained hand-painted fantasy inspiration.
+
 Menu model targets render at twice their displayed resolution and use linear downsampling.
 Premultiplied target blits preserve menu fades. Meshes are built lazily and cached. Small
-cylinders use fewer segments; the milled coin rim does not allocate geometry during rendering.
+cylinders use fewer segments; the broad stamped coin rim does not allocate geometry during rendering.
 Fabric's renderer pool owns target instances and lifecycle. Scissor bounds are carried into
 the extracted immutable state. Rendering uses Blaze3D, without direct OpenGL calls in production.
 
 The Extreme scene is selected only for **Elusive + Extreme**, with rewards enabled and the
 Extreme 3D intro toggle enabled. The serialized `JACKPOT` enum value remains compatible;
 its visible label is Extreme. Minimal, Classic and Extra retain the ordinary roll duration.
-The 5–14 second intro now has three phases: a sculpted cowboy hunter enters, tips his hat
-and exits; the native Ender Dragon approaches; the dragon holds the reveal under **ELUSIVE**.
-The display does not create entities or modify the world. Its native model, texture and
-sound use the same Minecraft rendering path as 1.9.0.
+The 5–14 second intro has three phases: the selected KayKit character enters and greets
+under `beth notices you`; the native Ender Dragon approaches as the text switches to
+`ELUSIVE MOB FOUND`; the dragon holds the final reveal. The native dragon growl is queued
+once at that same transition, respecting the user's sound toggles and volume settings.
+The display does not create entities or modify the world. No rabbit or coin appears
+in the Extreme sequence.
 
-The cowboy has a curved head and face, separate eyes/nose/ears/brows, curled wide-brim hat,
-leather duster and vest, neckerchief, strap, buckle, rope loop, rounded sleeves/joints,
-articulated forearms/gloved fingers and boots. There is no rabbit rig or token finale.
 The completed Extreme roll clears its ordinary result reel immediately. Its dragon reward
-continues the scene clock and full opacity, then fades out. The previous large coin treatment
-belongs to Extra; Extreme's painter never submits a coin, including when its intro is off.
+continues the scene clock and full opacity, then fades out. The large coin treatment uses an illustrated warm-gold palette, broad toon shading and a bold
+edge, without metallic specular/reflection bands or fine milling. It belongs to Extra; Extreme's painter never submits a coin, including when its intro is off.
 
 Rye supplies Western display titles; Outfit supplies captions throughout Elusive rewards.
 Both use baked 64px glyph atlases with cached metrics and bundled OFL licenses. Run
@@ -48,6 +53,36 @@ pure painter; it is baked before publication, rather than generated when a menu 
 - Trapper Crest face image: https://hypixelskyblock.minecraft.wiki/images/Trapper_Crest.png
 - Image source page: https://hypixelskyblock.minecraft.wiki/w/Trapper_Crest
 
-The 300×300 accessory image is used on the crest prism. Other solid meshes, the 2D module art,
-and pelt-coin art are authored in this repository. The dragon model/texture come from the
+The 300×300 accessory image is used on the crest prism. The module meshes, 2D module art and pelt-coin art are authored in this repository.
+Beth uses the separately credited CC0 asset below. The dragon model/texture come from the
 installed Minecraft client. No video frames or assets from the user's reference clip are bundled.
+
+
+## Asset credits
+
+**Kay Lousberg — KayKit Adventurers, Rogue (CC0).** The selected unhooded character,
+authored gradient texture, cape and `Idle`, `Walking_A`, `Interact` clips come from the
+[official free pack repository](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0),
+commit `672074b73ba276876a19e8816ecdc5241817ab47`. The in-mod scene calls this character Beth.
+The source export is Adventurers 1.0; the creator's current preview page shows the later
+2.0 pack. We use the available official CC0 Rogue export, not the promotional picture.
+
+- Source: `addons/kaykit_character_pack_adventures/Characters/gltf/Rogue.glb`
+- Original GLB SHA-256: `e825437cd4d2ee9c1960b517a74a69101e33eb409ae7fa8cedc7134a998fbb7d`
+- Original license, bundled unchanged: `assets/trevorroll/model-licenses/KayKit-CC0.txt`
+- Creator: https://kaylousberg.itch.io/kaykit-adventurers
+- Discovery included [this GitHub asset repository](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)
+  and [Reddit's free animation discussion](https://www.reddit.com/r/godot/comments/1jg4wtx/quaternius_just_dropped_a_high_quality_free_3d/).
+  Reddit search excerpts were available; the full thread was unavailable to the retrieval service.
+
+`python tools/bake-beth.py /path/to/Rogue.glb` reproduces the model and texture with numpy
+and Pillow installed. The script checks the pinned source hash, removes optional weapons,
+bakes the three skeleton clips at 60 Hz and converts coordinates/winding for Minecraft.
+Only 3,567 vertices, 4,347 triangles and 42 joints are retained, in a 299,053-byte compressed
+model and 15,886-byte texture. Original texture pixels and authored skin weights are preserved.
+
+The client lazily decodes this bounded binary once, interpolates the baked poses at actual
+render time and skins into reused arrays inside the ordered native render callback. It
+loads no glTF parser or third-party animation engine. It does no per-frame mesh construction,
+asset I/O or image processing. Clip blends keep entry, greeting and exit continuous.
+The default 2D menu and lighter reward styles do not load the Beth model.

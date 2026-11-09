@@ -2,7 +2,7 @@ package dev.trevorroll;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-/** A cowboy greeting flows into a dragon-held Elusive reveal, with no token finale. */
+/** Beth's greeting flows into a dragon-held Elusive reveal, with no token finale. */
 final class ElusiveCinematicHud {
     private ElusiveCinematicHud() {}
     static void draw(GuiGraphicsExtractor g,Reel reel,long now,int width,int height,double opacity){
@@ -28,15 +28,18 @@ final class ElusiveCinematicHud {
             c.round(radius,-.45,5+travel*16,.9,.45,stage==1?0x77BDA1D9:0x99E6CA91);
             g.pose().popMatrix();
         }
-        String heading=stage==0?"THE HUNTER":"ELUSIVE";
-        double headingScale=Math.min(stage==0?2.0:3.15,width*.76/CinematicFont.titleWidth(heading));
-        double hx=(width-CinematicFont.titleWidth(heading)*headingScale)/2,hy=height*.055;
-        CinematicFont.title(g,heading,hx,hy+1.3,headingScale,alpha(0xFF362323,fade*.8));
-        CinematicFont.title(g,heading,hx,hy,headingScale,alpha(stage==0?0xFFE3CAA0:0xFFFFDF96,fade));
+        String heading=ElusiveSequence.caption(progress);
+        double headingScale=Math.min(stage==0?1.6:2.4,width*.82/(stage==0?CinematicFont.bodyWidth(heading):CinematicFont.titleWidth(heading)));
+        double textWidth=stage==0?CinematicFont.bodyWidth(heading):CinematicFont.titleWidth(heading);
+        double hx=(width-textWidth*headingScale)/2,hy=height*.055;
         if(stage==0){
-            String caption="TREVOR  /  THE ELUSIVE TRAIL";double fs=Math.min(.78,width*.8/CinematicFont.bodyWidth(caption));
-            CinematicFont.body(g,caption,(width-CinematicFont.bodyWidth(caption)*fs)/2,height*.91,fs,alpha(0xFFE1C7A2,fade));
-        }else if(stage==2&&!location.isBlank()){
+            CinematicFont.body(g,heading,hx,hy+1.1,headingScale,alpha(0xFF302329,fade*.8));
+            CinematicFont.body(g,heading,hx,hy,headingScale,alpha(0xFFE3CAA0,fade));
+        }else{
+            CinematicFont.title(g,heading,hx,hy+1.3,headingScale,alpha(0xFF362323,fade*.8));
+            CinematicFont.title(g,heading,hx,hy,headingScale,alpha(0xFFFFDF96,fade));
+        }
+        if(stage==2&&!location.isBlank()){
             double fs=Math.min(.95,width*.8/CinematicFont.bodyWidth(location));
             CinematicFont.body(g,location,(width-CinematicFont.bodyWidth(location)*fs)/2,height*.91,fs,alpha(0xFFE6D9C1,fade));
         }
