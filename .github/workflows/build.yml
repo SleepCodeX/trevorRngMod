@@ -4,10 +4,16 @@ on:
     branches: ['**']
   pull_request:
   workflow_dispatch:
+    inputs:
+      publish_verified:
+        description: Publish the already-tested 1.9.1 artifact without rebuilding
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   build:
+    if: github.event_name != 'workflow_dispatch' || inputs.publish_verified != true
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -99,3 +105,38 @@ jobs:
           fi
           gh release upload 1.9.1 release-assets/trevor-roll-1.9.1.jar release-assets/trevor-roll-1.9.1.jar.sha256 --clobber
           gh release edit 1.9.1 --draft=false --prerelease=false --latest --title 'Trevor Roll 1.9.1' --notes-file RELEASE-NOTES.md
+
+  publish_verified_artifact:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_verified == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 47de0d6662a39653788a1da5c2fbe4128062aa34
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 42703515570
+          name: trevor-roll-1.9.1-mc26.2-loader0.19.5
+          path: release-assets
+      - name: Prepare the previously tested artifact
+        run: |
+          python - <<'PYRELEASE'
+          from pathlib import Path
+          import hashlib
+          p=Path('release-assets/trevor-roll-1.9.1.jar')
+          digest=hashlib.sha256(p.read_bytes()).hexdigest()
+          if digest!='a6e6b13ce925fc41306f73b2070bb6fd132cee9de0d1bf7ebbb5244819777332':
+              raise RuntimeError('The artifact differs from the already-tested release JAR')
+          p.with_name(p.name+'.sha256').write_text(digest+'  '+p.name+'\n')
+          PYRELEASE
+      - name: Attach and publish 1.9.1
+        run: |
+          gh release upload 1.9.1 release-assets/trevor-roll-1.9.1.jar release-assets/trevor-roll-1.9.1.jar.sha256 --clobber
+          gh release edit 1.9.1 --target 47de0d6662a39653788a1da5c2fbe4128062aa34 --draft=false --prerelease=false --latest --title 'Trevor Roll 1.9.1' --notes-file RELEASE-NOTES.md
