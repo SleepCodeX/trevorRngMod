@@ -1,4 +1,4 @@
-# Trevor module browser (1.9.0)
+# Trevor module browser (1.9.1)
 
 The browser follows the [OneClient / OneConfig](https://polyfrost.org/projects/oneclient)
 configuration workflow: a persistent utility sidebar, searchable category-filtered
@@ -37,7 +37,7 @@ and 960×720/scale 3. It checks scrolling, keyboard reachability, clipped input,
 search and categories, native sliders, persistence, sound selection, unbound/bind/rebind/reset,
 chat protection, repeated-key draining, reduced motion and clean animated closing.
 GPU captures cover all eight solid models at front, oblique, edge-on and rear angles,
-the actual rotating dashboard, five cinematic chapters, rabbit poses and every rarity card.
+the actual rotating dashboard, hunter/dragon/reveal chapters, compact cinematic layouts and every rarity card.
 Live commands verify that only Extreme Elusive uses the native cinematic and its duration.
 
 See [VALIDATION.md](../VALIDATION.md) for exact source/run evidence and

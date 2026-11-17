@@ -1,3 +1,16 @@
+# Trevor Roll 1.9.1 validation
+
+- Runtime/capture source: `2901500d9caf94015ec761cf0f8ed24d1fe1ec5b`.
+- [Source CI run 42703515570](https://github.com/SleepCodeX/trevorRngMod/actions/runs/42703515570) passed real Java 25 Loom clean build/check, production JAR verification and the full Minecraft 26.2 production-client suite. Published media comes from that run's evidence artifact.
+- The selected CC0 KayKit character uses its authored texture and three animation clips. Pure checks cover finite skinned geometry, normalized normals, actual motion, and caption/roar timing. Native SoundManager observation verifies one transition growl at the dragon/text change and respects muted and other-rarity routing.
+- Extreme goes directly from Beth to the native dragon, retains its scene clock through the reward and submits no coin result reel. Extra keeps the cartoon coin; Minimal, Classic and other rarities retain ordinary timing. Preview, skip, duration, persistence and intro-off behavior pass.
+- Exact geometry/material signatures preserve the approved Roll machine and Appearance palette. All eight models render at five angles, including edge-on/back views. Captures cover 60 model poses, 85 sequence poses, compact layouts and the live advanced dashboard.
+- Existing crest lore/first-hotbar-slot/removal, commands, reel, HUD editing, settings at four GUI/window combinations, focus/clipping, sliders, search/tabs/scrolling, unbound native keymapping, audio, persistence and reduced motion checks remain.
+- A bounded test-only task-draining workaround handles Fabric API [issue 5623](https://github.com/FabricMC/fabric-api/issues/5623) during disposable-world teardown. It does not patch dependencies or production behavior; a local full build/client run with this workaround completed successfully on 2026-11-09.
+- [Media provenance](docs/media/1.9.1/README.md) identifies the unchanged screenshots and lossless animation frames. The final feature head and main release workflow require fresh real build/client checks before publication.
+- Production JAR checks enforce Java 25 class version 69, correct FabricLoader InterfaceMethodref bytecode, required assets and CC0 notice, with no Minecraft/Fabric stubs or test harness.
+- The automated client uses a disposable offline world. Live Hypixel and the complete personal modpack are not reproduced.
+
 # Trevor Roll 1.9.0 validation
 
 - Runtime source: `231773910dfa0ae1c80625b12c05c5aeaad2f505`.

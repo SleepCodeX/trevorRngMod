@@ -14,7 +14,12 @@ public final class ElusiveRewardTest {
     private static int checks;
     private static void check(boolean ok, String detail) { checks++; if (!ok) throw new AssertionError(detail); }
     private static final class Probe implements HudPainter.Canvas {
-        int depth, calls;
+        int depth, calls,coins,dragons;
+        double dragonSeconds,dragonOpacity;
+        @Override public boolean medallion(double x,double y,double scale,double yaw,double roll,double opacity){coins++;return false;}
+        @Override public boolean extremeReward(double seconds,double progress,double opacity,String location){
+            dragons++;dragonSeconds=seconds;dragonOpacity=opacity;geometry(seconds,progress,opacity);return true;
+        }
         @Override public void push(double x, double y, double scale) { check(Double.isFinite(x+y+scale) && scale > 0, "finite transform"); depth++; }
         @Override public void pop() { check(--depth >= 0, "balanced transforms"); }
         private void geometry(double... values) { for (double v : values) check(Double.isFinite(v), "finite reward geometry"); calls++; }
@@ -40,11 +45,19 @@ public final class ElusiveRewardTest {
                     check(c.depth == 0, "pose always restored");
                     check(c.calls < 12000, "bounded draw work");
                     if (age == 3500) check(c.calls == 0, "expired reward draws nothing");
+                    if(age>0&&age<3500){
+                        check(c.coins==(style==ElusiveReward.Style.JACKPOT?0:1),"Extreme never draws a reward coin; Extra retains it");
+                        check(c.dragons==(style==ElusiveReward.Style.JACKPOT?1:0),"Only Extreme delegates to the native dragon");
+                    }
                 }
             }
         }
         var safe = new ElusiveReward(0,-1,null,Double.NaN,Double.POSITIVE_INFINITY,null);
         check(safe.durationMillis()==1500 && safe.style()==ElusiveReward.Style.EXTRA && safe.intensity()==.8, "invalid settings use safe bounds");
+        var continued=new Probe();
+        ElusiveRewardPainter.draw(continued,new ElusiveReward(1000,3500,ElusiveReward.Style.JACKPOT,.8,.7,"Trail",8.5),1000,640,360);
+        check(continued.dragons==1&&continued.coins==0,"The roll hands directly to the dragon without a coin frame");
+        check(continued.dragonSeconds==8.5&&continued.dragonOpacity==1,"Handoff preserves the scene clock and opacity");
         for(int sheet=0;sheet<4;sheet++) {
             var image=ImageIO.read(ElusiveRewardTest.class.getResourceAsStream("/assets/trevorroll/textures/gui/coin/coin_"+sheet+".png"));
             check(image.getWidth()==2048 && image.getHeight()==2048,"HD atlas dimensions");

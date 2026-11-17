@@ -34,6 +34,7 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             .getMetadata().getVersion().getFriendlyString().equals("0.19.5"), "Loader version");
         context.takeScreenshot("startup");
         try (var world = context.worldBuilder().create()) {
+            try {
             world.getConnection().waitForChunksRender();
             context.setScreen(() -> null);
             context.runOnClient(mc -> {
@@ -200,6 +201,15 @@ public final class TrevorRollClientGameTest implements FabricClientGameTest {
             dev.trevorroll.CinematicChecks.run(context);
             dev.trevorroll.RarityVisualChecks.run(context);
             System.out.println("PASS: real production client startup, hotbar lore/removal, all commands, HUD scales and original reel");
+            } finally {
+                // Fabric API issue 5623: process shutdown tasks before parking its tick phaser.
+                // https://github.com/FabricMC/fabric-api/issues/5623
+                var server=context.computeOnClient(Minecraft::getSingleplayerServer);
+                if(server!=null){
+                    long deadline=System.nanoTime()+30_000_000_000L;
+                    server.execute(()->server.managedBlock(()->!server.isRunning()||System.nanoTime()>=deadline));
+                }
+            }
         }
     }
 
